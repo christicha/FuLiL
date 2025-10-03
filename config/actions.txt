@@ -1,0 +1,14 @@
+addQualifier;inserting a qualifier (i.e., volatile, const, and restrict) of a variable
+remQualifier;removing a qualifier (i.e., volatile, const, and restrict) of a variable
+addModifier;inserting a modifier (i.e., long, short, signed, and unsigned) of a variable
+remModifier;removing a modifier (i.e., long, short, signed, and unsigned) of a variable
+repConstant;replacing a constant with another valid one of a variable
+repBinary;replacing a binary operator with another valid one on variables
+repUnary;replacing an unary operator on variables
+remUnary;removing an unary operator on variables
+repUnary;removing an unary operator on variables (if any)
+repVar;replacing a variable with another valid existing variable
+addIf;inserting a branch (i.e., if) statement in the statement body and reusing variables
+addWhile;inserting a loop (i.e., while or for) statement in the statement body and reusing variables
+addFunction;inserting a function call in the statement body and reusing variables
+addGoto;inserting a goto statement in the statement body and reusing variables

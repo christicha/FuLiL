@@ -1,0 +1,46 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.9~svn20110310	//
+DEBUG_TYPE	/home/chris/FLL/../RecBi-workplace/llvmbugs/compilers/r181189/r181189/llvm/lib/CodeGen/SplitKit.cpp	15;"	d	line:15	file:
+SplitAnalysis	/home/chris/FLL/../RecBi-workplace/llvmbugs/compilers/r181189/r181189/llvm/lib/CodeGen/SplitKit.cpp	42;"	f	line:42	class:SplitAnalysis
+SplitEditor	/home/chris/FLL/../RecBi-workplace/llvmbugs/compilers/r181189/r181189/llvm/lib/CodeGen/SplitKit.cpp	325;"	f	line:325	class:SplitEditor
+analyze	/home/chris/FLL/../RecBi-workplace/llvmbugs/compilers/r181189/r181189/llvm/lib/CodeGen/SplitKit.cpp	313;"	f	line:313	class:SplitAnalysis
+analyzeUses	/home/chris/FLL/../RecBi-workplace/llvmbugs/compilers/r181189/r181189/llvm/lib/CodeGen/SplitKit.cpp	122;"	f	line:122	class:SplitAnalysis
+calcLiveBlockInfo	/home/chris/FLL/../RecBi-workplace/llvmbugs/compilers/r181189/r181189/llvm/lib/CodeGen/SplitKit.cpp	172;"	f	line:172	class:SplitAnalysis
+clear	/home/chris/FLL/../RecBi-workplace/llvmbugs/compilers/r181189/r181189/llvm/lib/CodeGen/SplitKit.cpp	53;"	f	line:53	class:SplitAnalysis
+computeLastSplitPoint	/home/chris/FLL/../RecBi-workplace/llvmbugs/compilers/r181189/r181189/llvm/lib/CodeGen/SplitKit.cpp	61;"	f	line:61	class:SplitAnalysis
+countLiveBlocks	/home/chris/FLL/../RecBi-workplace/llvmbugs/compilers/r181189/r181189/llvm/lib/CodeGen/SplitKit.cpp	276;"	f	line:276	class:SplitAnalysis
+defFromParent	/home/chris/FLL/../RecBi-workplace/llvmbugs/compilers/r181189/r181189/llvm/lib/CodeGen/SplitKit.cpp	428;"	f	line:428	class:SplitEditor
+defValue	/home/chris/FLL/../RecBi-workplace/llvmbugs/compilers/r181189/r181189/llvm/lib/CodeGen/SplitKit.cpp	372;"	f	line:372	class:SplitEditor
+deleteRematVictims	/home/chris/FLL/../RecBi-workplace/llvmbugs/compilers/r181189/r181189/llvm/lib/CodeGen/SplitKit.cpp	1016;"	f	line:1016	class:SplitEditor
+dump	/home/chris/FLL/../RecBi-workplace/llvmbugs/compilers/r181189/r181189/llvm/lib/CodeGen/SplitKit.cpp	360;"	f	line:360	class:SplitEditor
+enterIntvAfter	/home/chris/FLL/../RecBi-workplace/llvmbugs/compilers/r181189/r181189/llvm/lib/CodeGen/SplitKit.cpp	495;"	f	line:495	class:SplitEditor
+enterIntvAtEnd	/home/chris/FLL/../RecBi-workplace/llvmbugs/compilers/r181189/r181189/llvm/lib/CodeGen/SplitKit.cpp	513;"	f	line:513	class:SplitEditor
+enterIntvBefore	/home/chris/FLL/../RecBi-workplace/llvmbugs/compilers/r181189/r181189/llvm/lib/CodeGen/SplitKit.cpp	478;"	f	line:478	class:SplitEditor
+extendPHIKillRanges	/home/chris/FLL/../RecBi-workplace/llvmbugs/compilers/r181189/r181189/llvm/lib/CodeGen/SplitKit.cpp	942;"	f	line:942	class:SplitEditor
+findShallowDominator	/home/chris/FLL/../RecBi-workplace/llvmbugs/compilers/r181189/r181189/llvm/lib/CodeGen/SplitKit.cpp	676;"	f	line:676	class:SplitEditor
+finish	/home/chris/FLL/../RecBi-workplace/llvmbugs/compilers/r181189/r181189/llvm/lib/CodeGen/SplitKit.cpp	1043;"	f	line:1043	class:SplitEditor
+forceRecompute	/home/chris/FLL/../RecBi-workplace/llvmbugs/compilers/r181189/r181189/llvm/lib/CodeGen/SplitKit.cpp	408;"	f	line:408	class:SplitEditor
+getLastSplitPointIter	/home/chris/FLL/../RecBi-workplace/llvmbugs/compilers/r181189/r181189/llvm/lib/CodeGen/SplitKit.cpp	114;"	f	line:114	class:SplitAnalysis
+hoistCopiesForSize	/home/chris/FLL/../RecBi-workplace/llvmbugs/compilers/r181189/r181189/llvm/lib/CodeGen/SplitKit.cpp	729;"	f	line:729	class:SplitEditor
+isOriginalEndpoint	/home/chris/FLL/../RecBi-workplace/llvmbugs/compilers/r181189/r181189/llvm/lib/CodeGen/SplitKit.cpp	299;"	f	line:299	class:SplitAnalysis
+leaveIntvAfter	/home/chris/FLL/../RecBi-workplace/llvmbugs/compilers/r181189/r181189/llvm/lib/CodeGen/SplitKit.cpp	543;"	f	line:543	class:SplitEditor
+leaveIntvAtTop	/home/chris/FLL/../RecBi-workplace/llvmbugs/compilers/r181189/r181189/llvm/lib/CodeGen/SplitKit.cpp	593;"	f	line:593	class:SplitEditor
+leaveIntvBefore	/home/chris/FLL/../RecBi-workplace/llvmbugs/compilers/r181189/r181189/llvm/lib/CodeGen/SplitKit.cpp	574;"	f	line:574	class:SplitEditor
+openIntv	/home/chris/FLL/../RecBi-workplace/llvmbugs/compilers/r181189/r181189/llvm/lib/CodeGen/SplitKit.cpp	460;"	f	line:460	class:SplitEditor
+overlapIntv	/home/chris/FLL/../RecBi-workplace/llvmbugs/compilers/r181189/r181189/llvm/lib/CodeGen/SplitKit.cpp	611;"	f	line:611	class:SplitEditor
+removeBackCopies	/home/chris/FLL/../RecBi-workplace/llvmbugs/compilers/r181189/r181189/llvm/lib/CodeGen/SplitKit.cpp	631;"	f	line:631	class:SplitEditor
+reset	/home/chris/FLL/../RecBi-workplace/llvmbugs/compilers/r181189/r181189/llvm/lib/CodeGen/SplitKit.cpp	340;"	f	line:340	class:SplitEditor
+rewriteAssigned	/home/chris/FLL/../RecBi-workplace/llvmbugs/compilers/r181189/r181189/llvm/lib/CodeGen/SplitKit.cpp	969;"	f	line:969	class:SplitEditor
+selectIntv	/home/chris/FLL/../RecBi-workplace/llvmbugs/compilers/r181189/r181189/llvm/lib/CodeGen/SplitKit.cpp	471;"	f	line:471	class:SplitEditor
+shouldSplitSingleBlock	/home/chris/FLL/../RecBi-workplace/llvmbugs/compilers/r181189/r181189/llvm/lib/CodeGen/SplitKit.cpp	1132;"	f	line:1132	class:SplitAnalysis
+splitLiveThroughBlock	/home/chris/FLL/../RecBi-workplace/llvmbugs/compilers/r181189/r181189/llvm/lib/CodeGen/SplitKit.cpp	1177;"	f	line:1177	class:SplitEditor
+splitRegInBlock	/home/chris/FLL/../RecBi-workplace/llvmbugs/compilers/r181189/r181189/llvm/lib/CodeGen/SplitKit.cpp	1281;"	f	line:1281	class:SplitEditor
+splitRegOutBlock	/home/chris/FLL/../RecBi-workplace/llvmbugs/compilers/r181189/r181189/llvm/lib/CodeGen/SplitKit.cpp	1373;"	f	line:1373	class:SplitEditor
+splitSingleBlock	/home/chris/FLL/../RecBi-workplace/llvmbugs/compilers/r181189/r181189/llvm/lib/CodeGen/SplitKit.cpp	1150;"	f	line:1150	class:SplitEditor
+transferValues	/home/chris/FLL/../RecBi-workplace/llvmbugs/compilers/r181189/r181189/llvm/lib/CodeGen/SplitKit.cpp	834;"	f	line:834	class:SplitEditor
+useIntv	/home/chris/FLL/../RecBi-workplace/llvmbugs/compilers/r181189/r181189/llvm/lib/CodeGen/SplitKit.cpp	532;"	f	line:532	class:SplitEditor
+useIntv	/home/chris/FLL/../RecBi-workplace/llvmbugs/compilers/r181189/r181189/llvm/lib/CodeGen/SplitKit.cpp	536;"	f	line:536	class:SplitEditor
