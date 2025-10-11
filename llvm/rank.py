@@ -1,30 +1,35 @@
+import csv
 import math
 import os
 import sys
 from configparser import ConfigParser
 import re
 from collections import defaultdict
-
 from Util import findFunByLine
 
 
 def deleteGcdaPath(gcdaDirName):
     return re.sub(r'/CMakeFiles/[^/]+.dir', '', gcdaDirName)
 
+
 def functionRank(bugids, revisions, configFile):
     cfg = ConfigParser()
     cfg.read(configFile)
     infodir = cfg.get('llvm-locations', 'infodir')
     passdir = cfg.get('llvm-locations', 'passdir')
-    resultFile = cfg.get('llvm-locations', 'resultFile')
-    resultFile = resultFile.split('.csv')[0] + '_func' + '.csv'
-    compilerBasePath = cfg.get('llvm-locations','compilersdir')
-    result = open(resultFile, 'w')
+    baseResultFile = cfg.get('llvm-locations', 'resultFile')
+    compilerBasePath = cfg.get('llvm-locations', 'compilersdir')
+
     for i in range(len(revisions)):
-        rev = revisions[i]  # 当前版本号
-        bugId = bugids[i]  # 当前bug ID
+        rev = revisions[i]
+        bugId = bugids[i]
         compilerPath = compilerBasePath + revisions[i] + '/' + revisions[i] + '/llvm'
-        result.write(rev + '  bug' + bugId + ':\n')  # 写入标题行
+        resultFile = baseResultFile + bugId + '/resultFile_func.csv'
+        result = open(resultFile, 'w', newline='', encoding='utf-8')
+        csv_writer = csv.writer(result)
+        # 写入修订版本和 bug ID 信息
+        result.write(rev + '  bug' + bugId + ':\n')
+
         locationfile = open(infodir + bugId + '/locations')
         locationlines = locationfile.readlines()
         locationfile.close()
@@ -35,7 +40,6 @@ def functionRank(bugids, revisions, configFile):
                 buggy_location = line.replace('file:', '').replace('method:', '')
                 if '/lib/' in buggy_location:
                     file_part, method_part = buggy_location.split(';', 1)
-                    method_part = method_part.rstrip('()')
                     if '/lib/' in file_part:
                         file_part = 'lib/' + file_part.split('/lib/')[1]
                     buggy_location = f"{file_part};{method_part}"
@@ -68,16 +72,16 @@ def functionRank(bugids, revisions, configFile):
             faillinesplit = faillines[i].strip().split(',')
             filename = faillinesplit[0].strip().split('.gcda')[0].strip()  # 提取文件名
             failfileset.add(deleteGcdaPath(filename))
-            filename = compilerPath+'/'+deleteGcdaPath(filename)
+            filename = compilerPath + '/' + deleteGcdaPath(filename)
             if not filename.endswith('.cpp'):  # 只处理.cpp文件
                 continue
             stmtlist = faillines[i].strip().split(':')[1].split(',')
-            line_to_func = findFunByLine(filename,stmtlist)
-            for line,func in line_to_func.items():
+            line_to_func = findFunByLine(filename, stmtlist)
+            for line, func in line_to_func.items():
                 failfuncset.add(func)
                 failfuncmapstmt[func].add(line)
-                failstmt[func+','+str(line)] = 1
-                passstmt[func+','+str(line)] = 0
+                failstmt[func + ',' + str(line)] = 1
+                passstmt[func + ',' + str(line)] = 0
         # 处理所有通过测试用例的覆盖率
         for test_dir in os.listdir(passdir + '/' + bugId + '/passcov'):  # 修复：使用不同的变量名
             # 读取单个通过用例的覆盖率文件
@@ -99,7 +103,7 @@ def functionRank(bugids, revisions, configFile):
                 line_to_func = findFunByLine(filename, stmtlist)
                 for line, func in line_to_func.items():
                     if f"{func},{line}" in passstmt:
-                        passstmt[func+','+str(line)] += 1
+                        passstmt[func + ',' + str(line)] += 1
 
         score = dict()
         funcscore = dict()
@@ -107,52 +111,15 @@ def functionRank(bugids, revisions, configFile):
         for key in failstmt.keys():
             # 核心评分公式：基于失败和通过覆盖率的比值
             score[key] = float(failstmt[key]) / math.sqrt(float(failstmt[key]) * (failstmt[key] + passstmt[key]))
-            keyfile = key.split(',')[0]  # 提取文件名
+            # 找到最后一个逗号的位置，分割函数名和行号
+            last_comma_index = key.rfind(',')
+            keyfile = key[:last_comma_index]  # 函数名部分
             # 按文件聚合语句得分
             if keyfile not in funcscore.keys():
                 funcscore[keyfile] = []
                 funcscore[keyfile].append(score[key])
             else:
                 funcscore[keyfile].append(score[key])
-
-        #     # 计算每个文件的平均可疑度得分
-        #     funcaggstmtscore = dict()
-        #     for key in funcscore.keys():
-        #         funcaggstmtscore[key] = float(sum(funcscore[key])) / len(funcscore[key])
-        #
-        #     # 按得分降序排序文件
-        #     scorelist = sorted(funcaggstmtscore.items(), key=lambda d: d[1], reverse=True)
-        #
-        #     # 统计得分为1.0的文件数量（最可疑的文件）
-        #     number_1po0 = 0
-        #     for j in range(len(scorelist)):
-        #         if scorelist[j][0] == 1.0:
-        #             number_1po0 += 1
-        #
-        #     # 处理已知的buggy文件，在排名中找到对应位置
-        #     for bf in buggyfiles:
-        #         # 尝试匹配文件名（处理路径格式差异）
-        #         for j in range(len(scorelist)):
-        #             setbf = set(bf.split('/'))
-        #             seti = set(scorelist[j][0].split('/'))
-        #             if setbf.issubset(seti):  # 如果buggy文件是排名中文件的子集
-        #                 bf = scorelist[j][0]  # 使用排名中的完整路径
-        #                 break
-        #
-        #     # 为每个buggy文件计算排名范围
-        #     for bf in buggyfiles:
-        #         tmp = []
-        #         for j in range(len(scorelist)):
-        #             if funcaggstmtscore[bf] == scorelist[j][1]:  # 找到得分相同的所有位置
-        #                 tmp.append(j)
-        #         # 写入结果：文件名,最小排名,最大排名,得分
-        #         result.write(
-        #             bf + ',' + str(min(tmp) + 1) + ',' + str(max(tmp) + 1) + ',' + str(funcaggstmtscore[bf]) + '\n')
-        #
-        #     result.write('\n')  # bug之间空行分隔
-        #     result.flush()  # 确保数据写入文件
-        #
-        # result.close()  # 关闭结果文件
 
         # 计算每个函数的平均可疑度得分
         funcaggstmtscore = dict()
@@ -162,32 +129,38 @@ def functionRank(bugids, revisions, configFile):
         # 按得分降序排序所有函数
         scorelist = sorted(funcaggstmtscore.items(), key=lambda d: d[1], reverse=True)
 
-        # 写入完整的可疑度排名
-        result.write("Rank,Function,Score\n")  # CSV 表头
-
-        for rank, (func_name, score) in enumerate(scorelist, 1):
-            result.write(f"{rank},{func_name},{score:.6f}\n")
+        # 使用 CSV writer 写入完整的可疑度排名
+        csv_writer.writerow(["Rank", "Function", "Score"])  # CSV 表头
+        for rank, (func_name, score_val) in enumerate(scorelist, 1):
+            csv_writer.writerow([rank, func_name, f"{score_val:.6f}"])
+            result.flush()  # 每次写入后都刷新缓冲区
 
         # 可选：添加分隔线并标记已知的 buggy 函数
         result.write("\n=== Known Buggy Functions ===\n")
         for bf in buggyfiles:
-            # 在完整排名中查找已知 buggy 函数的位置
+            # 分离文件部分和方法部分
+            if ';' in bf:
+                bf_file_part, bf_method_part = bf.split(';', 1)
+            else:
+                bf_file_part, bf_method_part = "", bf
             found = False
             for rank, (func_name, score) in enumerate(scorelist, 1):
-                # 尝试匹配函数名
-                setbf = set(bf.split('/'))
-                seti = set(func_name.split('/'))
-                if setbf.issubset(seti):
-                    result.write(f"Buggy Function: {bf} -> Rank: {rank}, Score: {score:.6f}\n")
+                # 分离当前函数名的文件部分和方法部分
+                if ';' in func_name:
+                    curr_file_part, curr_method_part = func_name.split(';', 1)
+                else:
+                    curr_file_part, curr_method_part = "", func_name
+                # 文件路径匹配
+                file_match = bf_file_part in curr_file_part if bf_file_part else True
+                # 直接比较完整的方法签名（包含参数）
+                method_match = bf_method_part == curr_method_part
+                if file_match and method_match:
+                    result.write(f"Buggy Function: {bf} -> Rank: {rank}, Score: {score:.6f}, Matched: {func_name}\n")
                     found = True
                     break
-
             if not found:
                 result.write(f"Buggy Function: {bf} -> Not found in ranking\n")
-
-        result.write('\n')  # bug之间空行分隔
         result.flush()  # 确保数据写入文件
-
         result.close()  # 关闭结果文件
 
 
@@ -196,14 +169,14 @@ def fileRank(bugids, revisions, configFile):
     cfg.read(configFile)
     infodir = cfg.get('llvm-locations', 'infodir')
     passdir = cfg.get('llvm-locations', 'passdir')
-    resultFile = cfg.get('llvm-locations', 'resultFile')
-    resultFile = resultFile.split('.csv')[0] + '_file' + '.csv'
-    result = open(resultFile, 'w')
+    baseResultFile = cfg.get('llvm-locations', 'resultFile')
 
     # 处理每个bug
     for i in range(len(revisions)):
         rev = revisions[i]  # 当前版本号
         bugId = bugids[i]  # 当前bug ID
+        resultFile = baseResultFile + bugId + '/resultFile_file.csv'
+        result = open(resultFile, 'w')
         result.write(rev + '  bug' + bugId + ':\n')  # 写入标题行
 
         # 读取bug位置信息文件
@@ -305,28 +278,31 @@ def fileRank(bugids, revisions, configFile):
         for j in range(len(scorelist)):
             if scorelist[j][0] == 1.0:
                 number_1po0 += 1
+        # 写入完整的可疑度排名（所有文件）
+        result.write("Rank,File,Score,CoveredStatements\n")  # CSV 表头
+        for rank, (filename, score_val) in enumerate(scorelist, 1):
+            # 获取该文件覆盖的语句数量
+            covered_statements = len(filescore.get(filename, []))
+            result.write(f"{rank},{filename},{score_val:.6f},{covered_statements}\n")
 
-        # 处理已知的buggy文件，在排名中找到对应位置
+        # 添加详细的buggy文件信息
+        result.write(f"\n# Buggy Files Details\n")
         for bf in buggyfiles:
-            # 尝试匹配文件名（处理路径格式差异）
-            for j in range(len(scorelist)):
+            # 在完整排名中查找已知 buggy 文件的位置
+            found_rank = None
+            found_score = None
+            for rank, (filename, score_val) in enumerate(scorelist, 1):
                 setbf = set(bf.split('/'))
-                seti = set(scorelist[j][0].split('/'))
-                if setbf.issubset(seti):  # 如果buggy文件是排名中文件的子集
-                    bf = scorelist[j][0]  # 使用排名中的完整路径
+                seti = set(filename.split('/'))
+                if setbf.issubset(seti):
+                    found_rank = rank
+                    found_score = score_val
                     break
 
-        # 为每个buggy文件计算排名范围
-        for bf in buggyfiles:
-            tmp = []
-            for j in range(len(scorelist)):
-                if fileaggstmtscore[bf] == scorelist[j][1]:  # 找到得分相同的所有位置
-                    tmp.append(j)
-            # 写入结果：文件名,最小排名,最大排名,得分
-            result.write(
-                bf + ',' + str(min(tmp) + 1) + ',' + str(max(tmp) + 1) + ',' + str(fileaggstmtscore[bf]) + '\n')
+            if found_rank is not None:
+                result.write(f"Buggy file: {bf} -> Rank: {found_rank}, Score: {found_score:.6f}\n")
+            else:
+                result.write(f"Buggy file: {bf} -> Not found in ranking\n")
+        result.flush()
+        result.close()
 
-        result.write('\n')  # bug之间空行分隔
-        result.flush()  # 确保数据写入文件
-
-    result.close()  # 关闭结果文件

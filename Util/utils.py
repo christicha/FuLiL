@@ -20,53 +20,98 @@ def findCppByGcda(compilerPath, gcdaPath) :
                     return os.path.abspath(os.path.join(root,cppBaseName))
 
 
+import chardet
+
+def detect_encoding(file_path):
+    """自动检测文件编码"""
+    with open(file_path, 'rb') as f:
+        raw_data = f.read()
+        result = chardet.detect(raw_data)
+        return result.get('encoding', 'utf-8')
+
+
 def findFunByLine(cppFilePath, targetLine):
     basePath = re.sub(r'^.*llvm/', '', cppFilePath)
     if os.path.exists('tags'):
-        os.system('rm tags')
+        os.remove('tags')
+
     cmd = [
-        "ctags", "-n", "--c++-kinds=+p", "--fields=+n", "-o", "tags", cppFilePath
+        "ctags", "-n", "--c++-kinds=+p", "--fields=+n+aS", "-o", "tags", cppFilePath
     ]
     try:
-        subprocess.run(cmd,check=True,capture_output=True,text=True)
+        subprocess.run(cmd, check=True, capture_output=True, text=True)
     except subprocess.CalledProcessError as e:
         print(f"ctags error: {e.stderr}")
         raise
 
     func_tags = []
-    with open("tags", 'r') as f:
-        for line in f:
-            line = line.strip()
-            if not line or line.startswith('!_TAG_'):
-                continue
-            parts = line.split('\t')
-            if len(parts) < 4:
-                continue
-            func_name = parts[0]
-            line_info = parts[2]
-            kind_info = parts[3]
 
-            if kind_info != 'f':
-                continue
+    tags_encoding = detect_encoding("tags")
+    try:
+        with open("tags", 'r', encoding=tags_encoding) as f:
+            for line in f:
+                line = line.strip()
+                if not line or line.startswith('!_TAG_'):
+                    continue
+                parts = line.split('\t')
+                if len(parts) < 4:
+                    continue
+                func_name = parts[0]
+                line_info = parts[2]
+                kind_info = parts[3]
 
-            start_line = int(re.search(r'(\d+);', line_info).group(1))
+                if kind_info != 'f':
+                    continue
 
-            class_name = None
-            for part in parts[4:]:
-                if part.startswith('class:'):
-                    class_name = part.split(':', 1)[1]
-                    break
+                start_line = int(re.search(r'(\d+);', line_info).group(1))
 
-            full_func_name = f"{basePath};{class_name}::{func_name}" if cppFilePath else func_name
-            func_tags.append((full_func_name, start_line))
+                class_name = None
+                signature = None
+
+                for part in parts[4:]:
+                    if part.startswith('class:'):
+                        class_name = part.split(':', 1)[1]
+                    elif part.startswith('signature:'):
+                        signature = part.split(':', 1)[1]
+
+                if signature:
+                    signature = signature.replace('\n', ' ').replace('\r', ' ')
+                    signature = re.sub(r'\s+', ' ', signature)  # 合并多个空格
+                    signature = signature.strip()
+                    if signature.endswith('/'):
+                        signature = signature[:-1].strip()
+                    if signature.endswith(';'):
+                        signature = signature[:-1].strip()
+
+                    full_func_name = f"{func_name}{signature}"
+                else:
+                    full_func_name = func_name
+
+                if class_name:
+                    full_func_name = f"{class_name}::{full_func_name}"
+
+                full_func_name = re.sub(r'\s+', ' ', full_func_name)  # 合并多个空格
+                full_func_name = full_func_name.strip()
+                full_func_name = f"{basePath};{full_func_name}" if cppFilePath else full_func_name
+
+                func_tags.append((full_func_name, start_line))
+    except Exception as e:
+        print(f"Error reading tags file: {e}")
+        return {}
 
     func_tags.sort(key=lambda x: x[1])
     if not func_tags:
         print("No any function tags")
         return {}
 
-    with open(cppFilePath,'r') as f:
-        total_lines = sum(1 for _ in f)
+    # 自动检测源文件编码
+    src_encoding = detect_encoding(cppFilePath)
+    try:
+        with open(cppFilePath, 'r', encoding=src_encoding) as f:
+            total_lines = sum(1 for _ in f)
+    except Exception as e:
+        print(f"Error reading source file {cppFilePath}: {e}")
+        return {}
 
     func_ranges = []
 
@@ -78,10 +123,11 @@ def findFunByLine(cppFilePath, targetLine):
     line_to_fun = {}
 
     for line in targetLine:
-        for func_name,start,end in func_ranges:
-            line = int(line)
+        line = int(line)
+        for func_name, start, end in func_ranges:
             if start <= line <= end:
                 line_to_fun[line] = func_name
+                break
 
     return line_to_fun
 
