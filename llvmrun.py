@@ -1,6 +1,6 @@
 from configparser import ConfigParser
 from llvm.generateMutate import generateMutate
-from llvm.rank import fileRank
+from llvm.rank import fileRank, functionRank
 
 config = ConfigParser()
 config.read('./config/config.ini', encoding='utf-8')
@@ -26,12 +26,48 @@ with open(buglist, 'r') as f:
         compileOptionWrongs.append(items[3])
         checks.append(items[4])
 
-for i in range(len(bugIds)):
+from concurrent.futures import ProcessPoolExecutor, as_completed
+
+def process_bugid_wrapper(args):
+    i, bugIds, revisions, compileOptionRights, compileOptionWrongs, checks, configPath, passBasePath = args
+
     bugid = bugIds[i]
     revision = revisions[i]
     compileOptionRight = compileOptionRights[i]
     compileOptionWrong = compileOptionWrongs[i]
     check = checks[i]
+
     failcovPath = passBasePath + bugid + '/'
+
     generateMutate(bugid, revision, check, compileOptionRight, compileOptionWrong, configPath)
     fileRank(bugid, revision, configPath)
+    functionRank(bugid, revision, configPath)
+
+    return bugid
+
+
+with ProcessPoolExecutor(max_workers=8) as executor:
+    # 提交所有任务
+    future_to_bugid = {
+        executor.submit(process_bugid_wrapper, (
+            i, bugIds, revisions, compileOptionRights, compileOptionWrongs, checks, configPath, passBasePath
+        )): bugIds[i]
+        for i in range(len(bugIds))
+    }
+
+    # 收集结果
+    completed_count = 0
+    total_count = len(bugIds)
+
+    for future in as_completed(future_to_bugid):
+        bugid = future_to_bugid[future]
+        try:
+            result = future.result()
+            completed_count += 1
+            print(f"进度: {completed_count}/{total_count} - BugID {bugid} 处理完成")
+        except Exception as e:
+            completed_count += 1
+            print(f"进度: {completed_count}/{total_count} - BugID {bugid} 处理失败: {e}")
+
+
+

@@ -4,43 +4,94 @@
 !_TAG_PROGRAM_NAME	Exuberant Ctags	//
 !_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
 !_TAG_PROGRAM_VERSION	5.9~svn20110310	//
-DEBUG_TYPE	/home/chris/FLL/../RecBi-workplace/llvmbugs/compilers/r181189/r181189/llvm/lib/CodeGen/SplitKit.cpp	15;"	d	line:15	file:
-SplitAnalysis	/home/chris/FLL/../RecBi-workplace/llvmbugs/compilers/r181189/r181189/llvm/lib/CodeGen/SplitKit.cpp	42;"	f	line:42	class:SplitAnalysis	signature:(const VirtRegMap &vrm, const LiveIntervals &lis, const MachineLoopInfo &mli)
-SplitEditor	/home/chris/FLL/../RecBi-workplace/llvmbugs/compilers/r181189/r181189/llvm/lib/CodeGen/SplitKit.cpp	325;"	f	line:325	class:SplitEditor	signature:(SplitAnalysis &sa, LiveIntervals &lis, VirtRegMap &vrm, MachineDominatorTree &mdt)
-analyze	/home/chris/FLL/../RecBi-workplace/llvmbugs/compilers/r181189/r181189/llvm/lib/CodeGen/SplitKit.cpp	313;"	f	line:313	class:SplitAnalysis	signature:(const LiveInterval *li)
-analyzeUses	/home/chris/FLL/../RecBi-workplace/llvmbugs/compilers/r181189/r181189/llvm/lib/CodeGen/SplitKit.cpp	122;"	f	line:122	class:SplitAnalysis	signature:()
-calcLiveBlockInfo	/home/chris/FLL/../RecBi-workplace/llvmbugs/compilers/r181189/r181189/llvm/lib/CodeGen/SplitKit.cpp	172;"	f	line:172	class:SplitAnalysis	signature:()
-clear	/home/chris/FLL/../RecBi-workplace/llvmbugs/compilers/r181189/r181189/llvm/lib/CodeGen/SplitKit.cpp	53;"	f	line:53	class:SplitAnalysis	signature:()
-computeLastSplitPoint	/home/chris/FLL/../RecBi-workplace/llvmbugs/compilers/r181189/r181189/llvm/lib/CodeGen/SplitKit.cpp	61;"	f	line:61	class:SplitAnalysis	signature:(unsigned Num)
-countLiveBlocks	/home/chris/FLL/../RecBi-workplace/llvmbugs/compilers/r181189/r181189/llvm/lib/CodeGen/SplitKit.cpp	276;"	f	line:276	class:SplitAnalysis	signature:(const LiveInterval *cli) const
-defFromParent	/home/chris/FLL/../RecBi-workplace/llvmbugs/compilers/r181189/r181189/llvm/lib/CodeGen/SplitKit.cpp	428;"	f	line:428	class:SplitEditor	signature:(unsigned RegIdx, VNInfo *ParentVNI, SlotIndex UseIdx, MachineBasicBlock &MBB, MachineBasicBlock::iterator I)
-defValue	/home/chris/FLL/../RecBi-workplace/llvmbugs/compilers/r181189/r181189/llvm/lib/CodeGen/SplitKit.cpp	372;"	f	line:372	class:SplitEditor	signature:(unsigned RegIdx, const VNInfo *ParentVNI, SlotIndex Idx)
-deleteRematVictims	/home/chris/FLL/../RecBi-workplace/llvmbugs/compilers/r181189/r181189/llvm/lib/CodeGen/SplitKit.cpp	1016;"	f	line:1016	class:SplitEditor	signature:()
-dump	/home/chris/FLL/../RecBi-workplace/llvmbugs/compilers/r181189/r181189/llvm/lib/CodeGen/SplitKit.cpp	360;"	f	line:360	class:SplitEditor	signature:() const
-enterIntvAfter	/home/chris/FLL/../RecBi-workplace/llvmbugs/compilers/r181189/r181189/llvm/lib/CodeGen/SplitKit.cpp	495;"	f	line:495	class:SplitEditor	signature:(SlotIndex Idx)
-enterIntvAtEnd	/home/chris/FLL/../RecBi-workplace/llvmbugs/compilers/r181189/r181189/llvm/lib/CodeGen/SplitKit.cpp	513;"	f	line:513	class:SplitEditor	signature:(MachineBasicBlock &MBB)
-enterIntvBefore	/home/chris/FLL/../RecBi-workplace/llvmbugs/compilers/r181189/r181189/llvm/lib/CodeGen/SplitKit.cpp	478;"	f	line:478	class:SplitEditor	signature:(SlotIndex Idx)
-extendPHIKillRanges	/home/chris/FLL/../RecBi-workplace/llvmbugs/compilers/r181189/r181189/llvm/lib/CodeGen/SplitKit.cpp	942;"	f	line:942	class:SplitEditor	signature:()
-findShallowDominator	/home/chris/FLL/../RecBi-workplace/llvmbugs/compilers/r181189/r181189/llvm/lib/CodeGen/SplitKit.cpp	676;"	f	line:676	class:SplitEditor	signature:(MachineBasicBlock *MBB, MachineBasicBlock *DefMBB)
-finish	/home/chris/FLL/../RecBi-workplace/llvmbugs/compilers/r181189/r181189/llvm/lib/CodeGen/SplitKit.cpp	1043;"	f	line:1043	class:SplitEditor	signature:(SmallVectorImpl<unsigned> *LRMap)
-forceRecompute	/home/chris/FLL/../RecBi-workplace/llvmbugs/compilers/r181189/r181189/llvm/lib/CodeGen/SplitKit.cpp	408;"	f	line:408	class:SplitEditor	signature:(unsigned RegIdx, const VNInfo *ParentVNI)
-getLastSplitPointIter	/home/chris/FLL/../RecBi-workplace/llvmbugs/compilers/r181189/r181189/llvm/lib/CodeGen/SplitKit.cpp	114;"	f	line:114	class:SplitAnalysis	signature:(MachineBasicBlock *MBB)
-hoistCopiesForSize	/home/chris/FLL/../RecBi-workplace/llvmbugs/compilers/r181189/r181189/llvm/lib/CodeGen/SplitKit.cpp	729;"	f	line:729	class:SplitEditor	signature:()
-isOriginalEndpoint	/home/chris/FLL/../RecBi-workplace/llvmbugs/compilers/r181189/r181189/llvm/lib/CodeGen/SplitKit.cpp	299;"	f	line:299	class:SplitAnalysis	signature:(SlotIndex Idx) const
-leaveIntvAfter	/home/chris/FLL/../RecBi-workplace/llvmbugs/compilers/r181189/r181189/llvm/lib/CodeGen/SplitKit.cpp	543;"	f	line:543	class:SplitEditor	signature:(SlotIndex Idx)
-leaveIntvAtTop	/home/chris/FLL/../RecBi-workplace/llvmbugs/compilers/r181189/r181189/llvm/lib/CodeGen/SplitKit.cpp	593;"	f	line:593	class:SplitEditor	signature:(MachineBasicBlock &MBB)
-leaveIntvBefore	/home/chris/FLL/../RecBi-workplace/llvmbugs/compilers/r181189/r181189/llvm/lib/CodeGen/SplitKit.cpp	574;"	f	line:574	class:SplitEditor	signature:(SlotIndex Idx)
-openIntv	/home/chris/FLL/../RecBi-workplace/llvmbugs/compilers/r181189/r181189/llvm/lib/CodeGen/SplitKit.cpp	460;"	f	line:460	class:SplitEditor	signature:()
-overlapIntv	/home/chris/FLL/../RecBi-workplace/llvmbugs/compilers/r181189/r181189/llvm/lib/CodeGen/SplitKit.cpp	611;"	f	line:611	class:SplitEditor	signature:(SlotIndex Start, SlotIndex End)
-removeBackCopies	/home/chris/FLL/../RecBi-workplace/llvmbugs/compilers/r181189/r181189/llvm/lib/CodeGen/SplitKit.cpp	631;"	f	line:631	class:SplitEditor	signature:(SmallVectorImpl<VNInfo*> &Copies)
-reset	/home/chris/FLL/../RecBi-workplace/llvmbugs/compilers/r181189/r181189/llvm/lib/CodeGen/SplitKit.cpp	340;"	f	line:340	class:SplitEditor	signature:(LiveRangeEdit &LRE, ComplementSpillMode SM)
-rewriteAssigned	/home/chris/FLL/../RecBi-workplace/llvmbugs/compilers/r181189/r181189/llvm/lib/CodeGen/SplitKit.cpp	969;"	f	line:969	class:SplitEditor	signature:(bool ExtendRanges)
-selectIntv	/home/chris/FLL/../RecBi-workplace/llvmbugs/compilers/r181189/r181189/llvm/lib/CodeGen/SplitKit.cpp	471;"	f	line:471	class:SplitEditor	signature:(unsigned Idx)
-shouldSplitSingleBlock	/home/chris/FLL/../RecBi-workplace/llvmbugs/compilers/r181189/r181189/llvm/lib/CodeGen/SplitKit.cpp	1132;"	f	line:1132	class:SplitAnalysis	signature:(const BlockInfo &BI, bool SingleInstrs) const
-splitLiveThroughBlock	/home/chris/FLL/../RecBi-workplace/llvmbugs/compilers/r181189/r181189/llvm/lib/CodeGen/SplitKit.cpp	1177;"	f	line:1177	class:SplitEditor	signature:(unsigned MBBNum, unsigned IntvIn, SlotIndex LeaveBefore, unsigned IntvOut, SlotIndex EnterAfter)
-splitRegInBlock	/home/chris/FLL/../RecBi-workplace/llvmbugs/compilers/r181189/r181189/llvm/lib/CodeGen/SplitKit.cpp	1281;"	f	line:1281	class:SplitEditor	signature:(const SplitAnalysis::BlockInfo &BI, unsigned IntvIn, SlotIndex LeaveBefore)
-splitRegOutBlock	/home/chris/FLL/../RecBi-workplace/llvmbugs/compilers/r181189/r181189/llvm/lib/CodeGen/SplitKit.cpp	1373;"	f	line:1373	class:SplitEditor	signature:(const SplitAnalysis::BlockInfo &BI, unsigned IntvOut, SlotIndex EnterAfter)
-splitSingleBlock	/home/chris/FLL/../RecBi-workplace/llvmbugs/compilers/r181189/r181189/llvm/lib/CodeGen/SplitKit.cpp	1150;"	f	line:1150	class:SplitEditor	signature:(const SplitAnalysis::BlockInfo &BI)
-transferValues	/home/chris/FLL/../RecBi-workplace/llvmbugs/compilers/r181189/r181189/llvm/lib/CodeGen/SplitKit.cpp	834;"	f	line:834	class:SplitEditor	signature:()
-useIntv	/home/chris/FLL/../RecBi-workplace/llvmbugs/compilers/r181189/r181189/llvm/lib/CodeGen/SplitKit.cpp	532;"	f	line:532	class:SplitEditor	signature:(const MachineBasicBlock &MBB)
-useIntv	/home/chris/FLL/../RecBi-workplace/llvmbugs/compilers/r181189/r181189/llvm/lib/CodeGen/SplitKit.cpp	536;"	f	line:536	class:SplitEditor	signature:(SlotIndex Start, SlotIndex End)
+AlmostDeadIV	/home/chris/RecBi-workplace/llvmbugs/compilers/r181995/r181995/llvm/lib/Transforms/Scalar/IndVarSimplify.cpp	1357;"	f	line:1357	file:	signature:(PHINode *Phi, BasicBlock *LatchBlock, Value *Cond)
+Changed	/home/chris/RecBi-workplace/llvmbugs/compilers/r181995/r181995/llvm/lib/Transforms/Scalar/IndVarSimplify.cpp	75;"	m	line:75	class:__anon1::IndVarSimplify	file:	access:private
+CloneIVUser	/home/chris/RecBi-workplace/llvmbugs/compilers/r181995/r181995/llvm/lib/Transforms/Scalar/IndVarSimplify.cpp	746;"	p	line:746	class:__anon3::WidenIV	file:	access:protected	signature:(NarrowIVDefUse DU)
+CloneIVUser	/home/chris/RecBi-workplace/llvmbugs/compilers/r181995/r181995/llvm/lib/Transforms/Scalar/IndVarSimplify.cpp	786;"	f	line:786	class:WidenIV	signature:(NarrowIVDefUse DU)
+ConvertToSInt	/home/chris/RecBi-workplace/llvmbugs/compilers/r181995/r181995/llvm/lib/Transforms/Scalar/IndVarSimplify.cpp	221;"	f	line:221	file:	signature:(const APFloat &APF, int64_t &IntVal)
+CreateWideIV	/home/chris/RecBi-workplace/llvmbugs/compilers/r181995/r181995/llvm/lib/Transforms/Scalar/IndVarSimplify.cpp	1011;"	f	line:1011	class:WidenIV	signature:(SCEVExpander &Rewriter)
+CreateWideIV	/home/chris/RecBi-workplace/llvmbugs/compilers/r181995/r181995/llvm/lib/Transforms/Scalar/IndVarSimplify.cpp	740;"	p	line:740	class:__anon3::WidenIV	file:	access:public	signature:(SCEVExpander &Rewriter)
+DEBUG_TYPE	/home/chris/RecBi-workplace/llvmbugs/compilers/r181995/r181995/llvm/lib/Transforms/Scalar/IndVarSimplify.cpp	27;"	d	line:27	file:
+DT	/home/chris/RecBi-workplace/llvmbugs/compilers/r181995/r181995/llvm/lib/Transforms/Scalar/IndVarSimplify.cpp	70;"	m	line:70	class:__anon1::IndVarSimplify	file:	access:private
+DT	/home/chris/RecBi-workplace/llvmbugs/compilers/r181995/r181995/llvm/lib/Transforms/Scalar/IndVarSimplify.cpp	711;"	m	line:711	class:__anon3::WidenIV	file:	access:private
+DeadInsts	/home/chris/RecBi-workplace/llvmbugs/compilers/r181995/r181995/llvm/lib/Transforms/Scalar/IndVarSimplify.cpp	717;"	m	line:717	class:__anon3::WidenIV	file:	access:private
+DeadInsts	/home/chris/RecBi-workplace/llvmbugs/compilers/r181995/r181995/llvm/lib/Transforms/Scalar/IndVarSimplify.cpp	74;"	m	line:74	class:__anon1::IndVarSimplify	file:	access:private
+FindLoopCounter	/home/chris/RecBi-workplace/llvmbugs/compilers/r181995/r181995/llvm/lib/Transforms/Scalar/IndVarSimplify.cpp	1387;"	f	line:1387	file:	signature:(Loop *L, const SCEV *BECount, ScalarEvolution *SE, DominatorTree *DT, const DataLayout *TD)
+GetExtendedOperandRecurrence	/home/chris/RecBi-workplace/llvmbugs/compilers/r181995/r181995/llvm/lib/Transforms/Scalar/IndVarSimplify.cpp	750;"	p	line:750	class:__anon3::WidenIV	file:	access:protected	signature:(NarrowIVDefUse DU)
+GetExtendedOperandRecurrence	/home/chris/RecBi-workplace/llvmbugs/compilers/r181995/r181995/llvm/lib/Transforms/Scalar/IndVarSimplify.cpp	832;"	f	line:832	class:WidenIV	signature:(NarrowIVDefUse DU)
+GetWideRecurrence	/home/chris/RecBi-workplace/llvmbugs/compilers/r181995/r181995/llvm/lib/Transforms/Scalar/IndVarSimplify.cpp	748;"	p	line:748	class:__anon3::WidenIV	file:	access:protected	signature:(Instruction *NarrowUse)
+GetWideRecurrence	/home/chris/RecBi-workplace/llvmbugs/compilers/r181995/r181995/llvm/lib/Transforms/Scalar/IndVarSimplify.cpp	872;"	f	line:872	class:WidenIV	signature:(Instruction *NarrowUse)
+HandleFloatingPointIV	/home/chris/RecBi-workplace/llvmbugs/compilers/r181995/r181995/llvm/lib/Transforms/Scalar/IndVarSimplify.cpp	105;"	p	line:105	class:__anon1::IndVarSimplify	file:	access:private	signature:(Loop *L, PHINode *PH)
+HandleFloatingPointIV	/home/chris/RecBi-workplace/llvmbugs/compilers/r181995/r181995/llvm/lib/Transforms/Scalar/IndVarSimplify.cpp	241;"	f	line:241	class:IndVarSimplify	signature:(Loop *L, PHINode *PN)
+ID	/home/chris/RecBi-workplace/llvmbugs/compilers/r181995/r181995/llvm/lib/Transforms/Scalar/IndVarSimplify.cpp	119;"	m	line:119	class:IndVarSimplify	file:
+ID	/home/chris/RecBi-workplace/llvmbugs/compilers/r181995/r181995/llvm/lib/Transforms/Scalar/IndVarSimplify.cpp	78;"	m	line:78	class:__anon1::IndVarSimplify	file:	access:public
+IndVarSimplify	/home/chris/RecBi-workplace/llvmbugs/compilers/r181995/r181995/llvm/lib/Transforms/Scalar/IndVarSimplify.cpp	67;"	c	line:67	namespace:__anon1	file:
+IndVarSimplify	/home/chris/RecBi-workplace/llvmbugs/compilers/r181995/r181995/llvm/lib/Transforms/Scalar/IndVarSimplify.cpp	79;"	f	line:79	class:__anon1::IndVarSimplify	access:public	signature:()
+IsSigned	/home/chris/RecBi-workplace/llvmbugs/compilers/r181995/r181995/llvm/lib/Transforms/Scalar/IndVarSimplify.cpp	632;"	m	line:632	struct:__anon2::WideIVInfo	file:	access:public
+IsSigned	/home/chris/RecBi-workplace/llvmbugs/compilers/r181995/r181995/llvm/lib/Transforms/Scalar/IndVarSimplify.cpp	705;"	m	line:705	class:__anon3::WidenIV	file:	access:private
+L	/home/chris/RecBi-workplace/llvmbugs/compilers/r181995/r181995/llvm/lib/Transforms/Scalar/IndVarSimplify.cpp	709;"	m	line:709	class:__anon3::WidenIV	file:	access:private
+LI	/home/chris/RecBi-workplace/llvmbugs/compilers/r181995/r181995/llvm/lib/Transforms/Scalar/IndVarSimplify.cpp	68;"	m	line:68	class:__anon1::IndVarSimplify	file:	access:private
+LI	/home/chris/RecBi-workplace/llvmbugs/compilers/r181995/r181995/llvm/lib/Transforms/Scalar/IndVarSimplify.cpp	708;"	m	line:708	class:__anon3::WidenIV	file:	access:private
+LinearFunctionTestReplace	/home/chris/RecBi-workplace/llvmbugs/compilers/r181995/r181995/llvm/lib/Transforms/Scalar/IndVarSimplify.cpp	112;"	p	line:112	class:__anon1::IndVarSimplify	file:	access:private	signature:(Loop *L, const SCEV *BackedgeTakenCount, PHINode *IndVar, SCEVExpander &Rewriter)
+LinearFunctionTestReplace	/home/chris/RecBi-workplace/llvmbugs/compilers/r181995/r181995/llvm/lib/Transforms/Scalar/IndVarSimplify.cpp	1549;"	f	line:1549	class:IndVarSimplify	signature:(Loop *L, const SCEV *BackedgeTakenCount, PHINode *IndVar, SCEVExpander &Rewriter)
+NarrowDef	/home/chris/RecBi-workplace/llvmbugs/compilers/r181995/r181995/llvm/lib/Transforms/Scalar/IndVarSimplify.cpp	686;"	m	line:686	struct:__anon3::NarrowIVDefUse	file:	access:public
+NarrowIV	/home/chris/RecBi-workplace/llvmbugs/compilers/r181995/r181995/llvm/lib/Transforms/Scalar/IndVarSimplify.cpp	630;"	m	line:630	struct:__anon2::WideIVInfo	file:	access:public
+NarrowIVDefUse	/home/chris/RecBi-workplace/llvmbugs/compilers/r181995/r181995/llvm/lib/Transforms/Scalar/IndVarSimplify.cpp	685;"	s	line:685	namespace:__anon3	file:
+NarrowIVDefUse	/home/chris/RecBi-workplace/llvmbugs/compilers/r181995/r181995/llvm/lib/Transforms/Scalar/IndVarSimplify.cpp	690;"	f	line:690	struct:__anon3::NarrowIVDefUse	access:public	signature:()
+NarrowIVDefUse	/home/chris/RecBi-workplace/llvmbugs/compilers/r181995/r181995/llvm/lib/Transforms/Scalar/IndVarSimplify.cpp	692;"	f	line:692	struct:__anon3::NarrowIVDefUse	access:public	signature:(Instruction *ND, Instruction *NU, Instruction *WD)
+NarrowIVUsers	/home/chris/RecBi-workplace/llvmbugs/compilers/r181995/r181995/llvm/lib/Transforms/Scalar/IndVarSimplify.cpp	720;"	m	line:720	class:__anon3::WidenIV	file:	access:private
+NarrowUse	/home/chris/RecBi-workplace/llvmbugs/compilers/r181995/r181995/llvm/lib/Transforms/Scalar/IndVarSimplify.cpp	687;"	m	line:687	struct:__anon3::NarrowIVDefUse	file:	access:public
+OrigPhi	/home/chris/RecBi-workplace/llvmbugs/compilers/r181995/r181995/llvm/lib/Transforms/Scalar/IndVarSimplify.cpp	703;"	m	line:703	class:__anon3::WidenIV	file:	access:private
+RewriteLoopExitValues	/home/chris/RecBi-workplace/llvmbugs/compilers/r181995/r181995/llvm/lib/Transforms/Scalar/IndVarSimplify.cpp	110;"	p	line:110	class:__anon1::IndVarSimplify	file:	access:private	signature:(Loop *L, SCEVExpander &Rewriter)
+RewriteLoopExitValues	/home/chris/RecBi-workplace/llvmbugs/compilers/r181995/r181995/llvm/lib/Transforms/Scalar/IndVarSimplify.cpp	477;"	f	line:477	class:IndVarSimplify	signature:(Loop *L, SCEVExpander &Rewriter)
+RewriteNonIntegerIVs	/home/chris/RecBi-workplace/llvmbugs/compilers/r181995/r181995/llvm/lib/Transforms/Scalar/IndVarSimplify.cpp	106;"	p	line:106	class:__anon1::IndVarSimplify	file:	access:private	signature:(Loop *L)
+RewriteNonIntegerIVs	/home/chris/RecBi-workplace/llvmbugs/compilers/r181995/r181995/llvm/lib/Transforms/Scalar/IndVarSimplify.cpp	439;"	f	line:439	class:IndVarSimplify	signature:(Loop *L)
+SE	/home/chris/RecBi-workplace/llvmbugs/compilers/r181995/r181995/llvm/lib/Transforms/Scalar/IndVarSimplify.cpp	638;"	m	line:638	class:__anon2::WideIVVisitor	file:	access:private
+SE	/home/chris/RecBi-workplace/llvmbugs/compilers/r181995/r181995/llvm/lib/Transforms/Scalar/IndVarSimplify.cpp	69;"	m	line:69	class:__anon1::IndVarSimplify	file:	access:private
+SE	/home/chris/RecBi-workplace/llvmbugs/compilers/r181995/r181995/llvm/lib/Transforms/Scalar/IndVarSimplify.cpp	710;"	m	line:710	class:__anon3::WidenIV	file:	access:private
+SimplifyAndExtend	/home/chris/RecBi-workplace/llvmbugs/compilers/r181995/r181995/llvm/lib/Transforms/Scalar/IndVarSimplify.cpp	108;"	p	line:108	class:__anon1::IndVarSimplify	file:	access:private	signature:(Loop *L, SCEVExpander &Rewriter, LPPassManager &LPM)
+SimplifyAndExtend	/home/chris/RecBi-workplace/llvmbugs/compilers/r181995/r181995/llvm/lib/Transforms/Scalar/IndVarSimplify.cpp	1092;"	f	line:1092	class:IndVarSimplify	signature:(Loop *L, SCEVExpander &Rewriter, LPPassManager &LPM)
+SinkUnusedInvariants	/home/chris/RecBi-workplace/llvmbugs/compilers/r181995/r181995/llvm/lib/Transforms/Scalar/IndVarSimplify.cpp	115;"	p	line:115	class:__anon1::IndVarSimplify	file:	access:private	signature:(Loop *L)
+SinkUnusedInvariants	/home/chris/RecBi-workplace/llvmbugs/compilers/r181995/r181995/llvm/lib/Transforms/Scalar/IndVarSimplify.cpp	1643;"	f	line:1643	class:IndVarSimplify	signature:(Loop *L)
+TD	/home/chris/RecBi-workplace/llvmbugs/compilers/r181995/r181995/llvm/lib/Transforms/Scalar/IndVarSimplify.cpp	639;"	m	line:639	class:__anon2::WideIVVisitor	file:	access:private
+TD	/home/chris/RecBi-workplace/llvmbugs/compilers/r181995/r181995/llvm/lib/Transforms/Scalar/IndVarSimplify.cpp	71;"	m	line:71	class:__anon1::IndVarSimplify	file:	access:private
+TLI	/home/chris/RecBi-workplace/llvmbugs/compilers/r181995/r181995/llvm/lib/Transforms/Scalar/IndVarSimplify.cpp	72;"	m	line:72	class:__anon1::IndVarSimplify	file:	access:private
+WI	/home/chris/RecBi-workplace/llvmbugs/compilers/r181995/r181995/llvm/lib/Transforms/Scalar/IndVarSimplify.cpp	642;"	m	line:642	class:__anon2::WideIVVisitor	file:	access:public
+WideDef	/home/chris/RecBi-workplace/llvmbugs/compilers/r181995/r181995/llvm/lib/Transforms/Scalar/IndVarSimplify.cpp	688;"	m	line:688	struct:__anon3::NarrowIVDefUse	file:	access:public
+WideIVInfo	/home/chris/RecBi-workplace/llvmbugs/compilers/r181995/r181995/llvm/lib/Transforms/Scalar/IndVarSimplify.cpp	629;"	s	line:629	namespace:__anon2	file:
+WideIVInfo	/home/chris/RecBi-workplace/llvmbugs/compilers/r181995/r181995/llvm/lib/Transforms/Scalar/IndVarSimplify.cpp	634;"	f	line:634	struct:__anon2::WideIVInfo	access:public	signature:()
+WideIVVisitor	/home/chris/RecBi-workplace/llvmbugs/compilers/r181995/r181995/llvm/lib/Transforms/Scalar/IndVarSimplify.cpp	637;"	c	line:637	namespace:__anon2	file:
+WideIVVisitor	/home/chris/RecBi-workplace/llvmbugs/compilers/r181995/r181995/llvm/lib/Transforms/Scalar/IndVarSimplify.cpp	644;"	f	line:644	class:__anon2::WideIVVisitor	access:public	signature:(PHINode *NarrowIV, ScalarEvolution *SCEV, const DataLayout *TData)
+WideInc	/home/chris/RecBi-workplace/llvmbugs/compilers/r181995/r181995/llvm/lib/Transforms/Scalar/IndVarSimplify.cpp	715;"	m	line:715	class:__anon3::WidenIV	file:	access:private
+WideIncExpr	/home/chris/RecBi-workplace/llvmbugs/compilers/r181995/r181995/llvm/lib/Transforms/Scalar/IndVarSimplify.cpp	716;"	m	line:716	class:__anon3::WidenIV	file:	access:private
+WidePhi	/home/chris/RecBi-workplace/llvmbugs/compilers/r181995/r181995/llvm/lib/Transforms/Scalar/IndVarSimplify.cpp	714;"	m	line:714	class:__anon3::WidenIV	file:	access:private
+WideType	/home/chris/RecBi-workplace/llvmbugs/compilers/r181995/r181995/llvm/lib/Transforms/Scalar/IndVarSimplify.cpp	704;"	m	line:704	class:__anon3::WidenIV	file:	access:private
+WidenIV	/home/chris/RecBi-workplace/llvmbugs/compilers/r181995/r181995/llvm/lib/Transforms/Scalar/IndVarSimplify.cpp	701;"	c	line:701	namespace:__anon3	file:
+WidenIV	/home/chris/RecBi-workplace/llvmbugs/compilers/r181995/r181995/llvm/lib/Transforms/Scalar/IndVarSimplify.cpp	723;"	f	line:723	class:__anon3::WidenIV	access:public	signature:(const WideIVInfo &WI, LoopInfo *LInfo, ScalarEvolution *SEv, DominatorTree *DTree, SmallVectorImpl<WeakVH> &DI)
+WidenIVUse	/home/chris/RecBi-workplace/llvmbugs/compilers/r181995/r181995/llvm/lib/Transforms/Scalar/IndVarSimplify.cpp	752;"	p	line:752	class:__anon3::WidenIV	file:	access:protected	signature:(NarrowIVDefUse DU, SCEVExpander &Rewriter)
+WidenIVUse	/home/chris/RecBi-workplace/llvmbugs/compilers/r181995/r181995/llvm/lib/Transforms/Scalar/IndVarSimplify.cpp	895;"	f	line:895	class:WidenIV	signature:(NarrowIVDefUse DU, SCEVExpander &Rewriter)
+Widened	/home/chris/RecBi-workplace/llvmbugs/compilers/r181995/r181995/llvm/lib/Transforms/Scalar/IndVarSimplify.cpp	719;"	m	line:719	class:__anon3::WidenIV	file:	access:private
+WidestNativeType	/home/chris/RecBi-workplace/llvmbugs/compilers/r181995/r181995/llvm/lib/Transforms/Scalar/IndVarSimplify.cpp	631;"	m	line:631	struct:__anon2::WideIVInfo	file:	access:public
+canExpandBackedgeTakenCount	/home/chris/RecBi-workplace/llvmbugs/compilers/r181995/r181995/llvm/lib/Transforms/Scalar/IndVarSimplify.cpp	1201;"	f	line:1201	file:	signature:(Loop *L, ScalarEvolution *SE)
+createIndVarSimplifyPass	/home/chris/RecBi-workplace/llvmbugs/compilers/r181995/r181995/llvm/lib/Transforms/Scalar/IndVarSimplify.cpp	130;"	f	line:130	class:llvm	signature:()
+genLoopLimit	/home/chris/RecBi-workplace/llvmbugs/compilers/r181995/r181995/llvm/lib/Transforms/Scalar/IndVarSimplify.cpp	1469;"	f	line:1469	file:	signature:(PHINode *IndVar, const SCEV *IVCount, Loop *L, SCEVExpander &Rewriter, ScalarEvolution *SE)
+getAnalysisUsage	/home/chris/RecBi-workplace/llvmbugs/compilers/r181995/r181995/llvm/lib/Transforms/Scalar/IndVarSimplify.cpp	86;"	f	line:86	class:__anon1::IndVarSimplify	access:public	signature:(AnalysisUsage &AU) const
+getExtend	/home/chris/RecBi-workplace/llvmbugs/compilers/r181995/r181995/llvm/lib/Transforms/Scalar/IndVarSimplify.cpp	743;"	p	line:743	class:__anon3::WidenIV	file:	access:protected	signature:(Value *NarrowOper, Type *WideType, bool IsSigned, Instruction *Use)
+getExtend	/home/chris/RecBi-workplace/llvmbugs/compilers/r181995/r181995/llvm/lib/Transforms/Scalar/IndVarSimplify.cpp	769;"	f	line:769	class:WidenIV	signature:(Value *NarrowOper, Type *WideType, bool IsSigned, Instruction *Use)
+getInsertPointForUses	/home/chris/RecBi-workplace/llvmbugs/compilers/r181995/r181995/llvm/lib/Transforms/Scalar/IndVarSimplify.cpp	190;"	f	line:190	file:	signature:(Instruction *User, Value *Def, DominatorTree *DT)
+getLoopPhiForCounter	/home/chris/RecBi-workplace/llvmbugs/compilers/r181995/r181995/llvm/lib/Transforms/Scalar/IndVarSimplify.cpp	1224;"	f	line:1224	file:	signature:(Value *IncV, Loop *L, DominatorTree *DT)
+getLoopTest	/home/chris/RecBi-workplace/llvmbugs/compilers/r181995/r181995/llvm/lib/Transforms/Scalar/IndVarSimplify.cpp	1260;"	f	line:1260	file:	signature:(Loop *L)
+hasConcreteDef	/home/chris/RecBi-workplace/llvmbugs/compilers/r181995/r181995/llvm/lib/Transforms/Scalar/IndVarSimplify.cpp	1349;"	f	line:1349	file:	signature:(Value *V)
+hasConcreteDefImpl	/home/chris/RecBi-workplace/llvmbugs/compilers/r181995/r181995/llvm/lib/Transforms/Scalar/IndVarSimplify.cpp	1316;"	f	line:1316	file:	signature:(Value *V, SmallPtrSet<Value*, 8> &Visited, unsigned Depth)
+isHighCostExpansion	/home/chris/RecBi-workplace/llvmbugs/compilers/r181995/r181995/llvm/lib/Transforms/Scalar/IndVarSimplify.cpp	1142;"	f	line:1142	file:	signature:(const SCEV *S, BranchInst *BI, SmallPtrSet<const SCEV*, 8> &Processed, ScalarEvolution *SE)
+isLoopInvariant	/home/chris/RecBi-workplace/llvmbugs/compilers/r181995/r181995/llvm/lib/Transforms/Scalar/IndVarSimplify.cpp	761;"	f	line:761	file:	signature:(Value *V, const Loop *L, const DominatorTree *DT)
+isValidRewrite	/home/chris/RecBi-workplace/llvmbugs/compilers/r181995/r181995/llvm/lib/Transforms/Scalar/IndVarSimplify.cpp	103;"	p	line:103	class:__anon1::IndVarSimplify	file:	access:private	signature:(Value *FromVal, Value *ToVal)
+isValidRewrite	/home/chris/RecBi-workplace/llvmbugs/compilers/r181995/r181995/llvm/lib/Transforms/Scalar/IndVarSimplify.cpp	138;"	f	line:138	class:IndVarSimplify	signature:(Value *FromVal, Value *ToVal)
+needsLFTR	/home/chris/RecBi-workplace/llvmbugs/compilers/r181995/r181995/llvm/lib/Transforms/Scalar/IndVarSimplify.cpp	1276;"	f	line:1276	file:	signature:(Loop *L, DominatorTree *DT)
+pushNarrowIVUsers	/home/chris/RecBi-workplace/llvmbugs/compilers/r181995/r181995/llvm/lib/Transforms/Scalar/IndVarSimplify.cpp	754;"	p	line:754	class:__anon3::WidenIV	file:	access:protected	signature:(Instruction *NarrowDef, Instruction *WideDef)
+pushNarrowIVUsers	/home/chris/RecBi-workplace/llvmbugs/compilers/r181995/r181995/llvm/lib/Transforms/Scalar/IndVarSimplify.cpp	988;"	f	line:988	class:WidenIV	signature:(Instruction *NarrowDef, Instruction *WideDef)
+releaseMemory	/home/chris/RecBi-workplace/llvmbugs/compilers/r181995/r181995/llvm/lib/Transforms/Scalar/IndVarSimplify.cpp	99;"	f	line:99	class:__anon1::IndVarSimplify	file:	access:private	signature:()
+runOnLoop	/home/chris/RecBi-workplace/llvmbugs/compilers/r181995/r181995/llvm/lib/Transforms/Scalar/IndVarSimplify.cpp	1730;"	f	line:1730	class:IndVarSimplify	signature:(Loop *L, LPPassManager &LPM)
+runOnLoop	/home/chris/RecBi-workplace/llvmbugs/compilers/r181995/r181995/llvm/lib/Transforms/Scalar/IndVarSimplify.cpp	84;"	p	line:84	class:__anon1::IndVarSimplify	file:	access:public	signature:(Loop *L, LPPassManager &LPM)
+visitCast	/home/chris/RecBi-workplace/llvmbugs/compilers/r181995/r181995/llvm/lib/Transforms/Scalar/IndVarSimplify.cpp	649;"	p	line:649	class:__anon2::WideIVVisitor	file:	access:public	signature:(CastInst *Cast)
+visitCast	/home/chris/RecBi-workplace/llvmbugs/compilers/r181995/r181995/llvm/lib/Transforms/Scalar/IndVarSimplify.cpp	656;"	f	line:656	class:WideIVVisitor	signature:(CastInst *Cast)

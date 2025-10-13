@@ -8,12 +8,12 @@ compilerBasePath = config.get('llvm-locations', 'compilersdir')
 baseResultPath = config.get('llvm-locations', 'resultFile')
 buglist = config.get('llvm-locations', 'bugList')
 infoBasePath = config.get('llvm-locations', 'infodir')
-benchmarkPath = config.get('llvm-locations','benchmark')
+benchmarkPath = config.get('llvm-locations', 'benchmark')
 
 bugIds = []
 revisions = []
-compileOptionRight = []
-compileOptionWrong = []
+compileOptionRights = []
+compileOptionWrongs = []
 
 with open(buglist, 'r') as f:
     for line in f:
@@ -21,50 +21,91 @@ with open(buglist, 'r') as f:
         items = line.split(',')
         bugIds.append(items[0])
         revisions.append(items[1])
-        compileOptionRight.append(items[2])
-        compileOptionWrong.append(items[3])
+        compileOptionRights.append(items[2])
+        compileOptionWrongs.append(items[3])
 
 
-def collectcov(bugid, revision, resultPath):
-    covdir = compilerBasePath + revision + '/' + revision + '-build'
+def exccmd(cmd):
+    p = os.popen(cmd, "r")
+    rs = []
+    line = ""
+    while True:
+        line = p.readline()
+
+        if not line:
+            break
+        # print line
+        # rs.append(line.strip())
+    p.close()
+    return rs
+
+
+def collect(compilersdir, infodir, revision, wrongoption):
+
+    testname = 'fail'
+
+    covdir = compilersdir
+    gccdir = covdir + '/bin'
+    resdir = infodir
+
+    os.chdir(resdir)
+
+    # if os.path.exists(resdir + '/' + testname):
+    #     exccmd('rm -rf ' + resdir + '/' + testname)
+
+    exccmd('mkdir ' + resdir  + testname)
+    if os.path.exists(resdir + testname + '/method_info.txt') \
+            and os.path.exists(resdir + '/' + testname + '/stmt_info.txt'):
+        methodfile = open(resdir + '/' + testname + '/method_info.txt', 'r')
+        methodlines = methodfile.readlines()
+        methodfile.close()
+        stmtfile = open(resdir + '/' + testname + '/stmt_info.txt', 'r')
+        stmtlines = stmtfile.readlines()
+        stmtfile.close()
+        if len(stmtlines) > 0 and len(methodlines) > 0:
+            return
+
+    methodfile = open(resdir + '/failcov' + '/method_info.txt', 'w')
+    stmtfile = open(resdir + '/failcov' + '/stmt_info.txt', 'w')
+    # delete all .gcda files
+    exccmd('find ' + covdir + ' -name \"*.gcda\" | xargs rm -f')
+    # compile test program
+    exccmd(gccdir + '/clang ' + wrongoption + ' ' + testname + '.c')  # change per bug
+
     if os.path.exists('gcdalist'):
-        os.system('rm gcdalist')
-    os.system('find ' + covdir + ' -name \"*.gcda\" > gcdalist')
+        exccmd('rm gcdalist')
+    exccmd('find ' + covdir + ' -name \"*.gcda\" > gcdalist')
+
     f = open('gcdalist')
     lines = f.readlines()
     f.close()
-    if not os.path.exists(resultPath):
-        os.system('mkdir -p ' + resultPath)
-    methodfile = open(resultPath + '/method_info.txt', 'w')
-    stmtfile = open(resultPath + '/stmt_info.txt', 'w')
 
     for i in range(len(lines)):
-        os.system('rm *.gcov')
         gcdafile = lines[i].strip()
-        if '/clang/test/' in gcdafile:
+        if '/clang/test/' in gcdafile:  # ?
             continue
-        os.system('rm *.gcov')
+        exccmd('rm *.gcov')
         if os.path.exists('gcovfile'):
-            os.system('rm gcovfile')
-        os.system('gcov -f ' + gcdafile + ' > gcovfile')
+            exccmd('rm gcovfile')
+        exccmd('gcov -f ' + gcdafile + ' > gcovfile')
         if not os.path.exists('./' + gcdafile.strip().split('/')[-1].split('.gcda')[0] + '.gcov'):
             continue
-
         f = open('gcovfile')
         gcovlines = f.readlines()
         f.close()
-
         for j in range(len(gcovlines)):
             if 'Function \'' in gcovlines[j].strip():
-                if 'Lines executed:' in gcovlines[j + 1].strip() and float(
-                        gcovlines[j + 1].strip().split('Lines executed:')[1].split('%')[0].strip()) != 0.0:
-                    methodfile.write(
-                        gcdafile.split(covdir + '/')[-1] + ',' + gcovlines[j].strip().split('\'')[1] + ',' +
-                        gcovlines[j + 1].strip().split('Lines executed:')[1].split('%')[0].strip() + ',' +
-                        gcovlines[j + 1].strip().split('of')[-1].strip() + '\n')
+                if 'Lines executed:' in gcovlines[j + 1].strip() and \
+                        float(gcovlines[j + 1].strip().split('Lines executed:')[1].split('%')[0].strip()) != 0.0:
+                    methodfile.write(gcdafile.split(covdir + '/')[-1] + ',' + gcovlines[j].strip().split('\'')[1]
+                                     + ',' + gcovlines[j + 1].strip().split('Lines executed:')[1].split('%')[
+                                         0].strip() +
+                                     ',' + gcovlines[j + 1].strip().split('of')[-1].strip() + '\n')
+
         f = open(gcdafile.strip().split('/')[-1].split('.gcda')[0] + '.gcov')
         stmtlines = f.readlines()
         f.close()
+
         tmp = []
         for j in range(len(stmtlines)):
             if stmtlines[j] == '------------------\n':
@@ -76,11 +117,14 @@ def collectcov(bugid, revision, resultPath):
         if len(tmp) == 0:
             continue
         stmtfile.write(gcdafile.split(covdir + '/')[-1] + ':' + ','.join(tmp) + '\n')
+    stmtfile.close()
+    methodfile.close()
 
 
 for i in range(len(bugIds)):
     bugid = bugIds[i]
     revision = revisions[i]
+    compileOptionWrong = compileOptionWrongs[i]
     failcovPath = infoBasePath + bugid + '/'
     if not os.path.exists(failcovPath):
         os.makedirs(failcovPath)
@@ -92,10 +136,4 @@ for i in range(len(bugIds)):
             shutil.copy2(filePath, targetPath)
     os.chdir(failcovPath)
     compilerPath = compilerBasePath + revision + '/' + revision + '-build'
-    os.system('find ' + compilerPath + ' -name \"*.gcda\" | xargs rm -f')
-    os.system(compilerPath + '/bin/clang' + ' ' + 'fail.c')
-    os.system('{ timeout 10 ./a.out; echo $? ; } >oriwrongfile 2>&1')
-    resultPath = failcovPath + 'failcov'
-    if not os.path.exists(resultPath):
-        os.mkdir(resultPath)
-    collectcov(bugid, revision, resultPath)
+    collect(compilerPath, failcovPath, revision, compileOptionWrong)

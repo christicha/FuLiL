@@ -119,6 +119,7 @@ def findFunByLine(cppFilePath, targetLine):
         func_name, start = func_tags[i]
         end = func_tags[i + 1][1] - 1 if i + 1 < len(func_tags) else total_lines
         func_ranges.append((func_name, start, end))
+        # print(f"function:{func_name} start:{start} end:{end}")
 
     line_to_fun = {}
 
