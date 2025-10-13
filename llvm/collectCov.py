@@ -1,14 +1,14 @@
 import os.path
 from configparser import ConfigParser
 
-config = ConfigParser()
-config.read('../config/config.ini', encoding='utf-8')
-compilerBasePath = config.get('llvm-locations', 'compilersdir')
-passdir = config.get('llvm-locations', 'passdir')
-buglist = config.get('llvm-locations', 'bugList')
 
-def collectcov(bugid, revision, resultPath):
-    workpath = passdir+'/'+bugid
+def collectcov(bugid, revision, resultPath, configPath):
+    config = ConfigParser()
+    config.read(configPath)
+    compilerBasePath = config.get('llvm-locations', 'compilersdir')
+    passdir = config.get('llvm-locations', 'passdir')
+    buglist = config.get('llvm-locations', 'bugList')
+    workpath = passdir + '/' + bugid
     os.chdir(workpath)
     covdir = compilerBasePath + revision + '/' + revision + '-build'
     if os.path.exists('gcdalist'):
@@ -18,7 +18,7 @@ def collectcov(bugid, revision, resultPath):
     lines = f.readlines()
     f.close()
     if not os.path.exists(resultPath):
-        os.system('mkdir -p '+resultPath)
+        os.system('mkdir -p ' + resultPath)
     methodfile = open(resultPath + '/method_info.txt', 'w')
     stmtfile = open(resultPath + '/stmt_info.txt', 'w')
 

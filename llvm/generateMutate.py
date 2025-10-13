@@ -10,12 +10,7 @@ from llvm.check import checkIsPass_wrongcodeOneline, checkIsPass_zeroandsegmento
     checkIsPass_zeroandonenumber
 from llvm.collectCov import collectcov
 
-config = ConfigParser()
-config.read('../config/config.ini', encoding='utf-8')
-baseInfoDir = config.get('llvm-locations', 'infodir')
-actionPath = config.get('llvm-locations', 'actionFile')
-passdir = config.get('llvm-locations', 'passdir')
-compilerBasePath = config.get('llvm-locations', 'compilersdir')
+
 ub_set = set()
 syn_err_set = set()
 fail_prog_set = set()
@@ -108,7 +103,15 @@ def add_comment_before_string(file_path):
         f.writelines(lines)
 
 
-def generateMutate(bugid, revision, checkpass, compileOptionRight, compileOptionWrong):
+def generateMutate(bugid, revision, checkpass, compileOptionRight, compileOptionWrong, configPath):
+    print(f"\033[94m bugid:{bugid} revision:{revision} checkpass:{checkpass} compilerOptionRight:{compileOptionRight} compilerOptionWrong:{compileOptionWrong} \033[0m")
+    config = ConfigParser()
+    config.read(configPath)
+    baseInfoDir = config.get('llvm-locations', 'infodir')
+    actionPath = config.get('llvm-locations', 'actionFile')
+    passdir = config.get('llvm-locations', 'passdir')
+    compilerBasePath = config.get('llvm-locations', 'compilersdir')
+    infoBasePath = config.get('llvm-locations', 'infodir')
     workpath = passdir + bugid
     if not os.path.exists(workpath):
         os.system('mkdir -p '+workpath)
@@ -120,6 +123,10 @@ def generateMutate(bugid, revision, checkpass, compileOptionRight, compileOption
     os.makedirs('failing_cases', exist_ok=True)
     os.makedirs('error_cases', exist_ok=True)
     os.makedirs('passcov',exist_ok=True)
+    failcovPath = infoBasePath + bugid + '/'
+    if os.path.exists('oriwrongfile'):
+        os.system('rm oriwrongfile')
+    shutil.copy2(failcovPath+'oriwrongfile', './oriwrongfile')
 
     total_prog = 0
     syn_error_prog = 0
@@ -353,7 +360,7 @@ def generateMutate(bugid, revision, checkpass, compileOptionRight, compileOption
                 stats_file.write(f"Pass {passingcnt:04d}: {pass_filename} - Mutation: {selected}\n")
             passcovdir = f"{workpath}/passcov/pass_{passingcnt:04d}"
             os.system('mkdir -p ' + passcovdir)
-            collectcov(bugid, revision, passcovdir)
+            collectcov(bugid, revision, passcovdir, configPath)
 
         elif flagIsPass == 2:
             # 仍然失败 - 仍然触发bug

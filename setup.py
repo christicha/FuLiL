@@ -1,19 +1,14 @@
-import csv
 import os.path
 import shutil
-import subprocess
-from concurrent.futures import ThreadPoolExecutor, as_completed
-from concurrent.futures import ThreadPoolExecutor
 from configparser import ConfigParser
-import time
 
 config = ConfigParser()
 config.read('./config/config.ini', encoding='utf-8')
 compilerBasePath = config.get('llvm-locations', 'compilersdir')
 baseResultPath = config.get('llvm-locations', 'resultFile')
 buglist = config.get('llvm-locations', 'bugList')
-starttime = '2003-12-18'
 infoBasePath = config.get('llvm-locations', 'infodir')
+benchmarkPath = config.get('llvm-locations','benchmark')
 
 bugIds = []
 revisions = []
@@ -89,7 +84,7 @@ for i in range(len(bugIds)):
     failcovPath = infoBasePath + bugid + '/'
     if not os.path.exists(failcovPath):
         os.makedirs(failcovPath)
-    sourcePath = './benchmark/llvmbugs/' + bugid
+    sourcePath = benchmarkPath + bugid
     for item in os.listdir(sourcePath):
         filePath = os.path.join(sourcePath, item)
         if os.path.isfile(filePath):
@@ -99,6 +94,7 @@ for i in range(len(bugIds)):
     compilerPath = compilerBasePath + revision + '/' + revision + '-build'
     os.system('find ' + compilerPath + ' -name \"*.gcda\" | xargs rm -f')
     os.system(compilerPath + '/bin/clang' + ' ' + 'fail.c')
+    os.system('{ timeout 10 ./a.out; echo $? ; } >oriwrongfile 2>&1')
     resultPath = failcovPath + 'failcov'
     if not os.path.exists(resultPath):
         os.mkdir(resultPath)
