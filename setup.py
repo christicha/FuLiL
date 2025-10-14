@@ -50,27 +50,26 @@ def collect(compilersdir, infodir, revision, wrongoption):
 
     os.chdir(resdir)
 
-    # if os.path.exists(resdir + '/' + testname):
-    #     exccmd('rm -rf ' + resdir + '/' + testname)
-
-    exccmd('mkdir ' + resdir  + testname)
-    if os.path.exists(resdir + testname + '/method_info.txt') \
-            and os.path.exists(resdir + '/' + testname + '/stmt_info.txt'):
-        methodfile = open(resdir + '/' + testname + '/method_info.txt', 'r')
+    if os.path.exists(resdir + 'failcov' + '/method_info.txt') \
+            and os.path.exists(resdir + '/' + 'failcov' + '/stmt_info.txt'):
+        methodfile = open(resdir + '/' + 'failcov' + '/method_info.txt', 'r')
         methodlines = methodfile.readlines()
         methodfile.close()
-        stmtfile = open(resdir + '/' + testname + '/stmt_info.txt', 'r')
+        stmtfile = open(resdir + '/' + 'failcov' + '/stmt_info.txt', 'r')
         stmtlines = stmtfile.readlines()
         stmtfile.close()
         if len(stmtlines) > 0 and len(methodlines) > 0:
             return
 
-    methodfile = open(resdir + '/failcov' + '/method_info.txt', 'w')
-    stmtfile = open(resdir + '/failcov' + '/stmt_info.txt', 'w')
+    methodfile = open(resdir + 'failcov' + '/method_info.txt', 'w')
+    stmtfile = open(resdir + 'failcov' + '/stmt_info.txt', 'w')
     # delete all .gcda files
     exccmd('find ' + covdir + ' -name \"*.gcda\" | xargs rm -f')
     # compile test program
     exccmd(gccdir + '/clang ' + wrongoption + ' ' + testname + '.c')  # change per bug
+    if os.path.exists('oriwrongfile'):
+        os.system('rm oriwrongfile')
+    os.system('{ timeout 10 ./a.out; echo $? ; } >oriwrongfile 2>&1')
 
     if os.path.exists('gcdalist'):
         exccmd('rm gcdalist')
@@ -128,6 +127,7 @@ for i in range(len(bugIds)):
     failcovPath = infoBasePath + bugid + '/'
     if not os.path.exists(failcovPath):
         os.makedirs(failcovPath)
+        os.makedirs(failcovPath+'/failcov')
     sourcePath = benchmarkPath + bugid
     for item in os.listdir(sourcePath):
         filePath = os.path.join(sourcePath, item)

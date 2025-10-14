@@ -26,10 +26,10 @@ def functionRank(bugId, rev, configFile):
         os.mkdir(baseResultFile + bugId)
     with open(resultFile,'w') as f:
         f.write(rev + '  bug' + bugId + ':\n')
+        writer = csv.writer(f)
+        writer.writerow(['Rank', 'Function', 'Score'])
     result = open(resultFile, 'w', newline='', encoding='utf-8')
     csv_writer = csv.writer(result)
-    # 写入修订版本和 bug ID 信息
-    result.write(rev + '  bug' + bugId + ':\n')
 
     locationfile = open(infodir + bugId + '/locations')
     locationlines = locationfile.readlines()
@@ -270,11 +270,9 @@ def fileRank(bugId, rev, configFile):
         if scorelist[j][0] == 1.0:
             number_1po0 += 1
     # 写入完整的可疑度排名（所有文件）
-    result.write("Rank,File,Score,CoveredStatements\n")  # CSV 表头
+    result.write("Rank,File,Score\n")  # CSV 表头
     for rank, (filename, score_val) in enumerate(scorelist, 1):
-        # 获取该文件覆盖的语句数量
-        covered_statements = len(filescore.get(filename, []))
-        result.write(f"{rank},{filename},{score_val:.6f},{covered_statements}\n")
+        result.write(f"{rank},{filename},{score_val:.6f}\n")
 
     # 添加详细的buggy文件信息
     result.write(f"\n# Buggy Files Details\n")
