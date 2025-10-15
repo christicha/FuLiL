@@ -37,8 +37,6 @@ def process_bugid_wrapper(args):
     compileOptionWrong = compileOptionWrongs[i]
     check = checks[i]
 
-    failcovPath = passBasePath + bugid + '/'
-
     generateMutate(bugid, revision, check, compileOptionRight, compileOptionWrong, configPath)
     fileRank(bugid, revision, configPath)
     functionRank(bugid, revision, configPath)

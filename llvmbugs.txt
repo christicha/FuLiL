@@ -1,3 +1,1 @@
-17503,r192089,-O1,-Os,checkIsPass_wrongcodeOneline,install_no
-18000,r195148,-O1,-Os,checkIsPass_wrongcodeOneline,install_no
-18101,r195973,-O1,-Os,checkIsPass_wrongcodeOneline,install_no
+17373,r191356,-O2,-O3,checkIsPass_zeroandsegmentoneline,install_no

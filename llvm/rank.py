@@ -5,6 +5,8 @@ import sys
 from configparser import ConfigParser
 import re
 from collections import defaultdict
+from itertools import islice
+
 from Util import findFunByLine
 
 
@@ -22,12 +24,16 @@ def functionRank(bugId, rev, configFile):
 
     compilerPath = compilerBasePath + rev + '/' + rev + '/llvm'
     resultFile = baseResultFile + bugId + '/resultFile_func.csv'
+
+    fileset = set()
+    with open(baseResultFile + bugId + '/resultFile_file.csv', 'r') as f:
+        for line in islice(f, 1, 21):
+            line = line.strip()
+            items = line.split(',')
+            fileset.add(items[1])
+
     if not os.path.exists(baseResultFile + bugId):
         os.mkdir(baseResultFile + bugId)
-    with open(resultFile,'w') as f:
-        f.write(rev + '  bug' + bugId + ':\n')
-        writer = csv.writer(f)
-        writer.writerow(['Rank', 'Function', 'Score'])
     result = open(resultFile, 'w', newline='', encoding='utf-8')
     csv_writer = csv.writer(result)
 
@@ -72,8 +78,11 @@ def functionRank(bugId, rev, configFile):
     for i in range(len(faillines)):
         faillinesplit = faillines[i].strip().split(',')
         filename = faillinesplit[0].strip().split('.gcda')[0].strip()  # 提取文件名
-        failfileset.add(deleteGcdaPath(filename))
-        filename = compilerPath + '/' + deleteGcdaPath(filename)
+        tempname = deleteGcdaPath(filename)
+        filename = compilerPath + '/' + tempname
+        if tempname not in fileset:
+            continue
+        failfileset.add(tempname)
         if not filename.endswith('.cpp'):  # 只处理.cpp文件
             continue
         stmtlist = faillines[i].strip().split(':')[1].split(',')
@@ -128,7 +137,7 @@ def functionRank(bugId, rev, configFile):
         funcaggstmtscore[key] = float(sum(funcscore[key])) / len(funcscore[key])
 
     scorelist = sorted(funcaggstmtscore.items(), key=lambda d: d[1], reverse=True)
-
+    result.write("Rank,Function,Score\n")
     for rank, (func_name, score_val) in enumerate(scorelist, 1):
         csv_writer.writerow([rank, func_name, f"{score_val:.6f}"])
         result.flush()
@@ -167,8 +176,6 @@ def fileRank(bugId, rev, configFile):
     resultFile = baseResultFile + bugId + '/resultFile_file.csv'
     if not os.path.exists(baseResultFile + bugId):
         os.mkdir(baseResultFile + bugId)
-    with open(resultFile,'w') as f:
-        f.write(rev + '  bug' + bugId + ':\n')  # 写入标题行
     result = open(resultFile, 'w')
     # 读取bug位置信息文件
     locationfile = open(infodir + bugId + '/locations')
@@ -270,7 +277,7 @@ def fileRank(bugId, rev, configFile):
         if scorelist[j][0] == 1.0:
             number_1po0 += 1
     # 写入完整的可疑度排名（所有文件）
-    result.write("Rank,File,Score\n")  # CSV 表头
+    result.write("Rank,Function,Score\n")  # CSV 表头
     for rank, (filename, score_val) in enumerate(scorelist, 1):
         result.write(f"{rank},{filename},{score_val:.6f}\n")
 
