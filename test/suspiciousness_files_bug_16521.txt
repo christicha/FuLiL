@@ -1,0 +1,24 @@
+文件级别缺陷定位结果 - Bug 16521
+==================================================================================================================================
+排名     平均可疑度        语句数      高可疑    中可疑    低可疑    文件名
+==================================================================================================================================
+1      0.716566     79       46     33     0      lib/Transforms/InstCombine/InstCombineAndOrXor.cpp
+2      0.681231     17       6      11     0      lib/Target/X86/Utils/X86ShuffleDecode.cpp
+3      0.657250     280      127    153    0      lib/CodeGen/MachineBasicBlock.cpp
+4      0.631331     215      81     134    0      lib/CodeGen/ScheduleDAG.cpp
+5      0.610250     90       25     65     0      lib/Transforms/InstCombine/InstCombineAddSub.cpp
+6      0.603962     139      42     97     0      lib/CodeGen/SelectionDAG/FunctionLoweringInfo.cpp
+7      0.590591     270      46     224    0      lib/CodeGen/ExecutionDepsFix.cpp
+8      0.585336     19       0      19     0      lib/Transforms/InstCombine/InstCombineMulDivRem.cpp
+9      0.585320     83       0      83     0      lib/Transforms/InstCombine/InstCombineVectorOps.cpp
+10     0.580150     40       0      40     0      lib/Transforms/InstCombine/InstCombineCasts.cpp
+11     0.569203     77       0      77     0      lib/CodeGen/SelectionDAG/LegalizeVectorOps.cpp
+12     0.569005     711      1      710    0      lib/Transforms/Vectorize/LoopVectorize.cpp
+13     0.562917     66       0      66     0      lib/Target/X86/X86TargetTransformInfo.cpp
+14     0.562859     164      8      156    0      lib/Transforms/InstCombine/InstCombineSimplifyDemanded.cpp
+15     0.546405     40       0      40     0      lib/CodeGen/BasicTargetTransformInfo.cpp
+16     0.543943     39       0      39     0      lib/Analysis/CaptureTracking.cpp
+17     0.543322     384      27     357    0      lib/CodeGen/MachineLICM.cpp
+18     0.527733     114      0      114    0      lib/Transforms/Utils/InlineFunction.cpp
+19     0.495907     165      0      165    0      lib/CodeGen/SelectionDAG/LegalizeDAG.cpp
+20     0.492784     14       0      14     0      lib/CodeGen/PseudoSourceValue.cpp

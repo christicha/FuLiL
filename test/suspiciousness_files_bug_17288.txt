@@ -1,0 +1,24 @@
+文件级别缺陷定位结果 - Bug 17288
+==================================================================================================================================
+排名     平均可疑度        语句数      高可疑    中可疑    低可疑    文件名
+==================================================================================================================================
+1      0.861595     17       17     0      0      lib/Target/X86/Utils/X86ShuffleDecode.cpp
+2      0.860869     14       14     0      0      lib/CodeGen/PseudoSourceValue.cpp
+3      0.819141     77       63     14     0      lib/CodeGen/SelectionDAG/LegalizeVectorOps.cpp
+4      0.764127     83       52     31     0      lib/Transforms/InstCombine/InstCombineVectorOps.cpp
+5      0.751336     231      122    109    0      lib/CodeGen/ExecutionDepsFix.cpp
+6      0.716255     215      81     134    0      lib/CodeGen/ScheduleDAG.cpp
+7      0.715543     166      62     104    0      lib/CodeGen/SelectionDAG/LegalizeDAG.cpp
+8      0.706077     742      337    405    0      lib/Transforms/Vectorize/LoopVectorize.cpp
+9      0.699823     19       9      10     0      lib/Transforms/InstCombine/InstCombineMulDivRem.cpp
+10     0.688941     744      217    527    0      lib/CodeGen/SelectionDAG/DAGCombiner.cpp
+11     0.688852     150      51     99     0      lib/Transforms/InstCombine/InstCombineSimplifyDemanded.cpp
+12     0.687139     93       18     75     0      lib/Transforms/InstCombine/InstCombineAddSub.cpp
+13     0.675856     311      78     233    0      lib/IR/Constants.cpp
+14     0.674425     56       27     29     0      lib/Target/X86/X86TargetTransformInfo.cpp
+15     0.671088     79       11     68     0      lib/Target/X86/MCTargetDesc/X86AsmBackend.cpp
+16     0.665985     248      20     228    0      lib/Analysis/ScalarEvolutionExpander.cpp
+17     0.660953     41       9      32     0      lib/CodeGen/BasicTargetTransformInfo.cpp
+18     0.655376     45       0      45     0      lib/Analysis/ScalarEvolutionNormalization.cpp
+19     0.655065     1129     7      1122   0      lib/Transforms/Scalar/LoopStrengthReduce.cpp
+20     0.644238     45       2      43     0      lib/CodeGen/ExpandPostRAPseudos.cpp

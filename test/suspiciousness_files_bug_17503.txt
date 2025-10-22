@@ -1,0 +1,24 @@
+文件级别缺陷定位结果 - Bug 17503
+==================================================================================================================================
+排名     平均可疑度        语句数      高可疑    中可疑    低可疑    文件名
+==================================================================================================================================
+1      0.792610     109      109    0      0      lib/IR/ConstantFold.cpp
+2      0.774290     256      256    0      0      lib/Transforms/Scalar/GVN.cpp
+3      0.759094     222      222    0      0      lib/IR/Constants.cpp
+4      0.753161     94       94     0      0      tools/clang/lib/Basic/FileManager.cpp
+5      0.753100     91       91     0      0      lib/Option/OptTable.cpp
+6      0.750989     160      160    0      0      lib/Transforms/InstCombine/InstructionCombining.cpp
+7      0.750977     18       18     0      0      lib/CodeGen/SelectionDAG/TargetLowering.cpp
+8      0.750973     61       61     0      0      lib/Transforms/Scalar/TailRecursionElimination.cpp
+9      0.750968     170      170    0      0      lib/Analysis/BasicAliasAnalysis.cpp
+10     0.750953     39       39     0      0      lib/Analysis/CaptureTracking.cpp
+11     0.750934     111      111    0      0      lib/Transforms/Scalar/MemCpyOptimizer.cpp
+12     0.750933     11       11     0      0      lib/Analysis/PtrUseVisitor.cpp
+13     0.750924     108      108    0      0      lib/Transforms/Utils/PromoteMemoryToRegister.cpp
+14     0.750907     99       99     0      0      lib/Transforms/Scalar/DeadStoreElimination.cpp
+15     0.750901     155      155    0      0      lib/Analysis/MemoryDependenceAnalysis.cpp
+16     0.750880     746      746    0      0      lib/CodeGen/SelectionDAG/SelectionDAG.cpp
+17     0.750872     124      124    0      0      lib/IR/Value.cpp
+18     0.750862     550      550    0      0      lib/Transforms/Scalar/SROA.cpp
+19     0.750829     87       87     0      0      lib/Analysis/AliasAnalysis.cpp
+20     0.750826     275      275    0      0      lib/CodeGen/SelectionDAG/DAGCombiner.cpp

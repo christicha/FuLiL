@@ -1,0 +1,24 @@
+文件级别缺陷定位结果 - Bug 15920
+==================================================================================================================================
+排名     平均可疑度        语句数      高可疑    中可疑    低可疑    文件名
+==================================================================================================================================
+1      0.945668     490      490    0      0      lib/Transforms/Vectorize/LoopVectorize.cpp
+2      0.940255     59       59     0      0      lib/Target/X86/X86TargetTransformInfo.cpp
+3      0.923313     60       60     0      0      lib/CodeGen/ProcessImplicitDefs.cpp
+4      0.905600     31       31     0      0      lib/CodeGen/BasicTargetTransformInfo.cpp
+5      0.885315     149      149    0      0      lib/IR/ConstantFold.cpp
+6      0.877918     302      302    0      0      lib/IR/Constants.cpp
+7      0.877111     21       21     0      0      lib/IR/Dominators.cpp
+8      0.857263     200      200    0      0      lib/Analysis/ValueTracking.cpp
+9      0.853040     122      122    0      0      lib/Transforms/Scalar/JumpThreading.cpp
+10     0.849245     1032     1032   0      0      lib/Analysis/ScalarEvolution.cpp
+11     0.843474     48       48     0      0      lib/Analysis/TargetTransformInfo.cpp
+12     0.839591     96       96     0      0      lib/IR/BasicBlock.cpp
+13     0.835495     147      147    0      0      lib/IR/Type.cpp
+14     0.833084     220      220    0      0      lib/Analysis/InstructionSimplify.cpp
+15     0.832663     356      356    0      0      lib/IR/Instructions.cpp
+16     0.828970     173      173    0      0      lib/CodeGen/SelectionDAG/InstrEmitter.cpp
+17     0.828465     155      155    0      0      lib/Support/APInt.cpp
+18     0.828465     120      120    0      0      lib/Support/ConstantRange.cpp
+19     0.827316     13       13     0      0      lib/Analysis/CodeMetrics.cpp
+20     0.819332     99       99     0      0      lib/Transforms/Utils/LoopUnroll.cpp

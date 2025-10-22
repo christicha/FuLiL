@@ -1,0 +1,24 @@
+文件级别缺陷定位结果 - Bug 16069
+==================================================================================================================================
+排名     平均可疑度        语句数      高可疑    中可疑    低可疑    文件名
+==================================================================================================================================
+1      0.029455     254      0      0      254    lib/CodeGen/MachineCSE.cpp
+2      0.017380     108      0      0      108    lib/CodeGen/MachineRegisterInfo.cpp
+3      0.017101     249      0      0      249    lib/CodeGen/TwoAddressInstructionPass.cpp
+4      0.015668     215      0      0      215    lib/CodeGen/ScheduleDAG.cpp
+5      0.015201     94       1      0      93     tools/clang/lib/Basic/FileManager.cpp
+6      0.012754     223      0      0      223    lib/CodeGen/LiveIntervalAnalysis.cpp
+7      0.011086     70       0      0      70     lib/Transforms/Utils/BasicBlockUtils.cpp
+8      0.010254     49       0      0      49     lib/CodeGen/LiveIntervalUnion.cpp
+9      0.009947     542      0      0      542    lib/CodeGen/SelectionDAG/ScheduleDAGRRList.cpp
+10     0.009429     49       0      0      49     lib/CodeGen/SelectionDAG/LegalizeIntegerTypes.cpp
+11     0.008112     124      0      0      124    lib/IR/ConstantFold.cpp
+12     0.007001     505      0      0      505    lib/CodeGen/SelectionDAG/DAGCombiner.cpp
+13     0.006832     989      0      0      989    lib/Target/X86/X86ISelLowering.cpp
+14     0.006753     226      0      0      226    lib/CodeGen/SelectionDAG/ScheduleDAGSDNodes.cpp
+15     0.006748     77       0      0      77     lib/Analysis/ConstantFolding.cpp
+16     0.006389     239      0      0      239    lib/CodeGen/SelectionDAG/InstrEmitter.cpp
+17     0.006247     139      0      0      139    lib/IR/Constants.cpp
+18     0.006130     110      0      0      110    lib/Target/X86/X86RegisterInfo.cpp
+19     0.005980     384      0      0      384    lib/Transforms/Utils/SimplifyCFG.cpp
+20     0.005344     88       0      0      88     lib/Transforms/Utils/InlineFunction.cpp

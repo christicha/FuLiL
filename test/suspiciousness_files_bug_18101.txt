@@ -1,0 +1,24 @@
+文件级别缺陷定位结果 - Bug 18101
+==================================================================================================================================
+排名     平均可疑度        语句数      高可疑    中可疑    低可疑    文件名
+==================================================================================================================================
+1      0.580419     91       1      90     0      lib/Option/OptTable.cpp
+2      0.580398     94       1      93     0      tools/clang/lib/Basic/FileManager.cpp
+3      0.576899     76       0      76     0      lib/Transforms/InstCombine/InstCombineCasts.cpp
+4      0.576856     47       0      47     0      lib/Transforms/Utils/SimplifyIndVar.cpp
+5      0.576840     135      0      135    0      lib/Transforms/InstCombine/InstCombineShifts.cpp
+6      0.576835     168      0      168    0      lib/Transforms/InstCombine/InstCombineAndOrXor.cpp
+7      0.576805     66       0      66     0      lib/Transforms/Utils/CloneFunction.cpp
+8      0.576780     30       0      30     0      lib/Support/ConstantRange.cpp
+9      0.576773     237      0      237    0      lib/CodeGen/RegisterPressure.cpp
+10     0.576760     67       0      67     0      lib/Transforms/Utils/InlineFunction.cpp
+11     0.576747     118      0      118    0      lib/Analysis/IPA/InlineCost.cpp
+12     0.576727     76       0      76     0      lib/Transforms/Utils/SSAUpdater.cpp
+13     0.576703     209      0      209    0      lib/Transforms/InstCombine/InstCombineSimplifyDemanded.cpp
+14     0.576675     4        0      4      0      lib/CodeGen/PHIEliminationUtils.cpp
+15     0.576669     329      0      329    0      lib/Transforms/InstCombine/InstCombineCompares.cpp
+16     0.576639     142      0      142    0      lib/CodeGen/PHIElimination.cpp
+17     0.576616     174      0      174    0      lib/CodeGen/MachineCSE.cpp
+18     0.576582     21       0      21     0      lib/IR/Dominators.cpp
+19     0.576529     413      0      413    0      lib/CodeGen/TwoAddressInstructionPass.cpp
+20     0.576463     166      0      166    0      lib/CodeGen/ScheduleDAG.cpp

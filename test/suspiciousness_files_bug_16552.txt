@@ -1,0 +1,24 @@
+文件级别缺陷定位结果 - Bug 16552
+==================================================================================================================================
+排名     平均可疑度        语句数      高可疑    中可疑    低可疑    文件名
+==================================================================================================================================
+1      0.665648     101      29     72     0      lib/CodeGen/TailDuplication.cpp
+2      0.618739     85       0      85     0      lib/Transforms/InstCombine/InstCombineVectorOps.cpp
+3      0.618052     17       0      17     0      lib/Target/X86/Utils/X86ShuffleDecode.cpp
+4      0.612829     14       0      14     0      lib/CodeGen/PseudoSourceValue.cpp
+5      0.602248     77       0      77     0      lib/CodeGen/SelectionDAG/LegalizeVectorOps.cpp
+6      0.601632     727      0      727    0      lib/Transforms/Vectorize/LoopVectorize.cpp
+7      0.594184     68       0      68     0      lib/Target/X86/X86TargetTransformInfo.cpp
+8      0.582390     271      0      271    0      lib/CodeGen/ExecutionDepsFix.cpp
+9      0.580295     19       0      19     0      lib/Transforms/InstCombine/InstCombineMulDivRem.cpp
+10     0.577706     200      0      200    0      lib/Transforms/InstCombine/InstCombineSimplifyDemanded.cpp
+11     0.572944     40       0      40     0      lib/CodeGen/BasicTargetTransformInfo.cpp
+12     0.565322     125      0      125    0      lib/IR/ConstantFold.cpp
+13     0.562583     262      0      262    0      lib/Analysis/ScalarEvolutionExpander.cpp
+14     0.558253     73       0      73     0      lib/Transforms/InstCombine/InstCombineAddSub.cpp
+15     0.550657     56       0      56     0      lib/Analysis/ScalarEvolutionNormalization.cpp
+16     0.545856     1143     0      1143   0      lib/Analysis/ScalarEvolution.cpp
+17     0.544601     1152     0      1152   0      lib/Transforms/Scalar/LoopStrengthReduce.cpp
+18     0.542522     113      0      113    0      lib/Support/ConstantRange.cpp
+19     0.539972     83       0      83     0      lib/Analysis/IVUsers.cpp
+20     0.521851     16       0      16     0      lib/Analysis/PHITransAddr.cpp
