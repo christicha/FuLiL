@@ -73,7 +73,7 @@ def functionRank(bugId, rev, configFile):
     failstmt = dict()  # 记录每个语句被失败用例覆盖的次数
     passstmt = dict()  # 记录每个语句被通过用例覆盖的次数
     failfuncset = set()  # 失败用例覆盖的func集合
-    failfuncmapstmt = defaultdict(set)  # 每个文件对应的语句集合映射
+    failfuncmapstmt = defaultdict(set)  # 每个func对应的语句集合映射
     failfileset = set()  # 失败用例覆盖的文件集合
     for i in range(len(faillines)):
         faillinesplit = faillines[i].strip().split(',')

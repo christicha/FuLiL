@@ -13,8 +13,6 @@ from llvm.collectCov import collectcov
 
 ub_set = set()
 syn_err_set = set()
-fail_prog_set = set()
-
 
 def remove_unused_printf(file1, file2):
     with open(file1, 'r') as f1:
@@ -212,14 +210,6 @@ def generateMutate(bugid, revision, checkpass, compileOptionRight, compileOption
                 syn_string)
             messages.append({"role": "user", "content": syn_back_to_llm})
 
-        if len(fail_prog_set) != 0:
-            fprog_string = ''
-            for f in fail_prog_set:
-                fprog_string += '```' + f + '```, '
-            fail_back_to_llm = "The following programs you generated {} still CAN reproduce the compiler bug or the `printf` function in the given program was removed in the new program, where you should NOT remove it, please do not generate such programs again".format(
-                fprog_string)
-            messages.append({"role": "user", "content": fail_back_to_llm})
-
         try:
             chat_completion = client.chat.completions.create(
                 model="deepseek-chat",
@@ -371,11 +361,9 @@ def generateMutate(bugid, revision, checkpass, compileOptionRight, compileOption
             # 保存失败用例
             fail_filename = f"failing_cases/fail_{failcnt:04d}.c"
             shutil.copy('mainvar.c', fail_filename)
-
-            # 记录失败程序用于反馈
-            with open('mainvar.c', 'r') as f:
-                fail_prog = f.read()
-            fail_prog_set.add(fail_prog)
+            failcovdir = f"{workpath}/failcov/fail_{failcnt:04d}"
+            os.system('mkdir -p ' + failcovdir)
+            collectcov(bugid, revision, failcovdir, configPath)
 
             print(f"Still failing case saved as: {fail_filename}")
 
