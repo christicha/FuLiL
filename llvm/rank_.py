@@ -4,7 +4,8 @@ from collections import defaultdict
 from configparser import ConfigParser
 import re
 import torch
-from sklearn.cluster import KMeans
+import torch.nn as nn
+import torch.nn.functional as F
 
 num = 5000  # top stmt num
 
@@ -13,121 +14,108 @@ def deleteGcdaPath(gcdaDirName):
     return re.sub(r'/CMakeFiles/[^/]+.dir', '', gcdaDirName)
 
 
-import torch.nn as nn
-import torch.nn.functional as F
+class SuspiciousnessBFNN(nn.Module):
+    def __init__(self, input_size, hidden_sizes=[512, 256, 128], dropout_rate=0.3):
+        """
+        BFNN - 基础前馈神经网络
+        Args:
+            input_size: 输入特征维度
+            hidden_sizes: 隐藏层大小列表
+            dropout_rate: dropout比率
+        """
+        super(SuspiciousnessBFNN, self).__init__()
 
+        # 构建动态网络层
+        layers = []
+        prev_size = input_size
 
-class SuspiciousnessRBFNN(nn.Module):
-    def __init__(self, input_size, num_centers=50, sigma=1.0):
-        super(SuspiciousnessRBFNN, self).__init__()
-        self.input_size = input_size
-        self.num_centers = num_centers
-        self.sigma = nn.Parameter(torch.tensor(sigma))
+        for i, hidden_size in enumerate(hidden_sizes):
+            layers.append(nn.Linear(prev_size, hidden_size))
+            layers.append(nn.BatchNorm1d(hidden_size))
+            layers.append(nn.ReLU())
+            layers.append(nn.Dropout(dropout_rate))
+            prev_size = hidden_size
 
-        # RBF层参数
-        self.centers = nn.Parameter(torch.randn(num_centers, input_size))
-        self.linear = nn.Linear(num_centers, input_size)  # 输出层
+        # 输出层
+        layers.append(nn.Linear(prev_size, input_size))
 
-        # 初始化参数
+        self.network = nn.Sequential(*layers)
         self._initialize_parameters()
 
     def _initialize_parameters(self):
         """初始化参数"""
-        nn.init.xavier_uniform_(self.centers)
-        nn.init.xavier_uniform_(self.linear.weight)
-        nn.init.constant_(self.linear.bias, 0.1)
-
-    def rbf_function(self, x, centers):
-        """径向基函数 - 高斯核"""
-        # 计算输入与中心点的欧氏距离
-        x = x.unsqueeze(1)  # [batch_size, 1, input_size]
-        centers = centers.unsqueeze(0)  # [1, num_centers, input_size]
-
-        distances = torch.sum((x - centers) ** 2, dim=2)  # [batch_size, num_centers]
-
-        # 应用高斯径向基函数
-        rbf_output = torch.exp(-distances / (2 * self.sigma ** 2))
-        return rbf_output
+        for layer in self.network:
+            if isinstance(layer, nn.Linear):
+                nn.init.xavier_uniform_(layer.weight)
+                nn.init.constant_(layer.bias, 0.1)
 
     def forward(self, x):
-        # RBF层
-        rbf_output = self.rbf_function(x, self.centers)  # [batch_size, num_centers]
-
-        # 线性输出层
-        output = self.linear(rbf_output)  # [batch_size, input_size]
-
-        # 应用sigmoid确保输出在[0,1]范围内
+        """
+        前向传播
+        Args:
+            x: 输入特征 [batch_size, input_size]
+        Returns:
+            suspiciousness: 可疑度预测 [batch_size, input_size]
+        """
+        output = self.network(x)
         suspiciousness = torch.sigmoid(output)
         return suspiciousness
 
 
-class ImprovedSuspiciousnessRBFNN(nn.Module):
-    def __init__(self, input_size, num_centers=100, hidden_size=64):
-        super(ImprovedSuspiciousnessRBFNN, self).__init__()
-        self.input_size = input_size
-        self.num_centers = num_centers
+class ImprovedSuspiciousnessBFNN(nn.Module):
+    def __init__(self, input_size, hidden_sizes=[256, 128, 64], dropout_rate=0.4):
+        """
+        改进的BFNN，更适合缺陷定位任务
+        """
+        super(ImprovedSuspiciousnessBFNN, self).__init__()
 
-        # RBF层
-        self.centers = nn.Parameter(torch.randn(num_centers, input_size))
-        self.sigma = nn.Parameter(torch.ones(num_centers))
+        # 编码器部分
+        self.encoder = nn.Sequential(
+            nn.Linear(input_size, hidden_sizes[0]),
+            nn.BatchNorm1d(hidden_sizes[0]),
+            nn.ReLU(),
+            nn.Dropout(dropout_rate),
 
-        # 隐藏层
-        self.hidden1 = nn.Linear(num_centers, hidden_size)
-        self.hidden2 = nn.Linear(hidden_size, hidden_size // 2)
+            nn.Linear(hidden_sizes[0], hidden_sizes[1]),
+            nn.BatchNorm1d(hidden_sizes[1]),
+            nn.ReLU(),
+            nn.Dropout(dropout_rate),
 
-        # 输出层
-        self.output_layer = nn.Linear(hidden_size // 2, input_size)
+            nn.Linear(hidden_sizes[1], hidden_sizes[2]),
+            nn.BatchNorm1d(hidden_sizes[2]),
+            nn.ReLU(),
+            nn.Dropout(dropout_rate),
+        )
 
-        # 激活函数和正则化
-        self.dropout = nn.Dropout(0.2)
+        # 解码器部分
+        self.decoder = nn.Sequential(
+            nn.Linear(hidden_sizes[2], hidden_sizes[1]),
+            nn.ReLU(),
+            nn.Dropout(dropout_rate),
+
+            nn.Linear(hidden_sizes[1], hidden_sizes[0]),
+            nn.ReLU(),
+            nn.Dropout(dropout_rate),
+
+            nn.Linear(hidden_sizes[0], input_size),
+        )
+
         self._initialize_parameters()
 
     def _initialize_parameters(self):
         """初始化参数"""
-        nn.init.xavier_uniform_(self.centers)
-        nn.init.xavier_uniform_(self.hidden1.weight)
-        nn.init.xavier_uniform_(self.hidden2.weight)
-        nn.init.xavier_uniform_(self.output_layer.weight)
-        nn.init.constant_(self.sigma, 1.0)
-
-    def rbf_function(self, x):
-        """改进的径向基函数"""
-        x = x.unsqueeze(1)  # [batch_size, 1, input_size]
-        centers = self.centers.unsqueeze(0)  # [1, num_centers, input_size]
-
-        # 计算距离
-        distances = torch.sum((x - centers) ** 2, dim=2)  # [batch_size, num_centers]
-
-        # 每个中心点使用自己的sigma参数
-        sigma_matrix = self.sigma.unsqueeze(0)  # [1, num_centers]
-        rbf_output = torch.exp(-distances / (2 * sigma_matrix ** 2))
-
-        return rbf_output
+        for module in self.modules():
+            if isinstance(module, nn.Linear):
+                nn.init.xavier_uniform_(module.weight)
+                nn.init.constant_(module.bias, 0.1)
 
     def forward(self, x):
-        # RBF层
-        rbf_output = self.rbf_function(x)
-
-        # 隐藏层
-        x = F.relu(self.hidden1(rbf_output))
-        x = self.dropout(x)
-        x = F.relu(self.hidden2(x))
-        x = self.dropout(x)
-
-        # 输出层
-        output = self.output_layer(x)
+        # 编码
+        encoded = self.encoder(x)
+        # 解码
+        output = self.decoder(encoded)
         suspiciousness = torch.sigmoid(output)
-
         return suspiciousness
-
-
-def initialize_rbf_centers_kmeans(features, num_centers):
-    """使用K-means初始化RBF中心点"""
-    features_np = features.cpu().numpy()
-    kmeans = KMeans(n_clusters=num_centers, random_state=42, n_init=10)
-    kmeans.fit(features_np)
-    centers = torch.tensor(kmeans.cluster_centers_, dtype=torch.float32)
-    return centers
 
 
 def get_file_suspiciousness(model, cov_matrix, stmtmap):
@@ -175,7 +163,8 @@ def get_file_suspiciousness(model, cov_matrix, stmtmap):
 
 
 def complete_training_pipeline(cov_matrix, stmtmap, bugId):
-    print("开始训练RBFNN模型...")
+    print("开始训练BFNN模型...")
+
     # 准备数据
     features = cov_matrix[:, :-1]
     input_size = features.shape[1]
@@ -189,40 +178,57 @@ def complete_training_pipeline(cov_matrix, stmtmap, bugId):
             self.features = features
             self.labels = labels
 
-        def __len__(self): return len(self.features)
+        def __len__(self):
+            return len(self.features)
 
-        def __getitem__(self, idx): return self.features[idx], self.labels[idx]
+        def __getitem__(self, idx):
+            return self.features[idx], self.labels[idx]
 
     dataset = CoverageDataset(features, cov_matrix[:, -1])
-    dataloader = torch.utils.data.DataLoader(dataset, batch_size=min(32, len(dataset)), shuffle=True)
-
-    # 确定RBF中心点数量
-    num_centers = min(100, max(20, features.shape[0] // 10))
-    print(f"使用 {num_centers} 个RBF中心点")
-
-    # 初始化模型
-    model = ImprovedSuspiciousnessRBFNN(
-        input_size=input_size,
-        num_centers=num_centers,
-        hidden_size=64
+    dataloader = torch.utils.data.DataLoader(
+        dataset,
+        batch_size=min(32, len(dataset)),
+        shuffle=True
     )
 
-    # 使用K-means初始化中心点（可选）
-    if features.shape[0] > num_centers:
-        with torch.no_grad():
-            initialized_centers = initialize_rbf_centers_kmeans(features, num_centers)
-            model.centers.data = initialized_centers
+    # 根据数据规模选择合适的模型
+    if input_size <= 1000:
+        # 小规模数据使用简单BFNN
+        model = SuspiciousnessBFNN(
+            input_size=input_size,
+            hidden_sizes=[256, 128, 64],
+            dropout_rate=0.3
+        )
+    else:
+        # 大规模数据使用改进BFNN
+        model = ImprovedSuspiciousnessBFNN(
+            input_size=input_size,
+            hidden_sizes=[512, 256, 128],
+            dropout_rate=0.4
+        )
 
-    optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
-    scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, patience=10, factor=0.5)
+    # 优化器 - 使用更大的学习率和权重衰减
+    optimizer = torch.optim.AdamW(
+        model.parameters(),
+        lr=0.001,
+        weight_decay=0.01  # 更强的正则化
+    )
+
+    # 学习率调度
+    scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
+        optimizer,
+        patience=15,
+        factor=0.5,
+        min_lr=1e-6
+    )
 
     # 训练过程
     model.train()
     best_loss = float('inf')
-    patience = 20
+    patience = 25
     patience_counter = 0
 
-    for epoch in range(500):
+    for epoch in range(300):
         epoch_loss = 0
         model.train()
 
@@ -232,21 +238,21 @@ def complete_training_pipeline(cov_matrix, stmtmap, bugId):
 
             loss = 0
             batch_size = batch_labels.shape[0]
+
             for i in range(batch_size):
                 if batch_labels[i] == 1:  # 失败测试用例
                     covered = (batch_features[i] == 1)
-                    if covered.sum() > 0:
-                        loss += torch.mean((1 - predictions[i][covered]) ** 2)
+                    # 失败用例：被覆盖的语句应该预测为高可疑度(接近1)
+                    loss += torch.mean((1 - predictions[i][covered]) ** 2)
                 else:  # 通过测试用例
                     covered = (batch_features[i] == 1)
-                    if covered.sum() > 0:
-                        loss += torch.mean(predictions[i][covered] ** 2)
+                    # 通过用例：被覆盖的语句应该预测为低可疑度(接近0)
+                    loss += torch.mean(predictions[i][covered] ** 2)
 
-            # 添加正则化项
-            reg_loss = 0.001 * torch.norm(model.centers)
-            loss = loss / batch_size + reg_loss
-
+            loss = loss / batch_size
             loss.backward()
+
+            # 梯度裁剪
             torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm=1.0)
             optimizer.step()
             epoch_loss += loss.item()
@@ -269,7 +275,7 @@ def complete_training_pipeline(cov_matrix, stmtmap, bugId):
 
         if (epoch + 1) % 10 == 0:
             current_lr = optimizer.param_groups[0]['lr']
-            print(f'Epoch [{epoch + 1}/500], Loss: {avg_epoch_loss:.4f}, LR: {current_lr:.6f}')
+            print(f'Epoch [{epoch + 1}/300], Loss: {avg_epoch_loss:.4f}, LR: {current_lr:.6f}')
 
     # 只计算文件级别的可疑度
     ranked_files, file_scores = get_file_suspiciousness(model, cov_matrix, stmtmap)
@@ -284,12 +290,11 @@ def complete_training_pipeline(cov_matrix, stmtmap, bugId):
 
 def save_file_results(ranked_files, bug_id):
     """保存文件级别可疑度结果"""
-    file_output_file = f"file_suspiciousness_bug_{bug_id}.txt"
+    file_output_file = f"/home/chris/FLL-workplace/llvmbugs/result/{bug_id}/NNresult_file_{bug_id}.txt"
     with open(file_output_file, 'w', encoding='utf-8') as f:
         f.write(f"文件级别缺陷定位结果 - Bug {bug_id}\n")
         f.write("=" * 130 + "\n")
-        f.write(
-            f"{'排名':<6} {'平均可疑度':<12} {'语句数':<8} {'高可疑':<6} {'中可疑':<6} {'低可疑':<6} {'文件名'}\n")
+        f.write(f"{'排名':<6} {'平均可疑度':<12} {'语句数':<8} {'高可疑':<6} {'中可疑':<6} {'低可疑':<6} {'文件名'}\n")
         f.write("=" * 130 + "\n")
         for i, (filename, score_info) in enumerate(ranked_files):
             f.write(f"{i + 1:<6} {score_info['avg_score']:<12.6f} {score_info['stmt_count']:<8} "
@@ -297,7 +302,6 @@ def save_file_results(ranked_files, bug_id):
                     f"{score_info['low_suspicion_count']:<6} {filename}\n")
 
     print(f"文件级别结果已保存到: {file_output_file}")
-
 
 def fileRank(bugId, rev, configFile):
     cfg = ConfigParser()

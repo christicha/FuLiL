@@ -10,9 +10,9 @@ from llvm.check import checkIsPass_wrongcodeOneline, checkIsPass_zeroandsegmento
     checkIsPass_zeroandonenumber
 from llvm.collectCov import collectcov
 
-
 ub_set = set()
 syn_err_set = set()
+
 
 def remove_unused_printf(file1, file2):
     with open(file1, 'r') as f1:
@@ -102,7 +102,8 @@ def add_comment_before_string(file_path):
 
 
 def generateMutate(bugid, revision, checkpass, compileOptionRight, compileOptionWrong, configPath):
-    print(f"\033[94m bugid:{bugid} revision:{revision} checkpass:{checkpass} compilerOptionRight:{compileOptionRight} compilerOptionWrong:{compileOptionWrong} \033[0m")
+    print(
+        f"\033[94m bugid:{bugid} revision:{revision} checkpass:{checkpass} compilerOptionRight:{compileOptionRight} compilerOptionWrong:{compileOptionWrong} \033[0m")
     config = ConfigParser()
     config.read(configPath)
     baseInfoDir = config.get('llvm-locations', 'infodir')
@@ -112,19 +113,80 @@ def generateMutate(bugid, revision, checkpass, compileOptionRight, compileOption
     infoBasePath = config.get('llvm-locations', 'infodir')
     workpath = passdir + bugid
     if not os.path.exists(workpath):
-        os.system('mkdir -p '+workpath)
+        os.system('mkdir -p ' + workpath)
     os.chdir(workpath)
     failPath = baseInfoDir + bugid + '/fail.c'
-    os.system('cp '+failPath+' ./main.c')
+    os.system('cp ' + failPath + ' ./main.c')
     # 创建目录结构
     os.makedirs('passing_cases', exist_ok=True)
     os.makedirs('failing_cases', exist_ok=True)
     os.makedirs('error_cases', exist_ok=True)
-    os.makedirs('passcov',exist_ok=True)
+    os.makedirs('passcov', exist_ok=True)
     failcovPath = infoBasePath + bugid + '/'
     if os.path.exists('oriwrongfile'):
         os.system('rm oriwrongfile')
-    shutil.copy2(failcovPath+'oriwrongfile', './oriwrongfile')
+    shutil.copy2(failcovPath + 'oriwrongfile', './oriwrongfile')
+    failset = set()
+    failcovfile = open(failcovPath + 'failcov/stmt_info.txt')
+    faillines = failcovfile.readlines()
+    failcovfile.close()
+    for i in range(len(faillines)):
+        faillinesplit = faillines[i].strip().split(',')
+        filename = re.sub(r'/CMakeFiles/[^/]+.dir', '', faillinesplit[0]).split('.gcda')[0]
+        stmtlist = faillines[i].strip().split(':')[1].split(',')
+        for j in range(len(stmtlist)):
+            failset.add(f"{filename}:{stmtlist[j]}")
+
+    passingcnt = 0  # passingcnt is the number of generated witness test program.
+    firstfailcnt = 0
+    # existingcovset is used for record the pair(passing test program, the intersection of the statement coverage of
+    # this program and that of failing test program)
+    existingcovset = dict()
+    # unionCovwithFail is used for record the pair(passing test program, the union of the statement coverage of this
+    # program and that of failing test program)
+    unionCovwithFail = dict()
+    # passCov is used for record the coverage of each passing test program. The form of each element is (testname,
+    # pair(filename, statement))
+    passCov = dict()
+
+    def diffPassCov(testname, bugid):
+        if len(os.listdir(passdir + bugid + '/passcov/')) == 1:
+            thisfile = open(passdir + bugid + '/passcov/' + testname + '/stmt_info.txt')
+            thislines = thisfile.readlines()
+            thisfile.close()
+
+            thisset = set()
+            for i in range(len(thislines)):
+                filenameitem = thislines[i].strip().split(':')[0]
+                lineitems = thislines[i].strip().split(':')[1].split(',')
+                for j in range(len(lineitems)):
+                    thisset.add(filenameitem + ':' + lineitems[j])
+            existingcovset[testname] = thisset & failset
+            unionCovwithFail[testname] = thisset | failset
+            passCov[testname] = thisset
+            return 0  # different
+
+        thisfile = open(passdir + bugid + '/passcov/' + testname + '/stmt_info.txt')
+        thislines = thisfile.readlines()
+        thisfile.close()
+
+        thisset = set()
+        for i in range(len(thislines)):
+            filenameitem = thislines[i].strip().split(':')[0]
+            lineitems = thislines[i].strip().split(':')[1].split(',')
+            for j in range(len(lineitems)):
+                thisset.add(filenameitem + ':' + lineitems[j])
+
+        for key in existingcovset.keys():
+            if len(existingcovset[key]) != 0:
+                similarity = float(len(existingcovset[key] & (thisset & failset))) / len(
+                    existingcovset[key] | (thisset & failset))
+                if similarity == 1:
+                    return 1  # same
+        existingcovset[testname] = thisset & failset
+        unionCovwithFail[testname] = thisset | failset
+        passCov[testname] = thisset
+        return 0  # different
 
     total_prog = 0
     syn_error_prog = 0
@@ -338,19 +400,23 @@ def generateMutate(bugid, revision, checkpass, compileOptionRight, compileOption
             passing_interesting += 1
             compiled_prog += 1
 
-            # 保存通过用例
-            pass_filename = f"passing_cases/pass_{passingcnt:04d}.c"
-            shutil.copy('mainvar.c', pass_filename)
-
-            print(f"PASSING CASE FOUND! Saved as: {pass_filename}")
-            print(f"Total passing cases: {passingcnt}/499")
-
-            # 更新统计文件
-            with open('generation_stats.txt', 'a') as stats_file:
-                stats_file.write(f"Pass {passingcnt:04d}: {pass_filename} - Mutation: {selected}\n")
             passcovdir = f"{workpath}/passcov/pass_{passingcnt:04d}"
             os.system('mkdir -p ' + passcovdir)
             collectcov(bugid, revision, passcovdir, configPath)
+            covFlag = diffPassCov(f"pass_{passingcnt:04d}", bugid)
+            if covFlag == 1:
+                os.system(f"rm -rm {passcovdir}")
+                passingcnt -= 1
+                continue
+            else:
+                # 保存通过用例
+                pass_filename = f"passing_cases/pass_{passingcnt:04d}.c"
+                shutil.copy('mainvar.c', pass_filename)
+                print(f"PASSING CASE FOUND! Saved as: {pass_filename}")
+                print(f"Total passing cases: {passingcnt}/499")
+                # 更新统计文件
+                with open('generation_stats.txt', 'a') as stats_file:
+                    stats_file.write(f"Pass {passingcnt:04d}: {pass_filename} - Mutation: {selected}\n")
 
         elif flagIsPass == 2:
             # 仍然失败 - 仍然触发bug

@@ -277,7 +277,7 @@ def fileRank(bugId, rev, configFile):
         if scorelist[j][0] == 1.0:
             number_1po0 += 1
     # 写入完整的可疑度排名（所有文件）
-    result.write("Rank,Function,Score\n")  # CSV 表头
+    result.write("Rank,File,Score\n")  # CSV 表头
     for rank, (filename, score_val) in enumerate(scorelist, 1):
         result.write(f"{rank},{filename},{score_val:.6f}\n")
 
