@@ -1,6 +1,6 @@
 from configparser import ConfigParser
 from llvm.generateMutate import generateMutate
-from llvm.rank import fileRank
+from llvm.rank_ import fileRank
 
 config = ConfigParser()
 config.read('./config/config.ini', encoding='utf-8')
@@ -37,13 +37,13 @@ def process_bugid_wrapper(args):
     compileOptionWrong = compileOptionWrongs[i]
     check = checks[i]
 
-    generateMutate(bugid, revision, check, compileOptionRight, compileOptionWrong, configPath)
+    # generateMutate(bugid, revision, check, compileOptionRight, compileOptionWrong, configPath)
     fileRank(bugid, revision, configPath)
 
     return bugid
 
 
-with ProcessPoolExecutor(max_workers=8) as executor:
+with ProcessPoolExecutor(max_workers=1) as executor:
     # 提交所有任务
     future_to_bugid = {
         executor.submit(process_bugid_wrapper, (

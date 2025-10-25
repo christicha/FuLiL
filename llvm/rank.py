@@ -192,10 +192,10 @@ def fileRank(bugId, rev, configFile):
             buggyfiles.add(buggyfile)  # 添加到bug文件集合
 
     # 确定失败用例的覆盖率文件路径
-    if os.path.exists(infodir + '/' + bugId + '/failcov/stmt_info.txt'):
-        tarpath = infodir + '/' + bugId + '/failcov/stmt_info.txt'
-    elif os.path.exists(infodir + '/' + bugId + '/fail/stmt_info.txt'):
-        tarpath = infodir + '/' + bugId + '/fail/stmt_info.txt'
+    if os.path.exists(infodir + bugId + '/failcov/stmt_info.txt'):
+        tarpath = infodir + bugId + '/failcov/stmt_info.txt'
+    elif os.path.exists(infodir + bugId + '/fail/stmt_info.txt'):
+        tarpath = infodir + bugId + '/fail/stmt_info.txt'
     else:
         print("Error!!")
         sys.exit(1)
@@ -211,7 +211,7 @@ def fileRank(bugId, rev, configFile):
     failfileset = set()  # 失败用例覆盖的文件集合
     failfilemapstmt = dict()  # 每个文件对应的语句集合映射
 
-    # 处理失败用例的覆盖率数据
+    # 处理fail.c的覆盖率数据
     for i in range(len(faillines)):
         faillinesplit = faillines[i].strip().split(',')
         filename = faillinesplit[0].strip().split('.gcda')[0].strip()  # 提取文件名
@@ -227,10 +227,29 @@ def fileRank(bugId, rev, configFile):
             failstmt[filename + ',' + stmt] = 1  # 失败用例覆盖1次
             passstmt[filename + ',' + stmt] = 0  # 通过用例覆盖0次（初始）
 
+    # 处理失败用例的覆盖率数据
+    # if os.path.exists(passdir + bugId + '/failcov'):
+    #     for i in os.listdir(passdir + bugId + '/failcov'):
+    #         # 读取单个通过用例的覆盖率文件
+    #         failfile = open(passdir + '/' + bugId + '/failcov/' + i + '/stmt_info.txt')
+    #         filelines = failfile.readlines()
+    #         failfile.close()
+    #         for j in range(len(faillines)):
+    #             filelinesplit = faillines[j].strip().split(',')
+    #             filename = filelinesplit[0].strip().split('.gcda')[0].strip()
+    #             filename = deleteGcdaPath(filename)
+    #             if not filename.endswith('.cpp'):  # 只考虑.cpp文件
+    #                 continue
+    #             if filename not in failfileset:  # 只处理fail.c也覆盖的文件
+    #                 continue
+    #             stmtlist = filelines[j].strip().split(':')[1].split(',')
+    #             for stmt in set(stmtlist) & failfilemapstmt[filename]:
+    #                 failstmt[filename + ',' + stmt] += 1
+
     # 处理所有通过测试用例的覆盖率
-    for i in os.listdir(passdir + '/' + bugId + '/passcov'):
+    for i in os.listdir(passdir + bugId + '/passcov'):
         # 读取单个通过用例的覆盖率文件
-        passfile = open(passdir + '/' + bugId + '/passcov/' + i + '/stmt_info.txt')
+        passfile = open(passdir + bugId + '/passcov/' + i + '/stmt_info.txt')
         passlines = passfile.readlines()
         passfile.close()
 
