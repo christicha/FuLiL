@@ -1,6 +1,6 @@
 from configparser import ConfigParser
 from llvm.generateMutate import generateMutate
-from llvm.rank_ import fileRank
+from llvm.rank_RBFNN import fileRank
 
 config = ConfigParser()
 config.read('./config/config.ini', encoding='utf-8')
