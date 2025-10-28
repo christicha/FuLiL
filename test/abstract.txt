@@ -1,0 +1,375 @@
+tools/clang/lib/Driver/ArgList.cpp，调用次数:386：该模块实现命令行参数解析功能，是LLVM选项子系统核心组件。主要提供ArgList类来存储和管理已解析的命令行参数，支持参数查询、过滤及渲染。它与OptTable配合完成从原始字符串到结构化参数的转换，服务于编译器驱动等需要复杂命令行处理的场景。
+tools/clang/lib/Driver/Arg.cpp，调用次数:77：该文件实现LLVM命令行参数解析模块中的Arg类，用于封装解析后的命令行参数。核心功能包括参数值的存储、与Option定义的关联、以及参数在输入序列中的位置追踪。它作为ArgList的基础组件，在编译驱动前端阶段负责将原始命令行字符串转换为结构化的参数对象，供后续处理阶段使用。
+tools/clang/lib/Driver/Option.cpp，调用次数:88：该模块是LLVM命令行选项解析系统的核心实现，负责处理编译器驱动和工具的命令行参数。主要功能包括定义选项规范、解析输入参数列表、匹配预定义选项以及生成帮助信息。它通过OptTable描述选项集，ArgList封装解析结果，为编译过程各阶段提供统一的参数交互接口。
+tools/clang/lib/Driver/OptTable.cpp，调用次数:230：该模块实现LLVM命令行选项解析的核心功能，主要提供OptTable类来定义和管理编译器的选项规格。其核心作用包括选项匹配、输入参数识别及生成帮助文档。该模块在编译过程的命令行解析阶段工作，与参数列表(ArgList)交互，将用户输入映射到预定义的选项规范上。
+lib/Support/FoldingSet.cpp，调用次数:168：该模块实现FoldingSet哈希集合的核心存储管理，用于编译器优化阶段快速去重与查找节点。提供哈希桶分配、节点定位及循环链表操作等底层支持，通过桶数组与单向循环链表结合的设计平衡空间效率与删除性能。关键功能包括计算哈希桶位置、管理链表连接关系，并与FoldingSetBase协作完成节点的插入、查找和移除。
+lib/Support/PrettyStackTrace.cpp，调用次数:13：该模块提供LLVM美化栈跟踪功能，在程序崩溃时输出可读的调用栈信息。核心功能包括启用内置栈跟踪机制、管理错误报告消息，并与信号处理模块交互，旨在提升调试体验。
+lib/Support/ConvertUTFWrapper.cpp，调用次数:32：该模块提供UTF编码转换功能，实现UTF-8、UTF-16、UTF-32及宽字符之间的相互转换。核心功能包括检测字节序标记、处理Unicode码点，并支持字符串与原始字节流的双向转换。作为LLVM基础支持模块，它在编译流程的各个阶段为字符编码处理提供底层支持。
+lib/Support/Host.cpp，调用次数:71：该模块提供主机系统检测功能，核心作用是识别宿主机的CPU架构（如x86、ARM、RISC-V）及其具体型号特性。它通过解析系统信息（如/proc/cpuinfo）和CPUID指令，为编译器目标代码生成提供准确的硬件配置，是目标解析与代码优化阶段的关键前置模块。
+lib/Support/APInt.cpp，调用次数:531：APInt.cpp 实现了 LLVM 的 APInt 类核心功能，提供任意精度整数运算支持。该模块包含内存管理、字符转数字等基础工具，并实现了 Knuth 算法 D 等高精度除法运算，以及位旋转、取补等底层操作。作为编译器中间表示的基础组件，它在编译优化阶段处理大整数常量的算术运算和位操作。
+lib/Support/Process.cpp，调用次数:39：该模块提供跨平台的进程控制功能，核心作用包括管理环境变量、文件描述符、终端颜色输出及进程执行环境。关键功能涉及检测核心转储文件状态、控制进程内存分配行为，并与文件系统、路径处理等系统模块交互，旨在为LLVM其他组件封装统一的进程操作接口。
+lib/Support/CommandLine.cpp，调用次数:534：该模块是LLVM命令行选项处理的核心组件，负责在编译器初始化及运行时解析和管理命令行参数。它定义了选项的注册、解析机制，支持多种选项类型（如布尔、整数、字符串）和格式（包括前缀和分组）。设计目标是为LLVM工具链提供统一的命令行接口，并与编译流程的其他模块（如调试系统）交互，确保选项在相关编译阶段生效。
+lib/Support/Timer.cpp，调用次数:155：该模块是LLVM的性能分析计时系统核心，提供Timer和TimerGroup类来测量并记录编译过程中的时间、内存及指令消耗。通过全局TimerGroup列表管理所有计时器，支持分组统计、结果打印及JSON输出。设计上采用互斥锁保证线程安全，并与统计子系统、信号柱跟踪等模块交互，用于优化编译性能分析。
+lib/Support/Triple.cpp，调用次数:370：该模块实现LLVM目标三元组(Triple)的解析与规范化功能，负责处理架构、厂商、操作系统和环境等组件的识别与转换。核心功能包括解析目标平台字符串、确定默认对象文件格式，以及为DXIL着色器模型提供版本映射。作为目标无关代码生成的关键基础组件，它为后续编译阶段提供标准化的目标平台描述。
+lib/Support/ManagedStatic.cpp，调用次数:28：该模块提供全局静态对象的生命周期管理，通过静态链表跟踪所有托管对象。核心功能包括使用互斥锁保证线程安全的注册机制，并在程序关闭时统一销毁所有托管实例。该设计旨在解决C++静态初始化顺序问题，确保全局资源的有序初始化和清理。
+lib/Support/RWMutex.cpp，调用次数:6：该模块实现读写锁(RWMutex)机制，为LLVM多线程环境提供共享资源的并发访问控制。支持读者优先策略，允许多个线程同时读取，但写入时独占访问。作为底层同步原语，它与LLVM的线程模型和内存分配器交互，确保编译器各阶段（如IR操作）的线程安全。
+lib/Support/ErrorHandling.cpp，调用次数:7：该模块是LLVM的错误处理核心，提供致命错误和内存分配失败的统一处理机制。核心功能包括安装/重置自定义错误处理器、报告致命错误及内存不足错误。设计目标是为LLVM各编译阶段（前后端、链接器等）提供可定制的错误响应机制，通过处理器回调与信号处理等系统组件交互，确保异常情况下的可控退出。
+lib/Support/APFloat.cpp，调用次数:204：APFloat.cpp 实现了 LLVM 中一个独立于主机和目标的任意精度浮点数软件库。该模块提供浮点数的核心运算、进制转换及舍入处理，支持多种浮点格式（如 IEEE-754），服务于编译器前端的常量求值与代码生成阶段。其设计目标是为编译器提供精确、可移植的浮点运算支持。
+lib/Support/Twine.cpp，调用次数:162：Twine模块提供轻量级字符串临时拼接功能，通过延迟求值避免不必要的内存分配。它作为LLVM编译器中间表示（IR）处理阶段的字符串辅助工具，与raw_ostream配合实现高效字符串输出，主要用于编译过程中的诊断信息和符号名称拼接。
+lib/Support/SmallVector.cpp，调用次数:16：该模块为LLVM的SmallVector容器提供底层内存管理支持，核心功能包括计算扩容后的新容量（getNewCapacity）与处理特殊内存分配场景（replaceAllocation）。它通过报告容量溢出（report_size_overflow）和最大容量错误（report_at_maximum_capacity）确保容器操作的安全性。该模块在编译时优化小对象存储，并与LLVM内存分配器交互，旨在实现高效且安全的动态数组内存管理。
+lib/Support/StringRef.cpp，调用次数:115：该模块实现LLVM字符串引用（StringRef）的核心操作，提供高效、轻量的字符串处理功能。关键函数ascii_strncasecmp支持不区分大小写的字符串比较，被starts_with_insensitive等方法调用。模块通过集成哈希、编辑距离计算等组件，在编译器的词法分析、符号表管理等阶段实现零拷贝字符串操作，优化编译性能。
+lib/Support/SmallPtrSet.cpp，调用次数:99：该模块实现SmallPtrSet类，提供基于SmallVector优化的指针集合容器。核心功能包括指针的插入、查找和删除操作，通过内联存储避免小规模数据时的堆分配。设计目标是在编译器的中间表示优化等阶段高效处理指针集合，与LLVM的DenseMap等容器协同工作，利用内存池进行动态扩容。
+lib/Support/Program.cpp，调用次数:171：该模块提供跨平台程序执行功能，核心函数Execute用于创建子进程并运行指定程序。支持参数传递、环境变量设置、输入输出重定向及内存限制等配置，是实现编译过程中外部工具调用的关键底层组件。
+lib/Support/IntEqClasses.cpp，调用次数:24：该模块实现整数等价类的高效管理，用于将整数集合划分为等价类。核心类`IntEqClasses`支持动态合并等价类、查找类代表元素及压缩类ID。主要应用于编译器的中间表示优化阶段，如处理寄存器分配中的并查集操作，通过紧凑存储提升算法性能。
+lib/Support/StringMap.cpp，调用次数:107：该模块实现LLVM字符串映射表的核心内存管理功能，负责哈希表的初始创建、容量计算与桶数组分配。通过计算最小桶数量优化存储效率，支持键值查找和哈希表重整操作，为上层StringMap提供基础存储管理。
+lib/Support/CrashRecoveryContext.cpp，调用次数:12：该模块提供崩溃恢复机制，允许程序在发生严重信号（如SIGSEGV）时捕获并优雅处理，而非立即终止。核心功能包括安装/卸载异常与信号处理器，以及支持在独立线程中以后台优先级安全运行任务，旨在提升工具（如编译器）的鲁棒性。
+lib/Support/MemoryBuffer.cpp，调用次数:155：该模块提供内存缓冲区的核心管理功能，用于在编译前端高效读取文件或输入数据。支持通过内存映射或读取拷贝方式创建只读/可写缓冲区，并处理空字符终止、流式输入等需求。与文件系统紧密交互，根据文件类型、大小及访问模式智能选择内存策略，为词法分析等阶段提供统一的数据访问接口。
+lib/Support/ConstantRange.cpp，调用次数:294：该模块实现LLVM常量范围分析，用于编译优化阶段的数值范围跟踪。核心类ConstantRange表示整数常量集合，提供交集/并集运算、移位乘除等算术操作的范围计算。关键功能包括无符号/有符号乘法精确区域构建、位移溢出处理、位掩码与操作下界估计等，通过与KnownBits等模块交互支持值域推导。
+lib/Support/Statistic.cpp，调用次数:26：该模块实现LLVM编译过程中的统计信息收集与管理。核心功能包括通过命令行选项控制统计开关、管理统计信息注册表，并提供统计结果的打印输出（支持JSON格式）。该模块与LLVM各编译阶段交互，供代码转换和分析过程记录性能指标。
+lib/Support/Path.cpp，调用次数:131：该模块提供跨平台路径处理和文件系统操作功能，包含路径的词法解析（获取根路径、文件名、扩展名等）、路径操作（拼接、去除文件名、替换扩展名）以及物理文件系统交互（创建临时文件/目录、检查文件存在性）。设计目标是为LLVM支持不同操作系统的路径格式，在编译过程中处理文件路径和基础文件系统操作。
+lib/Support/Threading.cpp，调用次数:10：该模块提供LLVM跨平台多线程支持，核心功能包括检测硬件并发数、控制线程亲和性及管理线程优先级。它集成GNU Jobserver接口协调并行任务，在编译过程各阶段（如并行代码生成）实现负载均衡。设计目标是通过抽象系统API确保线程操作的可移植性与效率。
+lib/Support/Allocator.cpp，调用次数:66：该模块是LLVM支持库中的内存分配器组件，提供BumpPtrAllocator和RecyclingAllocator等核心内存管理工具。BumpPtrAllocator通过连续内存块实现高效线性分配，支持批量释放；RecyclingAllocator则针对特定尺寸对象进行内存回收复用。这些分配器贯穿LLVM编译流程各阶段，为编译器内部数据结构提供高性能的内存管理支持，其设计目标是在保证分配效率的同时减少内存碎片。
+lib/Support/GraphWriter.cpp，调用次数:27：该模块为LLVM提供图可视化功能，核心作用是将内部数据结构输出为DOT格式文件，并调用外部图形工具（如DOT、CIRCO等）进行渲染显示。主要处理文件名合法性检查、图形程序路径查找及执行流程控制，在编译过程中辅助开发人员调试分析程序结构。
+lib/Support/TargetRegistry.cpp，调用次数:33：该模块实现LLVM目标注册表，负责管理所有支持的目标架构（如x86、ARM）。核心功能包括目标注册、查询和排序，为编译器后端提供统一的访问接口。它与MC子系统（汇编器、代码生成器）交互，在目标初始化阶段收集架构信息，支撑后续代码生成流程。
+lib/Support/DynamicLibrary.cpp，调用次数:8：该模块提供动态库的跨平台管理功能，核心作用包括永久加载动态库、搜索库中符号地址以及手动添加符号映射。它作为LLVM运行时支持组件，使JIT编译器等工具能够与系统动态库交互，实现符号解析和动态链接。
+lib/Support/FormattedStream.cpp，调用次数:20：该模块提供格式化输出流功能，基于LLVM的raw_ostream实现带缩进和列对齐的文本输出。核心类FormattedStream通过管理缩进状态与列位置，支持结构化代码生成和诊断信息格式化。主要用于编译器后端阶段生成汇编代码或调试元数据，与LLVM输出子系统协同工作。
+lib/IR/InlineAsm.cpp，调用次数:22：该模块实现LLVM内联汇编功能，在IR阶段表示和处理嵌入高级IR中的汇编代码。核心类InlineAsm封装汇编指令字符串、约束条件和副作用标识，支持调用约定与寄存器级操作。设计目标是为优化器和代码生成器提供统一的内联汇编表示，确保汇编片段在编译流程中正确集成与验证。
+lib/IR/Metadata.cpp，调用次数:301：该模块是LLVM元数据系统的核心实现，负责管理编译过程中的调试信息、范围分析和别名分析等元数据。它定义了元数据节点(MDNode)的创建、规范化、唯一化和存储机制，支持自引用处理，并与LLVM上下文、指令和全局对象等核心组件交互。模块通过类型分发机制处理各类元数据子类，确保元数据在整个编译流程中的一致性和正确性。
+lib/IR/LLVMContext.cpp，调用次数:56：LLVMContext.cpp 实现了 LLVM 编译器的核心上下文管理模块。该模块为整个编译过程提供共享的上下文环境，统一管理类型、常量元数据和诊断信息。其核心功能包括处理诊断消息的启用判断与分发，以及维护各类固定元数据类型的定义。该模块作为编译器基础设施，与 IR 生成、优化及代码生成阶段紧密交互，确保编译过程信息的一致性与隔离性。
+lib/IR/ValueTypes.cpp，调用次数:91：该文件实现LLVM代码生成阶段的扩展值类型(EVT)系统，作为IR类型与目标机器特定类型之间的桥梁。核心功能包括映射LLVM IR类型到机器值类型、处理目标相关的向量/浮点类型，并支持类型合法性检查。该模块与IR类型系统和后端指令选择紧密交互，确保类型在代码生成过程中的正确转换。
+lib/IR/Dominators.cpp，调用次数:214：该模块实现LLVM中的支配树与后支配树计算，提供控制流图的基本块支配关系分析。核心功能包括支配树的构建、增量更新（插入/删除边）及正确性验证，支持编译过程中的优化与代码变换。作为编译器中间表示的基础设施，它为其他Pass提供支配关系查询服务。
+lib/IR/PassRegistry.cpp，调用次数:424：该模块是LLVM Pass注册表的核心实现，负责管理所有Pass的注册与生命周期。它维护全局Pass注册表，支持Pass的注册、初始化和查询。通过注册机制，该模块确保Pass在编译流程中正确加载和执行，是实现Pass管理器功能的基础组件。
+lib/IR/Constants.cpp，调用次数:1197：该模块是LLVM IR常量系统的核心实现，负责各类常量的创建、管理和折叠优化。主要处理标量常量（如整型、浮点型）和复合常量（如常量表达式、结构体、数组、向量），并实现常量折叠以简化IR。模块在编译器的IR构建与优化阶段工作，通过集中管理常量来确保唯一性并减少内存开销，同时与类型系统、全局值和指令等IR组件紧密交互。
+lib/IR/Globals.cpp，调用次数:76：该模块负责LLVM全局值（GlobalValue）的核心管理，包括全局变量、函数、别名和IFunc的基类操作。提供从父模块中移除/删除全局值的统一操作接口，并支持通过别名链解析最终目标对象。其设计目标是为IR阶段的全局符号操作提供基础框架，与模块管理和常量处理模块紧密交互。
+lib/IR/LLVMContextImpl.cpp，调用次数:98：该模块是LLVM上下文的核心实现，负责管理编译过程中的全局共享资源。主要功能包括统一管理所有IR类型系统、元数据节点和属性集合，确保类型唯一性并实现资源复用。同时处理诊断信息、优化过程控制以及分析报告流。作为LLVMContext的内部数据管理器，它为整个编译流程提供基础设施支持。
+lib/IR/DIBuilder.cpp，调用次数:4：DIBuilder模块负责在LLVM IR生成阶段构建调试信息元数据。其核心功能包括创建各类调试信息节点（如作用域、变量、类型、函数等），管理调试信息的生命周期，并为调试指令（dbg.declare/dbg.value）提供支持。该模块与IRBuilder协作，确保调试信息能准确关联到IR指令和变量位置。
+lib/IR/ConstantFold.cpp，调用次数:783：该模块实现LLVM常量折叠功能，在编译优化阶段对常量表达式进行简化。核心功能包括处理类型转换对优化、位转换操作和全局值比较关系分析，通过消除冗余常量计算提升编译效率。模块与指令折叠及类型系统交互，实现编译时的常量表达式求值。
+lib/IR/Attributes.cpp，调用次数:470：该模块是LLVM属性系统的核心实现，负责管理函数、参数和返回值的属性。主要提供属性的创建、存储、查询与比较功能，支持枚举型和字符串型属性的统一处理。在编译优化阶段，模块负责处理函数内联时的属性传播与兼容性检查（如严格浮点模式、栈保护级别等），确保属性在IR转换过程中的正确性。其设计目标是通过高效的属性管理支撑跨模块的编译优化。
+lib/IR/DataLayout.cpp，调用次数:356：该模块实现LLVM数据布局管理，负责解析和表示目标平台的数据类型尺寸、地址空间与内存对齐规则。核心功能包括解析数据布局规范字符串，计算类型大小与偏移量，为GEP索引生成和代码优化提供布局查询支持。它在IR优化与代码生成阶段与其他IR组件交互，确保内存访问符合目标ABI约束。
+lib/IR/Instructions.cpp，调用次数:630：该文件实现LLVM中间表示的核心指令类，提供内存操作（alloca/load/store）、GEP地址计算、向量混洗等关键IR指令的构造与查询功能。模块负责IR构建阶段的指令创建与属性推导，通过计算默认对齐方式、分析掩码模式等辅助函数支撑指令优化，并与数据布局、类型系统等模块交互以实现跨平台代码生成。
+lib/IR/ValueSymbolTable.cpp，调用次数:132：该模块实现LLVM IR中的值符号表管理，在编译器的IR构建与优化阶段负责维护具名值的唯一性映射。核心功能包括通过名称查找Value、处理符号重名冲突、确保全局值名称符合目标平台约定。其设计目标是为Module和Function等容器提供高效的符号解析支持，并与全局值可见性规则协同工作。
+lib/MC/MCParser/AsmParser.cpp，调用次数:64：该模块是LLVM汇编器前端，负责解析汇编源代码并生成MCInst中间表示。核心功能包括词法分析、语法解析、表达式计算和指令匹配，支持多种目标架构和对象格式（ELF/COFF/Mach-O等）。通过与目标特定的汇编解析器交互，将文本汇编转换为机器指令，为后续代码生成阶段提供输入。
+lib/MC/MCAsmBackend.cpp，调用次数:4：该模块是LLVM汇编后端，负责将汇编器生成的指令编码为特定目标文件格式的机器码。核心功能包括处理重定位、修正指令编码、优化分支指令以及生成各类对象文件（ELF/Mach-O/COFF等）。它在汇编阶段与对象写入器交互，将MCInst转换为目标平台的二进制表示。
+lib/MC/MCContext.cpp，调用次数:226：MCContext是LLVM机器码生成阶段的核心上下文管理器，负责统一管理与目标文件格式相关的符号和节区。它为COFF、ELF、Wasm等多种二进制格式创建并缓存MCSymbol和MCSection对象，同时集成诊断处理功能。该模块通过与MCStreamer及目标特定组件交互，支撑汇编和对象文件生成的完整流程。
+lib/MC/MCStreamer.cpp，调用次数:213：MCStreamer.cpp 实现了汇编代码流式输出抽象层，负责在汇编和链接阶段将指令、标签、符号等转换为目标文件格式。它处理调试信息（如 DWARF、CodeView）、异常处理框架（Windows SEH、Mach-O）以及多平台节区管理，通过统一接口屏蔽不同对象格式的差异，为后端代码生成提供与格式无关的输出通道。
+lib/MC/ELFObjectWriter.cpp，调用次数:1309：该模块是LLVM的ELF目标文件写入器，负责在汇编阶段将MC抽象指令转换为ELF格式的二进制目标文件。核心功能包括生成ELF文件头、段头表、节区数据，处理符号表、重定位表，以及管理符号类型合并和特殊符号（如IFUNC）的识别。它与MC汇编器后端交互，完成从中间表示到标准ELF对象的序列化输出。
+lib/MC/MCObjectFileInfo.cpp，调用次数:240：该模块为LLVM后端代码生成阶段提供目标文件格式的抽象配置。核心功能是根据不同目标架构（ELF/COFF/MachO/Wasm等）生成对应的元数据节区，包括异常处理、调试信息、紧凑栈展开等。通过统一接口封装各格式的节区创建逻辑，确保汇编器与目标文件写入器能正确布局节区数据。
+lib/MC/MCSymbol.cpp，调用次数:9：该模块实现MCSymbol类，负责在LLVM汇编器后端表示符号。核心功能包括管理符号名称、绑定属性、定义状态及关联代码片段。在汇编和链接阶段，模块与MCContext、MCFragment等组件交互，支撑符号解析、重定位及目标文件生成。
+lib/MC/MCAssembler.cpp，调用次数:688：该模块是LLVM汇编器核心组件，负责将MCInst指令流组装为目标文件。主要功能包括管理代码片段布局、解析符号地址、处理重定位信息，并协调汇编后端与对象写入器生成最终二进制代码。设计目标是通过分层架构衔接编译器代码生成与目标文件输出阶段。
+lib/MC/MCELFObjectTargetWriter.cpp，调用次数:26：该模块是LLVM中ELF目标文件写入器的核心实现，负责在汇编器后端将机器代码（MC）数据转换为特定目标架构的ELF目标文件。它通过处理符号、重定位和节区布局，封装不同ELF格式变体（如ELF32/ELF64）的差异，为各目标架构提供统一的ELF输出接口。
+lib/MC/MCRegisterInfo.cpp，调用次数:7：该模块在LLVM后端机器码生成阶段，提供目标架构寄存器信息的抽象描述。核心类MCRegisterInfo定义寄存器属性、编号映射及等价关系，支持寄存器分配与编码。它通过初始化例程与TableGen生成的寄存器数据交互，为汇编器/反汇编器和代码发射器提供统一的寄存器查询接口。
+lib/MC/MCELFStreamer.cpp，调用次数:417：MCELFStreamer是LLVM中负责生成ELF目标文件的MCStreamer实现。该模块在汇编阶段将汇编指令和数据转换为ELF格式的节和符号，处理符号属性合并及重定位信息。它与汇编器后端、代码发射器和ELF对象写入器协作，完成从中间表示到ELF二进制输出的转换。
+lib/MC/MCObjectStreamer.cpp，调用次数:301：该模块是LLVM汇编器后端核心组件，负责将汇编指令流转换为目标文件对象格式。主要功能包括管理代码片段分配、处理符号地址计算与差值运算、生成DWARF调试信息行表及栈帧元数据。通过与MCAsmBackend、MCCodeEmitter等组件协作，完成从中间表示到二进制目标文件的最终输出。
+lib/MC/MCDwarf.cpp，调用次数:749：该模块负责生成DWARF调试信息中的行号表、地址范围数据及框架描述。核心功能包括处理DWARF文件条目、生成地址范围表、构建调试信息条目及关联的缩写表。在汇编阶段与MCStreamer交互，将调试数据输出到目标文件，支持DWARF多版本格式。
+lib/MC/MCObjectWriter.cpp，调用次数:50：该模块是LLVM后端汇编阶段的核心组件，负责将汇编器生成的MC片段布局并转换为具体的目标对象文件。它抽象了不同对象格式的写入操作，通过MCObjectWriter接口与特定目标的对象流写入器交互，最终输出ELF、COFF等格式的二进制对象文件。
+lib/MC/MCAsmInfo.cpp，调用次数:85：该文件实现MCAsmInfo类，用于描述目标汇编器的特性与语法规则。核心功能包括配置汇编输出格式、定义指令和标签语法、设置对齐方式及数据编码规则。在编译器的代码生成阶段，为汇编器后端和流式输出提供目标平台相关的汇编约定，确保汇编代码符合特定汇编器的要求。
+lib/MC/MCCodeEmitter.cpp，调用次数:2：该模块是LLVM机器码发射器的基类，负责在汇编阶段将MCInst指令转换为二进制机器码。核心功能包括处理定长/变长指令编码、处理重定位信息以及计算指令大小。作为目标无关的抽象接口，它与特定目标的编码实现协作，完成从中间表示到目标代码的最终转换。
+lib/MC/SubtargetFeature.cpp，调用次数:173：该模块负责管理目标特定的子目标特性，用于解析和处理CPU架构特性字符串。核心功能包括特性标志的编码、解码和验证，支持特性依赖性和相互排斥性检查。在编译器的目标代码生成阶段，它与目标解析器交互，将高级特性描述转换为底层可用的特性标志，确保指令集和硬件特性的正确匹配。
+lib/MC/WinCOFFObjectWriter.cpp，调用次数:34：该模块是LLVM的Windows COFF目标文件写入器，负责在汇编阶段将MC层数据转换为COFF格式对象文件。核心功能包括处理COFF符号表、段头部、重定位记录和字符串表，实现与汇编器的绑定交互以生成符合PE/COFF标准的二进制输出。
+lib/MC/MCExpr.cpp，调用次数:165：该模块实现LLVM机器码表达式(MCExpr)的评估与处理，属于汇编阶段。核心功能包括解析符号地址计算、折叠常量表达式、处理符号偏移差优化，并与汇编器(Assembler)、目标文件写入器(ObjectWriter)交互以生成最终二进制代码。
+lib/MC/MCSubtargetInfo.cpp，调用次数:129：该模块在LLVM机器码生成阶段，负责管理特定目标处理器的子目标特性。核心功能包括解析CPU型号与特性字符串，通过二进制搜索匹配特征键值，并处理特性间的隐含关系（设置/清除关联比特位）。它为指令调度模型提供支持，并与目标解析器交互以显示可用的CPU和特性帮助信息。
+lib/Target/MSP430/MCTargetDesc/MSP430MCTargetDesc.cpp，调用次数:23：该模块为LLVM的MSP430后端提供机器码目标描述，负责在编译器代码生成阶段注册并初始化关键MC组件。核心功能包括创建指令信息、寄存器信息、汇编信息及子目标信息，并生成机器指令打印器。通过目标注册机制与LLVM MC框架交互，实现对MSP430架构的完整机器码描述支持。
+lib/Target/MSP430/MSP430BranchSelector.cpp，调用次数:63：该模块是LLVM中针对MSP430后端的机器函数通道，负责分支指令选择。其核心功能是在代码生成阶段，将超出短跳转范围的分支指令扩展为长格式，并通过分割基本块确保跳转目标在有效范围内。该过程与指令选择及子目标信息交互，旨在优化代码大小与正确性。
+lib/Target/MSP430/MSP430AsmPrinter.cpp，调用次数:6：该模块是MSP430后端的汇编打印器，负责在代码生成阶段将机器指令转换为MSP430目标架构的汇编代码。它继承LLVM通用AsmPrinter，通过指令 lowering 机制处理机器指令到MCInst的转换，并与目标描述子系统交互完成最终汇编输出。
+lib/Target/MSP430/MSP430ISelLowering.cpp，调用次数:63：该模块是LLVM中MSP430后端的指令选择降级核心组件，负责在SelectionDAG阶段将通用LLVM IR操作转换为MSP430目标特定的指令模式。主要功能包括分析函数参数和返回值以遵循MSP430 ABI约定，处理可变参数和参数拆分，并实现条件码比较操作生成。通过与目标机器信息和调用约定组件的交互，完成从通用IR到目标特定DAG节点的合法化与降级转换。
+lib/Target/MSP430/MSP430TargetMachine.cpp，调用次数:6：该模块是LLVM中MSP430微控制器的目标机器实现，负责初始化MSP430后端并配置目标机器。核心功能包括注册MSP430特定组件（如汇编打印器和指令选择器），设置静态重定位模型，并管理代码生成流程。它作为MSP430架构与LLVM代码生成器之间的桥梁，协调目标相关的编译过程。
+lib/Target/MSP430/TargetInfo/MSP430TargetInfo.cpp，调用次数:22：该模块是LLVM中MSP430后端的目标信息注册器，核心功能是在编译器初始化阶段向目标注册表注册MSP430目标架构。通过LLVMInitializeMSP430TargetInfo()函数实现与LLVM目标框架的交互，确保后续编译流程能识别并处理MSP430平台相关的代码生成任务。
+lib/Target/Sparc/MCTargetDesc/SparcMCTargetDesc.cpp，调用次数:22：该模块是LLVM中SPARC架构的机器码描述组件，负责在编译器后端生成目标代码阶段提供SPARC-specific的MC层基础设施。核心功能包括：注册并创建SPARC架构的指令集信息、寄存器描述、子目标特性及汇编格式；同时为不同目标流（对象文件/汇编输出）提供相应的目标流接口。该模块通过静态初始化函数向LLVM目标系统注册所有SPARC相关的MC组件，支撑后续代码生成流程。
+lib/Target/Sparc/SparcISelLowering.cpp，调用次数:10：该模块是SPARC目标平台的指令选择降级核心组件，负责在LLVM后端将SelectionDAG节点转换为SPARC机器指令。主要功能包括调用约定实现（参数传递、返回值处理）、条件码转换、128位浮点运算降级，以及特殊操作（如帧地址获取、原子操作）的 lowering。通过与目标机器信息和寄存器信息交互，完成代码生成前的关键指令转换。
+lib/Target/Sparc/SparcAsmPrinter.cpp，调用次数:7：SparcAsmPrinter是LLVM中SPARC架构的汇编代码生成模块，属于代码生成后端。该模块将LLVM中间表示转换为SPARC架构的机器指令，通过MCInst生成目标代码，并处理函数调用、移位操作等指令的汇编输出。作为AsmPrinter的子类，它与MC层交互完成最终的汇编代码或目标文件生成。
+lib/Target/Sparc/SparcTargetMachine.cpp，调用次数:7：该模块是LLVM中SPARC架构的代码生成核心，负责初始化SPARC目标机器并配置其编译流程。关键功能包括目标机器注册、重定位模型与代码模型的有效值计算，以及条件分支松弛等优化选项的提供。它协调后端各组件（如指令选择、汇编输出）在SPARC平台上的协同工作。
+lib/Target/Sparc/DelaySlotFiller.cpp，调用次数:35：该模块是LLVM中针对Sparc架构的延迟槽填充器，作为机器函数后端优化阶段运行。核心功能是识别并填充分支/调用指令后的延迟槽，通过指令调度提升流水线效率。支持与RESTORE指令组合优化（如ADD、OR、SETHI），统计填充数量，并可通过选项禁用。
+lib/Target/Sparc/TargetInfo/SparcTargetInfo.cpp，调用次数:24：该模块是LLVM中SPARC架构的目标信息注册器，在编译器初始化阶段向目标注册表注册SPARC架构的多个目标（包括Sparc、SparcEL和SparcV9），为后续编译流程提供目标平台的基本识别与配置支持。
+lib/Target/Hexagon/MCTargetDesc/HexagonMCTargetDesc.cpp，调用次数:22：该文件是LLVM中Hexagon目标机的机器代码描述模块，负责在编译器的代码生成阶段提供目标特定支持。核心功能包括定义Hexagon处理器的寄存器信息、指令集描述和子目标特性，并创建对应的汇编器、反汇编器和代码发射器。该模块通过目标注册机制与LLVM核心框架交互，为Hexagon架构生成ELF格式的目标文件提供基础设施。
+lib/Target/Hexagon/HexagonVLIWPacketizer.cpp，调用次数:37：该模块是Hexagon后端的VLIW指令打包器，在代码生成阶段将独立指令组合成VLIW数据包。核心功能包括检测指令间依赖关系、处理谓词执行与寄存器冲突、管理控制流指令，并遵循目标架构的打包约束规则。它与调度器和寄存器分配器协同工作，实现指令级并行优化。
+lib/Target/Hexagon/HexagonFrameLowering.cpp，调用次数:80：该模块是Hexagon后端的栈帧处理核心，负责在代码生成阶段管理函数栈帧的布局与操作。主要功能包括处理函数调用的序言/尾声生成、寄存器保存与恢复、栈指针调整以及局部变量空间分配。它与寄存器分配器、指令选择器等组件交互，旨在实现高效的栈空间利用，并支持栈帧收缩包装等优化。
+lib/Target/Hexagon/HexagonISelDAGToDAG.cpp，调用次数:34：该模块是Hexagon后端的DAG到DAG指令选择器，负责将合法化后的SelectionDAG转换为Hexagon架构特定的DAG。其核心功能包括模式匹配指令选择、地址计算树重平衡优化，并处理内存操作候选识别及目标相关常量。该阶段承接指令选择，为后续指令调度做准备。
+lib/Target/Hexagon/HexagonTargetObjectFile.cpp，调用次数:29：该模块为Hexagon目标平台实现对象文件生成，核心功能是管理全局变量的节区分配。它根据大小阈值将小数据对象分配到.sdata/.sbss节，支持跳转表和查找表在函数节中的可选放置，并与代码生成器交互以优化数据布局。
+lib/Target/Hexagon/HexagonSubtarget.cpp，调用次数:60：HexagonSubtarget模块定义了Hexagon处理器目标的子目标特性，负责管理指令集、寄存器及调度相关的硬件特定信息。它在LLVM代码生成阶段工作，通过控制调度选项（如BSB调度、长调用、谓词调用）和优化（如返回值优化、消除存储体冲突）来定制机器指令调度。该模块与机器调度器交互，实现针对Hexagon架构的指令依赖调整和零延迟边处理。
+lib/Target/Hexagon/HexagonISelLowering.cpp，调用次数:33：该文件是Hexagon后端在LLVM SelectionDAG阶段的核心 lowering 实现，负责将LLVM IR中间表示转换为特定于Hexagon架构的SelectionDAG节点。主要功能包括处理调用约定、参数传递、内存操作 lowering，以及将内建函数和复杂操作转换为目标支持的指令序列。该模块与代码生成器的其他组件协作，为后续指令选择和调度做准备。
+lib/Target/Hexagon/HexagonMachineScheduler.cpp，调用次数:44：该文件为Hexagon VLIW处理器实现机器指令调度器，是LLVM机器调度框架的扩展。核心功能包括定义Hexagon特定调度策略、资源管理和依赖关系处理，在指令选择后生成ScheduleDAG并进行VLIW打包优化。通过与目标子系统和VLIW调度器交互，实现指令级并行优化。
+lib/Target/Hexagon/HexagonNewValueJump.cpp，调用次数:44：该模块是Hexagon后端的机器函数Pass，用于在机器指令层将条件跳转优化为NewValueJump指令。其核心功能是识别比较指令的结果生产者（feeder），并验证其能否安全地替换为使用新值的跳转指令，从而消除冗余比较操作。该优化发生在寄存器分配阶段前后，与分支概率信息交互以选择最佳跳转类型。
+lib/Target/Hexagon/HexagonAsmPrinter.cpp，调用次数:42：HexagonAsmPrinter是LLVM中面向Hexagon架构的汇编代码生成模块，负责在编译后端将机器指令（MachineInstr）转换为MCInst表示并输出汇编代码。其核心功能包括处理Hexagon特定指令（如向量偏移量缩放、寄存器对转换）和小数据段生成，并与MCStreamer及目标流接口交互以完成最终代码发射。
+lib/Target/Hexagon/HexagonPeephole.cpp，调用次数:53：该模块是Hexagon后端的窥孔优化器，作用于LLVM代码生成阶段的机器指令层面。核心功能包括优化符号/零扩展操作、处理PNotP模式以及扩展至64位操作。该过程通过识别并替换特定指令序列来提升代码效率，与机器函数及寄存器信息交互实现局部指令改进。
+lib/Target/Hexagon/HexagonTargetMachine.cpp，调用次数:60：该文件是LLVM中Hexagon目标机器的核心实现模块，负责定义和配置Hexagon后端的编译流程。其核心功能包括构建目标机器实例、管理特定于Hexagon的编译过程（如指令选择、循环优化、硬件循环处理），并集成自定义的机器调度器。该模块通过注册并组织一系列Hexagon专用优化与代码生成Pass，实现从LLVM IR到Hexagon目标代码的转换。
+lib/Target/Hexagon/TargetInfo/HexagonTargetInfo.cpp，调用次数:22：该文件是LLVM中Hexagon架构的目标信息注册模块。核心功能是通过初始化函数向LLVM目标系统注册Hexagon后端，声明其支持的架构特性。该模块在编译器初始化阶段被调用，为后续代码生成流程提供目标平台基础信息。
+lib/Target/X86/AsmParser/X86AsmParser.cpp，调用次数:7：X86AsmParser.cpp 是 LLVM 中 x86 架构的汇编解析器核心模块。它负责在汇编阶段解析 x86 汇编指令，将助记符和操作数转换为内部 MCInst 表示。该模块通过自动生成的匹配器（X86GenAsmMatcher.inc）进行指令匹配，并支持 SSE 到 AVX 指令转换等优化。它与目标描述、寄存器信息和流式输出等子系统交互，共同完成从汇编文本到机器指令的转换。
+lib/Target/X86/MCTargetDesc/X86MCAsmInfo.cpp，调用次数:91：该模块为X86架构提供汇编代码生成信息，定义AT&T和Intel两种汇编语法风格选项，并配置重定位修饰符映射表。它在LLVM后端代码生成阶段工作，为汇编器输出提供目标相关的格式规范，与MCStreamer等模块交互实现正确的汇编代码输出。
+lib/Target/X86/MCTargetDesc/X86ELFObjectWriter.cpp，调用次数:118：该模块是X86架构ELF目标文件写入器的核心实现，负责在LLVM后端代码生成阶段将机器指令转换为ELF格式的二进制目标文件。其主要功能包括处理X86特定的重定位类型，特别是64位架构下的各种PC相对寻址和符号重定位，通过映射内部fixup类型到标准ELF重定位条目，确保目标文件符合ELF规范并与链接器正确交互。
+lib/Target/X86/MCTargetDesc/X86MCCodeEmitter.cpp，调用次数:499：该模块是X86机器码发射器，负责在LLVM后端编译阶段将MCInst指令转换为二进制机器码。核心功能包括处理指令编码的ModR/M字节、生成立即数常量、判断位移量是否适合压缩格式，并管理全局偏移表等特殊符号的表达式解析。设计目标是与X86特定寻址模式和ELF重定位机制交互，完成从中间表示到目标代码的最终转换。
+lib/Target/X86/MCTargetDesc/X86MCTargetDesc.cpp，调用次数:224：该模块是LLVM X86目标机的机器码描述核心，负责在编译器后端生成阶段提供X86架构的MC（Machine Code）基础设施。主要功能包括：注册X86目标机到LLVM框架，创建指令集信息、寄存器描述和子目标特性；实现汇编器输出格式(AT&T/Intel)的指令打印；提供PLT条目分析工具。通过与目标注册表交互，为汇编、反汇编和代码发射阶段提供架构特定支持。
+lib/Target/X86/MCTargetDesc/X86AsmBackend.cpp，调用次数:189：该模块是X86架构的汇编后端，负责目标代码生成阶段的指令编码与重定位处理。核心功能包括处理分支指令松弛优化、宏指令融合检测、RIP相对寻址识别，以及管理各类重定位类型。它与汇编器、代码发射器及对象写入器交互，共同完成从MCInst到二进制指令的转换与优化。
+lib/Target/X86/X86FloatingPoint.cpp，调用次数:715：该模块是X86后端的浮点栈管理器，在代码生成阶段对x87浮点指令进行栈化处理。核心功能包括转换浮点指令为栈操作形式、管理寄存器栈状态、通过插入FXCH指令优化栈顶访问。设计目标是通过维护指令间的栈一致性来提升浮点计算性能。
+lib/Target/X86/X86Subtarget.cpp，调用次数:242：该模块是LLVM中X86架构的子目标描述实现，负责在代码生成阶段配置特定CPU特性。核心功能包括定义X86处理器家族的指令集、寄存器资源和调度模型，并集成全局指令选择器(GISel)的调用降级、合法化及寄存器分配组件。通过与目标机器和指令选择器交互，为不同X86微架构提供差异化的编译优化策略。
+lib/Target/X86/X86FrameLowering.cpp，调用次数:722：X86FrameLowering.cpp 实现x86架构栈帧管理，负责函数调用中栈指针调整、寄存器保存/恢复及栈空间分配。该模块在代码生成阶段处理函数序言与尾声，生成堆栈操作指令，并与异常处理、寄存器分配等模块交互以支持分段栈等特性。
+lib/Target/X86/X86TargetObjectFile.cpp，调用次数:4：该模块是X86目标文件生成的实现核心，负责在编译器后端代码发射阶段，处理特定于X86架构的节（Section）与符号布局。它定义了如何生成ELF节（如微小代码模型下的特殊节）、管理线程局部存储(TLS)并集成Dwarf调试信息，通过与LLVM MC层及目标机器信息交互，完成从中间表示到目标对象文件的转换。
+lib/Target/X86/X86RegisterInfo.cpp，调用次数:408：该模块实现X86架构的寄存器信息管理，在代码生成阶段处理寄存器分配、帧索引消除和栈帧优化。核心功能包括提供寄存器描述、管理基指针优化、生成寄存器分配提示（支持Tile形状匹配），并与帧降低及机器函数信息模块交互完成栈帧布局。
+lib/Target/X86/X86SelectionDAGInfo.cpp，调用次数:6：该模块在LLVM的SelectionDAG指令选择阶段，负责为X86架构生成高效的内存操作指令。其核心功能是优化常量大小的内存设置(memset)和内存复制(memcpy)操作，通过发射REP STOS和REP MOVS系列指令来实现。模块会根据对齐方式、目标特性和代码大小优化选项，智能选择最优的重复操作数据类型（如B/W/D/Q），并在特定情况下回退到加载/存储序列或运行时函数调用。
+lib/Target/X86/X86MCInstLower.cpp，调用次数:470：该模块负责在X86架构代码生成阶段，将机器指令（MachineInstr）转换为底层的MCInst表示。其核心功能是完成指令 lowering，处理操作数到汇编符号的转换，并生成相关的汇编注释。该模块与汇编打印器（AsmPrinter）及目标流（TargetStreamer）交互，旨在为最终的汇编或目标文件输出做准备。
+lib/Target/X86/X86ISelDAGToDAG.cpp，调用次数:1403：该模块是X86后端的DAG到DAG指令选择器核心实现，负责将平台无关的SelectionDAG节点转换为X86特定的机器指令。核心功能包括模式匹配X86指令、地址模式折叠优化、复杂指令（如BEXTR/VPTESTM）合成，以及通过窥孔优化提升代码质量。它在LLVM指令选择阶段运行，与X86子目标特性紧密交互，将中间表示最终转换为合法的X86机器指令序列。
+lib/Target/X86/X86ISelLowering.cpp，调用次数:1964：该文件是LLVM中X86目标平台的指令选择降级模块，负责在SelectionDAG阶段将LLVM IR中间表示转换为X86机器相关的DAG节点。核心功能包括处理X86特有的指令集特性、实现复杂操作到机器指令的映射、优化向量 shuffle 操作以及处理条件码转换。该模块与X86指令生成器和目标机器描述紧密交互，确保高效生成X86汇编代码。
+lib/Target/X86/X86AsmPrinter.cpp，调用次数:225：X86AsmPrinter.cpp 是LLVM后端中负责将X86机器指令转换为汇编代码的关键模块。它在代码生成阶段工作，核心功能包括处理X86架构特定的汇编输出、内联汇编操作数打印，以及生成非惰性符号指针和Windows/MSVC浮点使用相关的桩代码。该模块与MC层交互，负责最终的目标代码输出。
+lib/Target/X86/X86TargetMachine.cpp，调用次数:229：该模块是LLVM中X86架构的目标机器实现核心，负责初始化X86目标并配置编译流程。它创建特定于X86的目标对象文件，计算有效的重定位与代码模型，并管理多个关键编译阶段：包括指令选择、全局指令选择（GlobalISel）、机器调度及寄存器分配（如瓦片寄存器）。通过与X86子目标系统和各优化/代码生成组件的交互，完成从IR到目标代码的转换。
+lib/Target/X86/X86FastISel.cpp，调用次数:70：该模块是X86后端的快速指令选择器实现，属于LLVM代码生成阶段。它基于FastISel框架，将LLVM IR快速转换为X86机器指令，支持常见操作和调用约定处理。通过查询目标子特性和使用生成代码，在保证基本正确性的前提下优化编译速度。
+lib/Target/X86/X86TargetTransformInfo.cpp，调用次数:99：该模块是X86架构专用的TargetTransformInfo分析实现，在LLVM中端优化阶段提供目标相关的成本评估和转换决策。它基于X86子目标特性精确处理TTI查询（如指令代价、向量化合法性），同时复用基础TTI的通用逻辑，实现目标无关与特定优化的协同。
+lib/Target/X86/X86InstrInfo.cpp，调用次数:469：该模块实现X86指令集的信息描述与低级变换，核心功能包括指令编码、伪指令展开、负载折叠优化及条件码转换。在代码生成阶段与寄存器分配、机器指令调度等模块交互，为X86后端提供指令模式匹配和特定架构优化支持。
+lib/Target/X86/TargetInfo/X86TargetInfo.cpp，调用次数:24：该模块是LLVM中X86架构的目标信息注册器，在编译器初始化阶段向目标注册表注册32位与64位X86后端。其核心功能是声明X86目标平台的基本信息，为后续代码生成流程提供架构支持。
+lib/Target/NVPTX/MCTargetDesc/NVPTXMCAsmInfo.cpp，调用次数:44：该模块为NVPTX目标定义汇编信息配置，负责在代码生成阶段控制汇编输出格式。核心功能包括设置私有标签前缀、数据对齐规则及注释符号格式，确保生成的PTX汇编符合NVIDIA工具链要求。通过继承MCAsmInfo基类实现与LLVM后端汇编器的交互。
+lib/Target/NVPTX/MCTargetDesc/NVPTXMCTargetDesc.cpp，调用次数:25：该模块为LLVM的NVPTX GPU后端提供机器码目标描述，负责在MC层（机器码）阶段注册并创建指令集、寄存器信息、子目标特性等核心组件。它实现了目标流和指令打印器，与LLVM目标注册机制交互，将NVPTX的代码生成部件集成到编译流程中。
+lib/Target/NVPTX/NVPTXAllocaHoisting.cpp，调用次数:28：该模块是LLVM的NVPTX后端功能，实现alloca指令提升优化。核心作用是将非入口基本块中的alloca指令提升至函数入口块，以优化GPU内存访问。该过程在代码生成阶段执行，与栈保护器等模块交互，旨在改善PTX代码的存储性能。
+lib/Target/NVPTX/NVVMReflect.cpp，调用次数:167：该模块是LLVM中针对NVPTX后端的反射处理组件，核心功能是在编译时解析并替换__nvvm_reflect函数调用。它通过识别特定符号（如__CUDA_ARCH和__CUDA_FTZ），将其转换为对应的常量值，从而支持条件代码的编译时优化。该模块与NVPTX代码生成流程交互，主要用于处理CUDA架构特性相关的元数据反射。
+lib/Target/NVPTX/NVPTXSubtarget.cpp，调用次数:62：该模块是LLVM中针对NVIDIA PTX GPU的编译子目标描述，定义了特定GPU架构的功能特性和指令集支持。核心功能包括配置半精度数学运算(f16)和双32位浮点指令(f32x2)的生成开关，通过与目标机器和指令选择层交互，在代码生成阶段为NVPTX后端提供硬件特性查询与优化控制。
+lib/Target/NVPTX/NVPTXAsmPrinter.cpp，调用次数:90：该模块是LLVM中NVPTX后端的汇编打印器，负责在代码生成阶段将机器指令转换为PTX汇编代码。核心功能包括处理全局变量的依赖关系与发射顺序、管理局部存储符号，并支持全局变量降级优化。它与NVPTX目标机器及MC流式器交互，完成从LLVM IR到GPU可执行代码的最终输出转换。
+lib/Target/NVPTX/NVPTXLowerAggrCopies.cpp，调用次数:73：该模块是LLVM中针对NVPTX后端的函数转换Pass，核心功能是将聚合类型拷贝操作及内存操作内部函数（llvm.mem*）分解为底层循环。它在编译的中间表示优化阶段运行，旨在适配GPU硬件对复杂内存操作的限制，通过循环展开提升目标代码性能。
+lib/Target/NVPTX/NVPTXISelDAGToDAG.cpp，调用次数:40：该模块是NVPTX后端的DAG到DAG指令选择器，负责将LLVM SelectionDAG节点转换为NVPTX目标机器指令。核心功能包括处理特殊地址模式选择、优化内存操作（如生成LDG指令），以及转换原子操作和异步张量拷贝（cp.async.bulk.tensor）等NVPTX特有操作。它在LLVM代码生成的选择DAG阶段工作，将通用DAG节点模式匹配并 lowering 为具体的NVPTX指令。
+lib/Target/NVPTX/NVPTXTargetMachine.cpp，调用次数:13：该模块实现LLVM对NVIDIA GPU（NVPTX）的代码生成支持，核心是NVPTXTargetMachine类。它负责配置目标特性、注册特定优化与 lowering 阶段（如alloca提升、原子操作降级），并集成地址空间别名分析等NVPTX专用组件。该模块与LLVM代码生成器交互，将通用IR转换为可在NVIDIA GPU上执行的PTX代码。
+lib/Target/NVPTX/NVPTXISelLowering.cpp，调用次数:47：该模块是LLVM中NVPTX后端的SelectionDAG lowering核心实现，负责将LLVM IR中间表示转换为NVPTX GPU可执行的SelectionDAG节点。主要功能包括处理PTX向量类型、参数传递规则、内建函数降级，以及针对加减乘除等运算的特定优化。在编译流程中处于代码生成阶段，与NVPTX目标机器和子目标特性模块紧密交互，确保生成的PTX代码符合NVIDIA GPU架构要求。
+lib/Target/NVPTX/TargetInfo/NVPTXTargetInfo.cpp，调用次数:24：该模块是LLVM中针对NVIDIA GPU的NVPTX后端目标信息注册器。核心功能是通过初始化函数向LLVM目标系统注册32位和64位NVPTX目标架构，确保编译器在目标选择阶段能识别和处理NVPTX设备代码生成请求。
+lib/Target/XCore/MCTargetDesc/XCoreMCTargetDesc.cpp，调用次数:23：该模块是XCore目标机的MC层描述组件，负责在LLVM后端代码生成阶段提供机器相关的描述信息。核心功能包括创建指令集信息、寄存器信息、子目标特性等MC基础设施，并生成汇编打印器和目标流。通过注册到LLVM目标系统，为汇编器和反汇编器提供目标依赖的支持。
+lib/Target/XCore/XCoreAsmPrinter.cpp，调用次数:6：该模块是XCore架构的LLVM汇编打印器，负责在代码生成阶段将机器指令转换为XCore汇编代码。它继承自AsmPrinter类，通过MCInstLower将MachineInstr转换为MCInst，并利用MCStreamer输出最终汇编格式。核心功能包括处理指令打印、常量池和跳转表等汇编生成任务。
+lib/Target/XCore/XCoreFrameLowering.cpp，调用次数:22：该模块负责XCore架构的栈帧管理，在代码生成的发射序言/尾声阶段工作。核心功能包括：通过EXTSP/LDAWSP指令分步调整栈指针，处理寄存器溢出/恢复的排序列表，生成异常处理相关的spill槽位，并维护CFI调试信息。其设计目标是在有限的立即数范围内高效管理栈空间，并与异常处理和调试器栈展开机制交互。
+lib/Target/XCore/XCoreTargetMachine.cpp，调用次数:6：该模块是XCore架构的LLVM目标机器实现，负责初始化目标注册并配置特定于XCore的编译流程。核心功能包括设置目标机器参数、管理代码模型与重定位模式，以及集成代码生成过程中的指令选择与优化通道。该模块与LLVM代码生成器交互，为XCore后端提供完整的编译目标支持。
+lib/Target/XCore/XCoreLowerThreadLocal.cpp，调用次数:39：该LLVM模块是一个针对XCore架构的编译阶段优化Pass，核心功能是降低线程局部变量。通过将线程本地存储转换为全局数组结构，并利用xcore_threadlocal_load内部函数实现访问。该模块在编译中后端阶段运行，与全局变量处理和内部函数生成进行交互，旨在为XCore目标机有效模拟线程本地存储。
+lib/Target/XCore/TargetInfo/XCoreTargetInfo.cpp，调用次数:22：该文件是LLVM编译器框架中XCore目标平台的基础信息注册模块。核心功能是在LLVM初始化阶段向目标注册表注册XCore目标平台，使编译器能够识别和处理XCore架构的代码。通过调用初始化函数，将XCore目标描述信息注入到LLVM的全局目标系统中，为后续编译流程提供目标平台的基本支持。
+lib/Target/Mips/AsmParser/MipsAsmParser.cpp，调用次数:9：该模块是LLVM中MIPS架构的汇编解析器，负责在汇编阶段解析MIPS指令集。其核心功能包括指令匹配、操作数验证及伪指令扩展，并与目标流接口交互处理ABI标志和特定宏指令。该解析器将汇编源代码转换为机器指令，是代码生成流程中的关键组件。
+lib/Target/Mips/MCTargetDesc/MipsMCTargetDesc.cpp，调用次数:60：该模块是LLVM中MIPS架构的机器码目标描述组件，负责在编译器后端生成MIPS目标代码阶段提供核心支持。它通过工厂函数创建指令信息、寄存器描述、子目标特性等关键MC（Machine Code）子系统组件，并集成汇编后端、代码发射器和目标流等模块。该文件实现了与LLVM目标注册系统的交互接口，为MIPS架构提供完整的代码生成基础设施。
+lib/Target/Mips/MipsTargetMachine.cpp，调用次数:9：该模块是LLVM中MIPS架构的编译目标机器实现，负责初始化MIPS后端并配置目标相关组件。核心功能包括注册MIPS目标机器、创建目标对象文件、设置重定位模型，并管理MIPS16/MIPS32指令选择、子目标配置和代码生成流程。它整合了全局指令选择器(GISel)流水线，与LLVM代码生成器交互以完成从IR到MIPS机器代码的转换。
+lib/Target/Mips/MipsMachineFunction.cpp，调用次数:33：该模块为MIPS目标提供机器函数级支持，核心功能包括管理全局基址寄存器（如$gp）的访问控制。通过FixGlobalBaseReg选项强制使用固定基址寄存器，并与代码生成阶段的寄存器分配器协同工作，确保符合MIPS ABI规范对全局数据访问的约定要求。
+lib/Target/Mips/Mips16InstrInfo.cpp，调用次数:35：该模块实现MIPS16指令集在LLVM后端的功能，主要处理指令选择、编码及帧管理。核心类Mips16InstrInfo负责生成MIPS16机器指令，包含栈帧创建/恢复的辅助函数。在代码生成阶段与寄存器分配器、帧信息管理器交互，确保生成符合MIPS16架构约束的目标代码。
+lib/Target/Mips/MipsSubtarget.cpp，调用次数:39：该模块是LLVM中MIPS架构的子目标描述，负责配置特定MIPS处理器变体的编译特性。它定义了MIPS16/MIPS32混合模式、常量岛优化、硬件浮点等关键编译选项，并与目标机器、调用约定 lowering、合法化器、寄存器分配等子系统交互，共同完成MIPS指令集在LLVM后端各编译阶段的适配工作。
+lib/Target/Mips/MipsAsmPrinter.cpp，调用次数:9：MipsAsmPrinter是LLVM中MIPS后端的汇编打印模块，负责在代码生成阶段将机器指令转换为汇编代码。该模块通过MipsAsmPrinter类实现核心功能，处理指令发射、重定位指令生成以及与MIPS目标流器的交互。其设计目标是将LLVM中间表示准确转换为MIPS架构特定的汇编格式，协同MIPS子目标系统完成最终代码输出。
+lib/Target/Mips/MipsSEISelLowering.cpp，调用次数:33：该文件是LLVM中MIPS 64位/32位指令集架构（MIPS SE）在SelectionDAG指令选择阶段的核心后端模块。主要负责将LLVM IR的通用操作（如AND、OR、MUL、SETCC等）合法化并降低为MIPS SE平台特有的机器指令，包括对DSP扩展和MSA SIMD指令集的支持。通过实现多种DAG节点组合优化和模式匹配，将向量洗牌、位操作等高级操作映射到具体的MIPS机器指令，与代码生成器的其他模块协同完成从中间表示到目标代码的转换。
+lib/Target/Mips/MipsTargetObjectFile.cpp，调用次数:33：该模块为MIPS目标文件提供ELF节(section)管理策略，负责在代码生成阶段将全局变量和常量分配到合适的节中。核心功能包括根据变量大小阈值判断是否放入small data/bss节，并通过选项控制局部/外部数据是否使用gp_rel寻址及嵌入式数据分配。设计目标是通过节分配优化内存访问效率。
+lib/Target/Mips/Mips16ISelLowering.cpp，调用次数:67：该模块负责MIPS16架构的指令选择与 lowering 处理，将LLVM IR转换为MIPS16机器指令。核心功能包括处理MIPS16特有的调用约定、硬浮点运算支持，以及条件移动伪指令的展开优化。该模块与代码生成器后端交互，针对MIPS16指令集特性进行定制化 lowering 操作。
+lib/Target/Mips/MipsDelaySlotFiller.cpp，调用次数:47：该模块是LLVM中针对MIPS架构的延迟槽填充器，作为机器函数编译后端优化阶段的一部分。核心功能是搜索并填充分支指令后的延迟槽，通过前向、后向及后继基本块搜索寻找有效指令以减少NOP。该模块与MIPS指令信息及目标子目标系统交互，支持紧凑分支策略以优化代码生成。
+lib/Target/Mips/MipsISelLowering.cpp，调用次数:33：该模块是LLVM中MIPS目标平台的指令选择降阶核心组件，负责在SelectionDAG阶段将LLVM IR通用操作转换为MIPS架构特定的机器指令。主要功能包括处理条件码转换、浮点运算优化、除零异常插入，以及实现O32调用约定的参数传递规则。通过与MipsSubtarget等模块交互，适配不同MIPS变体的指令集特性。
+lib/Target/Mips/TargetInfo/MipsTargetInfo.cpp，调用次数:27：该模块是LLVM中MIPS架构的目标信息注册器，通过初始化函数向LLVM目标系统注册MIPS系列目标（包括mips/mipsel/mips64/mips64el）。其核心功能是在编译器初始化阶段声明MIPS后端目标，使后续编译流程能识别并调用对应的MIPS代码生成组件。
+lib/Target/PowerPC/AsmParser/PPCAsmParser.cpp，调用次数:7：该模块是LLVM中PowerPC架构的汇编解析器，负责在汇编阶段解析PowerPC指令和操作数。核心功能包括指令匹配、助记符拼写检查、条件寄存器表达式求值以及内存操作数验证。它通过自动生成的匹配器实现指令识别，并与MC层交互将汇编文本转换为机器指令。
+lib/Target/PowerPC/MCTargetDesc/PPCMCTargetDesc.cpp，调用次数:49：该模块是PowerPC目标机的LLVM机器码描述组件，负责在编译器后端生成目标代码阶段提供核心支持。主要功能包括创建PowerPC指令集信息、寄存器描述和子目标特性，并生成ELF/XCOFF格式的汇编与目标文件流。通过注册表与LLVM MC框架交互，统一管理代码生成所需的各类目标机器信息。
+lib/Target/PowerPC/PPCISelLowering.cpp，调用次数:132：该模块是LLVM PowerPC后端的选择DAG lowering阶段核心组件，负责将LLVM IR通用操作转换为PowerPC目标特定的DAG节点。主要功能包括处理调用约定、参数传递、尾调用优化、向量操作 lowering 以及TOC基址引用管理。通过与指令选择器及寄存器分配器交互，实现PowerPC指令集的高效代码生成。
+lib/Target/PowerPC/PPCAsmPrinter.cpp，调用次数:6：PPCAsmPrinter.cpp 是LLVM中PowerPC架构的汇编代码生成模块，负责在代码生成阶段将机器指令转换为目标汇编代码。该模块处理TOC（Table of Contents）条目管理、AIX/Linux系统特定汇编格式生成，以及TLS访问符号创建等关键功能。通过与MCStreamer和TargetMachine的交互，实现从LLVM IR到PowerPC汇编代码的最终输出。
+lib/Target/PowerPC/PPCTargetMachine.cpp，调用次数:34：该模块是LLVM中PowerPC架构的目标机器实现核心，负责初始化PPC32/64后端并管理特定于该架构的编译流程。主要功能包括：根据目标三元组配置ABI（ELFv1/ELFv2）、代码模型和重定位模式；创建对象文件生成器；集成机器调度器（支持宏融合与预/后寄存器分配调度）；协调从IR到机器代码的全局指令选择流程。其设计目标是为PowerPC架构提供完整的代码生成支持。
+lib/Target/PowerPC/PPCInstrInfo.cpp，调用次数:29：该文件是LLVM中PowerPC目标平台的指令信息实现模块，定义了PPCInstrInfo类及其方法。核心功能包括指令编码、伪指令扩展、指令调度与优化，支持指令聚类、条件选择转换和浮点融合模式识别。在代码生成阶段与寄存器分配器、机器组合器等组件交互，完成从LLVM IR到PowerPC机器指令的转换与优化。
+lib/Target/PowerPC/PPCFrameLowering.cpp，调用次数:7：该模块实现PowerPC架构的栈帧管理，在代码生成阶段处理函数调用的栈布局。核心功能包括计算栈帧偏移量、管理寄存器保存/恢复（LR/CR/通用/浮点/向量寄存器），并支持不同ABI（ELFv2/AIX）。通过生成prologue/epilogue代码维护调用约定，与寄存器分配器和指令选择器协同完成栈帧构建。
+lib/Target/PowerPC/TargetInfo/PowerPCTargetInfo.cpp，调用次数:24：该文件是LLVM中PowerPC架构的目标信息注册模块，核心功能是向LLVM目标注册表注册PowerPC架构的32/64位大小端版本。通过初始化函数声明不同变体的目标信息，为后续编译流程中的目标识别和代码生成提供架构支持。
+lib/Target/AArch64/AsmParser/AArch64AsmParser.cpp，调用次数:6：该模块是LLVM中AArch64架构的汇编解析器，负责在编译流程的汇编阶段将AArch64汇编指令文本转换为机器指令。其核心功能包括指令匹配、寄存器名称识别、向量类型解析以及子目标特性检查，并与MC框架中的指令流和上下文进行交互以实现准确的代码生成。
+lib/Target/AArch64/MCTargetDesc/AArch64MCTargetDesc.cpp，调用次数:35：该模块是LLVM中AArch64目标的机器码描述核心，负责在编译器后端生成目标代码阶段提供基础架构支持。它通过工厂函数创建指令信息、寄存器描述、子目标特性等关键MC（Machine Code）组件，并集成汇编流、代码发射器及指令分析功能。模块与目标注册系统交互，为ELF、Mach-O和COFF等多种目标文件格式提供统一的代码生成接口。
+lib/Target/AArch64/AArch64ISelLowering.cpp，调用次数:3：该文件实现AArch64目标平台的指令选择降级，将LLVM IR的通用DAG节点转换为AArch64特定机器指令。核心功能包括处理条件码转换、立即数优化、向量操作降级和尾调用优化。作为后端关键模块，与选择DAG阶段交互，完成从通用IR到目标指令的转换。
+lib/Target/AArch64/AArch64TargetMachine.cpp，调用次数:6：该模块是LLVM中AArch64架构的目标机器实现核心，负责初始化目标机器、配置代码模型和重定位模型。它管理AArch64后端的编译流程，包括指令选择、调度、宏融合等关键优化阶段，并集成全局指令选择框架。通过协调子目标特性与多个优化组件，完成从LLVM IR到AArch64机器代码的转换。
+lib/Target/AArch64/AArch64AsmPrinter.cpp，调用次数:6：该模块是LLVM中AArch64后端的汇编打印器，负责将机器指令转换为目标汇编代码。核心功能包括处理AArch64特定指令、地址模式、认证指针和跳转表等。它在代码生成阶段运作，与MC层交互完成汇编输出，并支持多种目标文件格式。
+lib/Target/AArch64/TargetInfo/AArch64TargetInfo.cpp，调用次数:22：该模块是LLVM中AArch64架构的目标信息注册器，在编译器初始化阶段向目标注册表注册AArch64后端。核心功能包括声明AArch64le/AArch64be等不同字节序的目标架构变体，并建立目标名称与对应后端实现间的映射关系，为后续代码生成流程提供架构支持。
+lib/Target/TargetMachine.cpp，调用次数:129：该文件是LLVM目标机器抽象的核心实现，负责管理特定目标架构的编译过程。它整合了目标相关的子模块（如指令集、寄存器信息），为代码生成阶段提供统一接口。主要功能包括根据目标特性配置优化与代码生成策略，以及处理线程局部存储模型选择等目标相关决策。
+lib/Target/Mangler.cpp，调用次数:134：该模块是LLVM的名称修饰器，负责在代码生成阶段将编译器内部符号转换为目标平台特定的ABI格式。核心功能包括为全局变量和函数添加名称前缀，以及处理特殊调用约定（如Microsoft fastcall/stdcall）的参数字节数后缀。它与数据布局模块交互，确保符号命名符合目标ABI规范。
+lib/Target/TargetLibraryInfo.cpp，调用次数:269：该模块在LLVM编译器的优化阶段工作，核心功能是管理目标平台的标准库和向量数学函数信息。它通过分析目标三元组，初始化并维护可用库函数集合，支持多种向量函数库（如Accelerate、SVML、SLEEF等）。设计目标是使编译器能够识别并利用特定平台的优化库调用，从而提升代码性能。
+lib/Target/TargetSubtargetInfo.cpp，调用次数:16：该模块是LLVM目标特定子目标信息的核心实现，负责在代码生成阶段提供目标相关的硬件特性支持。它通过`TargetSubtargetInfo`类封装特定处理器的指令集、调度模型和寄存器文件等关键信息，供指令选择、调度和寄存器分配等编译流程查询使用，是实现目标无关编译器后端与具体硬件架构对接的重要桥梁。
+lib/Target/TargetLoweringObjectFile.cpp，调用次数:109：该模块在LLVM后端代码生成阶段，负责将高级IR对象映射到目标文件的具体结构。核心功能包括确定全局变量和函数的最终存储段（如BSS、数据段等），处理符号命名与重定位，并生成目标文件所需的元数据。它与MC层及目标机器描述交互，实现从编译器IR到目标文件格式的转换。
+lib/Target/ARM/AsmParser/ARMAsmParser.cpp，调用次数:10：ARMAsmParser.cpp 是 LLVM 中 ARM 目标平台的汇编解析器核心模块。它负责在汇编阶段将文本格式的 ARM 汇编指令转换为机器指令（MCInst）。该模块通过指令匹配、助记符别名处理和拼写检查，实现对 ARM/Thumb 指令集的解析，并与目标描述和寄存器信息等模块交互以完成指令编码。
+lib/Target/ARM/MCTargetDesc/ARMMCTargetDesc.cpp，调用次数:49：该模块是LLVM ARM后端的目标机器代码描述组件，负责在编译器代码生成阶段提供ARM架构的MC（Machine Code）层支持。核心功能包括：通过生成的表驱动信息定义ARM指令集、寄存器文件和子目标特性；创建指令打印器、汇编器后端和ELF/Mach-O目标文件流；实现多种ARM内存寻址模式的地址计算。该模块与LLVM MC框架紧密集成，为ARM目标代码生成与汇编提供基础架构。
+lib/Target/ARM/MCTargetDesc/ARMELFStreamer.cpp，调用次数:1：该模块为ARM架构提供ELF目标文件流式生成功能，核心是ARMELFStreamer类。它在汇编阶段处理ARM特定的ELF元数据，包括构建属性、异常处理表（EHABI）和硬件寄存器映射。通过集成MCAsmBackend和MCCodeEmitter，将ARM指令转换为ELF目标文件，支持Thumb模式及Android平台特定格式。
+lib/Target/ARM/MCTargetDesc/ARMMCAsmInfo.cpp，调用次数:34：该文件为ARM架构的汇编代码生成提供目标特定的汇编器信息配置。核心功能是定义ARM特有的符号修饰符映射表，包括GOT、PLT、TLS等重定位类型与对应汇编符号的关联。该模块在LLVM后端代码生成阶段工作，为MC层提供ARM目标平台的汇编格式规范，确保汇编输出符合ARM架构的ABI要求。
+lib/Target/ARM/ARMTargetMachine.cpp，调用次数:61：该文件是LLVM中ARM后端的目标机器定义核心模块。它负责构建ARM目标机器实例，配置目标特定组件如子目标、目标转换信息、对象文件格式和全局指令选择框架。模块协调ARM架构的代码生成流程，包括指令调度、宏融合优化、执行域修复等关键编译阶段，并为不同ARM变体（Thumb/ARM）提供差异化支持。
+lib/Target/ARM/MLxExpansionPass.cpp，调用次数:30：该LLVM机器函数Pass在ARM后端编译阶段运行，负责将浮点乘加（MLA）和乘减（MLS）指令展开为独立的乘法与加法/减法指令序列。其核心功能是识别并转换特定的浮点乘运算指令，旨在处理目标硬件可能不支持原生复合指令的情况，或受限于特定编译选项。该模块与ARM指令选择及寄存器分配交互，确保指令合法化。
+lib/Target/ARM/Thumb2SizeReduction.cpp，调用次数:104：该模块是LLVM中的Thumb2指令大小缩减优化 pass，作用于机器指令层。其核心功能是将32位Thumb2指令替换为等效的16位指令以减小代码体积，包括普通窄化、双操作数形式转换以及加载存储指令优化。该过程需考虑CPSR标志位状态和低寄存器使用限制，与指令选择及寄存器分配等编译阶段交互。
+lib/Target/ARM/ARMConstantIslandPass.cpp，调用次数:54：ARMConstantIslandPass是ARM后端机器代码优化器，负责常量池岛屿布局和分支指令缩短。它在代码生成阶段工作，通过调整基本块布局将常量池条目放置在代码段内，并优化条件/无条件分支及跳转表指令的位移以适应目标架构范围限制。该模块与ARM子目标信息及基本块信息交互，旨在提升指令密度和代码性能。
+lib/Target/ARM/ARMFastISel.cpp，调用次数:10：该模块是ARM架构的快速指令选择器，在LLVM编译流程中负责将LLVM IR快速转换为机器指令。核心功能包括处理算术运算、内存访问和函数调用等常见操作，通过快速路径选择优化编译速度。它作为选择优化器与ARM后端指令生成之间的桥梁，针对简单指令模式提供高效代码生成。
+lib/Target/ARM/ARMAsmPrinter.cpp，调用次数:59：ARMAsmPrinter.cpp是LLVM后端中负责ARM架构汇编代码生成的模块。其核心作用是将机器指令（MachineInstr）转换为ARM/Thumb汇编或目标文件代码。该模块在编译的代码发射阶段工作，处理常量池、跳转表、函数调用及非延迟符号指针等关键功能。它与ARM目标机器框架紧密交互，支持生成多种指令集（ARM/Thumb）和对象格式（如ELF、COFF）。
+lib/Target/ARM/ARMISelLowering.cpp，调用次数:140：ARMISelLowering.cpp实现ARM目标的选择DAG lowering阶段，负责将LLVM IR中间表示转换为ARM架构特定的SelectionDAG节点。核心功能包括处理ARM指令集特有的操作 lowering、向量操作转换、条件码映射、原子操作支持以及调用约定实现。该模块与ARM子目标特性紧密交互，为后续指令选择阶段准备平台相关的DAG模式。
+lib/Target/ARM/ARMFrameLowering.cpp，调用次数:100：该模块负责ARM架构的栈帧管理，在代码生成阶段处理函数调用中的栈操作。核心功能包括生成函数序言/尾声代码、分配栈空间、保存/恢复寄存器，并支持对齐的NEON寄存器溢出处理。与指令选择、寄存器分配等模块协作，确保符合ARM过程调用标准。
+lib/Target/ARM/ARMLoadStoreOptimizer.cpp，调用次数:28：该模块是ARM架构的加载/存储优化器，在LLVM机器指令层运行。核心功能包括将连续单次内存访问合并为LDM/STM批量操作，优化前/后变址寻址模式，并在寄存器分配前后分别进行ldrd/strd双字指令形成与调整。通过减少指令数量和提升内存访问效率来优化代码性能。
+lib/Target/ARM/A15SDOptimizer.cpp，调用次数:53：该模块是ARM Cortex-A15的机器函数优化器，作为LLVM后端代码生成阶段的机器函数Pass运行。其核心功能是识别并优化双字存储操作序列，通过合并相邻的存储指令来减少内存访问次数。该优化旨在提升Cortex-A15处理器的存储性能，与ARM子目标信息和机器指令构建器交互完成指令重写。
+lib/Target/ARM/ARMBaseInstrInfo.cpp，调用次数:55：该模块是ARM指令集的核心实现，提供指令编码、调度与优化功能。负责指令选择后的低级转换，包括分支展开、比较消除及尾调用优化。与寄存器分配器和调度器协同工作，支持Thumb/ARM双模式，并处理MVE扩展等特定目标特性。
+lib/Target/ARM/Thumb2InstrInfo.cpp，调用次数:34：该模块实现Thumb-2指令集的信息管理，位于LLVM后端代码生成阶段。核心功能包括处理指令偏移量操作码转换、优化选择指令(如CSEL)，并提供if-conversion启发式控制。与ARM子目标框架和机器函数信息交互，支撑指令选择与机器码生成。
+lib/Target/ARM/ARMISelDAGToDAG.cpp，调用次数:76：该模块是ARM目标平台的SelectionDAG指令选择器，负责将LLVM中间表示的SelectionDAG节点模式匹配并转换为ARM机器指令。核心功能包括识别32位立即数、处理NEON向量加载/存储的地址更新模式、生成条件码常量，以及处理向量重排和寄存器掩码操作。作为代码生成的关键阶段，它在目标无关的SelectionDAG基础上实现ARM特定指令选择，与目标机器描述和指令信息模块紧密交互。
+lib/Target/ARM/ARMExpandPseudoInsts.cpp，调用次数:27：该模块是ARM架构的机器码伪指令扩展Pass，在LLVM后端代码生成阶段运行。核心功能是将ARM伪指令（如NEON加载/存储、独占访问指令等）展开为等效的真实指令序列，处理寄存器分配、指令选择及特定操作数转换。设计目标是通过抽象层简化指令选择，并与ARM子目标信息、常量池等系统组件交互完成低级指令生成。
+lib/Target/ARM/ARMSubtarget.cpp，调用次数:38：ARMSubtarget.cpp 实现了 ARM 架构的目标特定子目标信息，为 LLVM 后端代码生成提供核心支撑。它根据目标 ARM 特性（如 Thumb/ARM 指令集）配置并集成关键组件，包括指令选择、调用约定处理、帧布局及合法化信息。该模块在代码生成阶段与目标机器交互，以适配不同 ARM 变体的编译需求。
+lib/Target/ARM/TargetInfo/ARMTargetInfo.cpp，调用次数:24：该模块是LLVM ARM后端的目标信息注册器，负责在编译器初始化阶段向目标系统注册ARM架构的四个目标实例（ARM/Thumb的小端序和大端序变体）。其核心功能是声明目标机器特性，为后续编译流程（代码生成、指令选择等）提供架构基础信息。
+lib/Analysis/LazyValueInfo.cpp，调用次数:566：LazyValueInfo模块是LLVM的懒值信息分析器，在编译优化阶段推断指令操作数的可能取值。它通过值格理论分析条件分支和指令约束，支持常量折叠、范围推导和空指针检查。该模块与支配树、假设缓存等分析器交互，旨在为跳转线程和简化提供精确的静态值信息。
+lib/Analysis/ScalarEvolutionExpander.cpp，调用次数:504：该模块是LLVM标量演化优化器中的代码生成组件，负责将标量演化分析结果转换为实际IR指令。核心功能包括在循环优化阶段扩展SCEV表达式为可执行代码、选择最相关循环进行扩展、处理归纳变量变换，并与循环信息和目标代价模型交互以实现高效代码生成。
+lib/Analysis/TypeBasedAliasAnalysis.cpp，调用次数:126：该模块实现基于类型的别名分析（TBAA），通过检查内存访问的类型元数据判断指针别名关系。核心功能包括识别结构体路径感知的TBAA格式、匹配访问标签的兼容性、计算类型共同祖先。作为LLVM别名分析框架的一部分，它在优化阶段辅助确定内存操作是否可能重叠，提升代码优化效果。
+lib/Analysis/CodeMetrics.cpp，调用次数:170：该模块提供代码度量分析功能，用于评估基本块和循环的复杂度。核心功能包括计算指令开销、识别瞬时值、分析循环内收敛性，服务于内联等优化决策。它通过收集目标无关和目标相关的成本信息，与循环信息、目标变换信息等模块交互，支撑编译器优化阶段的成本模型。
+lib/Analysis/AliasAnalysisEvaluator.cpp，调用次数:30：该模块是LLVM别名分析器的评估工具，用于在编译优化阶段对别名分析结果进行统计验证。核心功能包括计算别名查询命中率、评估Mod/Ref分析准确性，并通过命令行选项控制不同别名类型的输出。该工具与别名分析框架交互，帮助开发者量化分析器性能并验证其正确性。
+lib/Analysis/ScalarEvolution.cpp，调用次数:2971：该模块是LLVM标量演化分析的核心实现，用于推导标量表达式在循环迭代中的演化规律。其主要功能包括分析循环归纳变量、计算循环行程计数、推导标量表达式闭式解，并为循环优化（如向量化、并行化）提供数学基础。该模块与循环分析、支配树等组件协作，在中间表示优化阶段支撑后续编译转换。
+lib/Analysis/TargetTransformInfo.cpp，调用次数:192：该模块是LLVM目标无关代码优化器的核心组件，为各类优化遍提供目标硬件相关的成本模型和转换查询。它通过抽象接口封装了特定目标架构的成本评估（如指令开销、向量化收益）与合法化检查，使中端优化能在不同目标间复用。模块与指令选择前的优化阶段交互，支撑向量化、循环变换等关键优化决策。
+lib/Analysis/BasicAliasAnalysis.cpp，调用次数:267：BasicAliasAnalysis是LLVM中的基础别名分析模块，在优化阶段判断内存操作是否可能别名。它通过分析指针值关系，包括线性表达式分解、对象大小计算和递归PHI节点处理，为其他优化提供内存访问冲突信息。该模块作为别名分析框架的基础实现，与循环信息、支配树等分析交互以提升精度。
+lib/Analysis/IVUsers.cpp，调用次数:81：该模块是LLVM循环优化中的归纳变量用户分析器，核心功能是识别循环中的归纳变量及其用户。通过分析标量演化表达式，判定指令是否与归纳变量相关，并决策用户应使用前增值还是后增值以优化代码生成。该分析作用于循环优化阶段，为后续循环变换（如强度削减）提供关键信息。
+lib/Analysis/LoopPass.cpp，调用次数:275：该文件是LLVM循环优化的核心模块，定义了LoopPass及其管理器。它负责在LLVM中间表示的循环结构上执行优化和转换，管理循环遍历顺序，并与优化引导、计时统计等系统交互。该模块作为LLVM Pass框架的关键组成部分，协调循环分析、依赖管理和优化过程。
+lib/Analysis/BranchProbabilityInfo.cpp，调用次数:373：该模块实现分支概率分析，在LLVM中下层优化阶段估算条件分支的执行概率。核心功能包括：基于多种启发式规则（指针比较、整数零值、浮点运算等）计算分支权重，结合循环信息与支配关系推断块执行频率，为块分配专用权重（如不可达、冷代码等）。该分析为后续优化（如代码布局、内联）提供关键概率数据。
+lib/Analysis/LoopInfo.cpp，调用次数:1126：该模块提供自然循环分析功能，识别程序中的循环结构并构建其层级关系。核心类`Loop`和`LoopInfo`用于表示循环信息和CFG分析结果，支持LCSSA形式验证和归纳变量边界计算。作为LLVM中间表示层的关键分析组件，它为循环优化（如向量化、并行化）和标量演化等后续阶段提供基础依赖。
+lib/Analysis/RegionPrinter.cpp，调用次数:34：该模块是LLVM编译器中的区域可视化工具，提供RegionPrinter和RegionViewer两个Pass，用于在编译过程中将函数内的控制流区域（Region）以Graphviz DOT格式输出或直接显示。核心功能包括生成区域结构图（支持仅显示简单区域），便于开发者分析优化过程中的区域划分。该模块与LLVM Pass管理器交互，作为分析阶段的可视化辅助工具。
+lib/Analysis/MemoryBuiltins.cpp，调用次数:72：该模块提供内存分配/释放内置函数的识别与分析功能，核心作用是在LLVM中间表示阶段识别标准库中的malloc、free等内存操作函数。通过枚举类型分类分配器类型，并与目标库信息交互，验证函数属性以支持别名分析、对象大小评估等优化流程。
+lib/Analysis/PtrUseVisitor.cpp，调用次数:32：该模块实现指针使用访问器，用于遍历和分析LLVM IR中指针值的所有使用链。核心功能是沿指针操作链（如GEP、BitCast）递归访问，识别实际内存操作指令。作为静态分析基础组件，服务于别名分析、内存优化等编译阶段，实现轻量级指针使用追踪。
+lib/Analysis/AliasSetTracker.cpp，调用次数:417：该模块实现别名集合跟踪器，用于在编译优化阶段对内存访问指令进行别名分析分组。核心功能是将可能相互别名（指向同一内存）的指令归类到AliasSet中，支持集合的增删改查及别名关系检查。通过AliasAnalysis接口获取别名信息，帮助优化过程识别内存依赖关系。当跟踪的内存位置总数超过饱和阈值时性能会下降。
+lib/Analysis/Loads.cpp，调用次数:101：该模块提供LLVM中关于内存访问的静态分析功能，主要用于验证指针的可解引用性和对齐属性，并支持推测性加载的安全检查。核心功能包括判断指针是否始终指向已分配且对齐的内存区域、检测等效地址值、查找可用加载/存储值以及分析指针替换可行性。该模块在编译器优化阶段（如循环优化、指令简化）与别名分析、标量演化等模块交互，旨在提升内存操作相关优化的安全性与准确性。
+lib/Analysis/RegionInfo.cpp，调用次数:76：该模块是LLVM的分析Pass，核心功能为检测函数中的单入口单出口区域（SESE regions）。它基于控制流图和支配关系进行区域识别与构建，为后续优化（如循环变换）提供结构化信息。模块支持区域验证与多种细节打印风格，与其他分析Pass（如支配前沿）交互协作。
+lib/Analysis/ConstantFolding.cpp，调用次数:428：该模块实现LLVM编译器的常量折叠优化，在编译时计算并简化IR中的常量表达式。核心功能包括处理算术运算、类型转换、聚合类型元素访问及浮点常量非规格化处理。它作用于优化阶段，与目标库信息和数据布局交互，旨在减少运行时计算并提升代码效率。
+lib/Analysis/MemoryDependenceAnalysis.cpp，调用次数:401：该模块是LLVM中的内存依赖分析器，用于确定指令间的内存依赖关系。核心功能包括分析内存操作（加载/存储）的依赖源、识别跨基本块的非局部依赖，以及区分控制流依赖与数据依赖。该分析在LLVM中后端优化阶段运行，依赖别名分析（AliasAnalysis）来精确判断内存访问冲突。
+lib/Analysis/ValueTracking.cpp，调用次数:756：该模块是LLVM中用于静态值分析的组件，在编译优化阶段通过已知位模式、符号位和零值推断来推导程序语义。核心功能包括计算已知位集、判断非零值、分析符号位数量，并支持与支配条件、假设缓存等模块交互，为指令简化和常量折叠提供基础信息。
+lib/Analysis/AliasAnalysis.cpp，调用次数:127：该模块是LLVM别名分析的核心实现，提供内存别名查询的通用接口和基础设施。它整合了多种别名分析算法（如基础分析、类型分析、标量演化分析等），通过AAResultsWrapperPass在编译优化阶段为其他Pass提供内存访问关系的判定（NoAlias/MayAlias/MustAlias）。支持外部分析扩展和查询跟踪功能，是优化器进行内存依赖分析的关键基础组件。
+lib/Analysis/InstructionSimplify.cpp，调用次数:880：该模块是LLVM中指令简化优化的核心实现，位于中端优化阶段。其主要功能是通过静态分析对各类指令（如算术、比较、逻辑、转换、GEP等）进行常量折叠和代数简化，利用已知位、常量范围等信息推导出更简单的等效形式。该模块与值跟踪、常量折叠等分析模块交互，旨在减少冗余计算并优化IR。
+lib/Analysis/IPA/CallGraph.cpp，调用次数:335：该模块实现LLVM调用图分析，构建并维护函数间的调用关系。核心类CallGraph表示整个调用图，CallGraphNode封装单个函数的调用信息。该分析在中间表示（IR）阶段工作，为过程间优化提供基础。模块支持遍历强连通分量以识别递归循环，并能集成到Pass管理器中进行自动化分析。
+lib/Analysis/IPA/InlineCost.cpp，调用次数:42：该模块是LLVM编译器中内联优化的成本分析核心组件，在编译优化阶段评估函数内联的代价与收益。通过整合目标架构信息、循环数据、块频率等分析结果，计算调用点的内联成本阈值，并检查调用者与被调用函数间的属性兼容性，以决定是否进行内联转换。
+lib/Analysis/IPA/CallGraphSCCPass.cpp，调用次数:631：该模块实现基于调用图强连通分量的过程间优化。核心功能是管理在SCC拓扑顺序上运行的CallGraphSCCPass，处理函数间调用关系形成的循环依赖。通过迭代式SCC遍历，支持跨函数优化，并与LegacyPassManager集成以协调模块级与函数级优化。
+lib/Transforms/ObjCARC/ObjCARC.cpp，调用次数:43：该模块在LLVM编译器的优化阶段实现Objective-C自动引用计数（ARC）优化。核心功能包括识别并消除冗余的ARC操作（如retain/release调用）、执行ARC合约确保引用计数正确性，以及进行低级ARC指令优化。其设计目标是通过静态分析降低运行时开销，并与LLVM中间表示（IR）层的其他优化传递交互协作。
+lib/Transforms/IPO/GlobalOpt.cpp，调用次数:326：GlobalOpt模块是LLVM的IPO优化器，专门对全局变量和函数进行优化。核心功能包括将全局变量标记为常量、删除未使用全局对象、执行标量聚合替换(SRA)、优化全局地址分配。同时处理函数调用约定转换、静态构造函数评估和全局别名解析。该模块在链接时优化阶段运行，与目标库信息和数据布局交互，旨在提升程序性能并减少全局数据使用。
+lib/Transforms/IPO/ArgumentPromotion.cpp，调用次数:92：ArgumentPromotion模块是LLVM中一个过程间优化(IPO)组件，负责在函数调用时提升指针参数。其核心功能是将间接传递的指针参数转换为直接传递的值参数，通过分析调用图确定参数是否可安全提升。该模块在编译优化阶段运行，与别名分析、调用图分析等组件交互，旨在减少内存访问开销并启用后续优化。主要处理直接调用场景，确保类型ABI兼容性和指针有效性验证。
+lib/Transforms/IPO/LoopExtractor.cpp，调用次数:79：该模块是LLVM的循环提取转换通道，核心功能是将程序中的循环结构提取到独立的新函数中。提供两种模式：标准模式提取所有可提取循环，单循环模式专为bugpoint工具设计仅提取单个循环。该通道依赖循环分析和支配信息，属于中端优化阶段的IPO（过程间优化）转换，旨在通过循环隔离提升代码可调试性和优化效果。
+lib/Transforms/IPO/MergeFunctions.cpp，调用次数:4：该模块是LLVM的IPO优化阶段组件，用于检测并合并功能等效的函数。核心功能包括检查函数合并资格、比较函数等价性，并通过生成转发thunk或别名来替换重复函数实现。该优化旨在减少代码体积，在链接时优化阶段运行，并与函数比较器及模块工具交互。
+lib/Transforms/IPO/FunctionAttrs.cpp，调用次数:1034：该模块实现过程间属性推导与传播，通过遍历调用图分析函数行为。核心功能包括推导内存访问属性（readonly/readnone）、参数属性（nocapture/returned）和函数属性（norecurse/nounwind）。在IPO阶段基于SCC迭代，结合别名分析和调用图信息，实现跨函数优化。
+lib/Transforms/IPO/DeadArgumentElimination.cpp，调用次数:734：该模块是LLVM的IPO阶段死参数消除优化。核心功能是移除函数中未被函数体使用的参数，并消除未使用的返回值。通过分析函数参数和返回值的实际使用情况，在模块间优化阶段清理无效接口，减少不必要的参数传递开销。
+lib/Transforms/IPO/Inliner.cpp，调用次数:405：该模块是LLVM的CGSCC过程间内联器核心实现，负责在调用图强连通分量层面执行函数内联优化。通过内联顾问评估内联成本与收益，支持基于历史记录的回放机制和多种决策策略。作为IPO优化阶段的关键组件，它与调用图分析、成本分析等模块交互，旨在提升运行时性能并管理编译时开销。
+lib/Transforms/IPO/GlobalDCE.cpp，调用次数:201：GlobalDCE模块是LLVM的中间表示（IR）级优化器，在链接时优化（IPO）阶段运行。其核心功能是执行死全局消除，通过分析模块中全局对象（包括函数、变量、别名、间接函数和虚函数）的使用情况，安全地移除未被引用的死代码。该过程旨在缩减最终二进制体积，并可选择性地启用虚函数消除（VFE）以增强优化效果。
+lib/Transforms/IPO/Internalize.cpp，调用次数:41：该模块是LLVM链接时优化阶段的内部化转换，通过将模块中的全局符号（函数、全局变量、别名）默认转换为内部链接性来减少符号可见性。核心功能是根据用户提供的保留符号列表（文件或命令行参数），仅保留指定的公共API外部可见，其余符号均被内部化以优化后续编译过程。该转换与CallGraph等分析交互，实现跨模块的编译优化。
+lib/Transforms/IPO/PartialInlining.cpp，调用次数:136：该模块实现LLVM的部分内联优化，在IPO阶段运行。其核心功能是将函数中的冷代码区域（如低频执行块）提取为独立函数并进行外联，仅将热代码内联到调用处。通过分析块频率和分支概率识别冷区域，结合代码提取器与函数克隆实现部分内联，旨在减少代码膨胀的同时保留关键路径的内联收益。
+lib/Transforms/IPO/StripDeadPrototypes.cpp，调用次数:43：该模块是LLVM中一个IPO优化通道，专门用于移除模块中未被使用的函数声明（即死原型）。它在编译链接时优化阶段运行，通过扫描整个模块来清理无用原型，减少目标代码冗余。该功能作为LLVM传递体系的一部分，由StripDeadPrototypesPass调用执行。
+lib/Transforms/IPO/ConstantMerge.cpp，调用次数:259：ConstantMerge模块是LLVM在链接时优化(IPO)阶段的转换器，用于合并模块中的重复全局常量。该模块通过识别具有相同初始值的全局常量，并选择最优候选作为规范版本，将其他重复常量替换为该规范版本。设计目标是通过消除冗余常量来减少代码大小，优化发生在模块链接阶段，通过替换所有使用点并移除原常量来实现优化。
+lib/Transforms/Utils/LoopSimplify.cpp，调用次数:277：该模块是LLVM循环规范化工具，核心功能为将自然循环转换为简化形式。主要作用包括：确保循环具有唯一预头块和唯一后缘块，处理多后缘循环时插入专用后缘块。当检测到嵌套循环时，会通过PHI节点分析进行循环分离。该过程依赖循环信息、支配树和标量演化分析，并为后续优化传递奠定基础。
+lib/Transforms/Utils/BasicBlockUtils.cpp，调用次数:560：该模块提供基本块核心操作功能，包括清空指令、分离前驱/后继关系、拆分基本块及维护控制流完整性。通过前向/后向扫描优化调试指令，消除冗余的dbg.value和dbg.assign。在变换过程中自动更新支配树、循环信息和内存SSA等分析结果，确保编译中端优化流程的准确性。
+lib/Transforms/Utils/InlineFunction.cpp，调用次数:51：该模块实现LLVM编译器的函数内联核心功能，负责在编译优化阶段将函数调用处替换为被调用函数的函数体。主要处理参数映射、异常处理转换、调试信息更新和元数据传播，并与别名分析、支配树等分析模块交互，确保内联后程序语义正确性。
+lib/Transforms/Utils/PromoteMemoryToRegister.cpp，调用次数:321：该模块是LLVM的Mem2Reg优化核心，在IR层将局部Alloca内存提升为寄存器。主要处理单块和单存储场景，利用支配树插入PHI节点并消除冗余内存操作。通过支配边界计算实现跨块变量提升，与调试信息更新协同工作，将内存访问优化为SSA形式寄存器操作。
+lib/Transforms/Utils/LCSSA.cpp，调用次数:453：LCSSA.cpp 实现循环封闭SSA形式转换，在循环优化阶段运行。该模块为跨循环出口的变量插入LCSSA PHI节点，将循环内定义值的所有外部使用重写为通过出口块PHI节点访问。处理过程按深度优先遍历循环嵌套，依赖循环信息和支配树分析，确保后续循环优化能正确处理跨循环边界的值流。
+lib/Transforms/Utils/SSAUpdater.cpp，调用次数:704：该模块在LLVM中后端优化阶段实现SSA形式更新，核心类SSAUpdater用于在控制流图中维护变量定义的SSA属性。其主要功能包括插入Phi节点、重命名变量以保持SSA约束，并支持跨基本块的值更新。该设计旨在简化各类程序变换（如循环优化、内联）后的SSA维护工作，通过与IR指令系统和控制流分析模块交互实现高效更新。
+lib/Transforms/Utils/BuildLibCalls.cpp，调用次数:109：该模块在LLVM中端优化阶段提供标准库函数调用的构建与属性推断功能。核心作用包括生成标准库函数调用指令，并为已知库函数推断内存访问、异常行为等函数属性。通过分析函数签名与目标库信息，自动设置只读内存、无副作用等关键属性，协助优化器进行更精确的分析与转换。
+lib/Transforms/Utils/SimplifyLibCalls.cpp，调用次数:285：该模块是LLVM中用于简化标准库调用的优化器，在编译器的中间表示优化阶段运行。其核心功能是将已知的标准库函数调用（如strlen、memcpy等）替换为更高效的等效操作，包括转换为内置函数、常量折叠或特化优化。该模块通过与目标库信息交互来识别可优化的调用，并利用IR构建器实现安全替换，旨在提升代码性能并减少冗余调用。
+lib/Transforms/Utils/BreakCriticalEdges.cpp，调用次数:405：该模块是LLVM中用于打破关键边的变换工具，作用于控制流图(CFG)优化阶段。核心功能是识别并分割关键边——即具有多个前驱和多个后继的基本块之间的边，为后续优化（如指令下沉和phi节点处理）创造有利条件。模块通过插入新基本块重构控制流，与支配树、循环信息、内存SSA等分析结果交互，确保变换后程序语义不变。
+lib/Transforms/Utils/SimplifyCFG.cpp，调用次数:795：SimplifyCFG.cpp是LLVM中控制流图简化优化模块，在中间表示优化阶段运行。核心功能包括合并冗余基本块、消除空块、简化条件分支与switch语句、推测执行安全指令。该模块通过消除控制流冗余、优化分支结构来提升代码效率，并与DomTreeUpdater、MemorySSA等分析模块交互维护程序正确性。
+lib/Transforms/Utils/SimplifyIndVar.cpp，调用次数:231：该模块是LLVM循环优化中的归纳变量简化器，作用于标量优化阶段。核心功能是使用标量演化分析归纳变量的循环递推关系，通过消除恒等变换、折叠操作数、转换有符号运算为无符号等方式简化IV用户指令。它与循环信息、支配树等分析结果交互，旨在降低IV相关操作的复杂度并消除冗余比较运算。
+lib/Transforms/Utils/ValueMapper.cpp，调用次数:289：该模块是LLVM中用于值映射的核心组件，负责在编译转换过程中将IR值（如函数、基本块、指令、常量等）和元数据从一个模块映射到另一个模块。它支持函数克隆、全局变量重映射等操作，通过维护映射关系来确保IR在转换过程中的正确链接。主要服务于模块链接、循环转换等需要复制或重组IR的编译阶段。
+lib/Transforms/Utils/LowerInvoke.cpp，调用次数:24：该模块是LLVM的LowerInvoke降级转换组件，核心功能是将函数中的invoke指令和unwind指令转换为标准分支调用结构。作为中间表示转换阶段的关键环节，主要服务于不支持异常处理机制的代码生成器，通过消除异常处理相关指令确保代码能在无异常处理能力的后端正常运行。
+lib/Transforms/Utils/CodeExtractor.cpp，调用次数:27：CodeExtractor模块是LLVM中用于代码提取的核心工具，作用于中间表示优化阶段。其主要功能是从现有函数中提取指定基本块集合，生成独立的新函数并替换原调用点。该模块处理输入/输出变量映射、调试信息维护、生命周期标记更新等关键任务，支持与支配树、假设缓存等分析模块交互，旨在实现函数结构化分解和代码复用优化。
+lib/Transforms/Utils/LoopUnroll.cpp，调用次数:536：该模块是LLVM的循环展开优化核心组件，位于中端优化阶段。主要实现循环的完全展开与部分展开，支持运行时余数处理。通过分析循环结构选择前导或后继展开策略，集成标量演化、循环信息等分析结果。设计目标包括减少循环开销、提升指令级并行，并与LCSSA形式维护、循环简化等模块协同工作。
+lib/Transforms/Utils/LowerExpectIntrinsic.cpp，调用次数:116：该模块在LLVM优化阶段处理`llvm.expect`内建函数，将其转换为分支权重元数据。核心功能包括处理条件分支、switch语句和PHI节点中的expect指令，通过分析预期值与实际值的关系来推断分支概率。该转换旨在为后续优化传递（如块放置）提供准确的跳转概率信息，从而提升代码布局效率。
+lib/Transforms/Scalar/IndVarSimplify.cpp，调用次数:769：IndVarSimplify是LLVM标量优化阶段的循环归纳变量简化模块，核心功能包括：消除冗余归纳变量、将循环退出条件替换为规范形式、扩展变量位宽以消除符号/零扩展操作。该模块与标量演化(ScalarEvolution)和循环信息(LoopInfo)紧密交互，在线性函数测试替换(LFTR)等环节发挥作用，旨在简化循环结构并提升后续优化效果。
+lib/Transforms/Scalar/SimplifyCFGPass.cpp，调用次数:327：该模块是LLVM的简化控制流图(CFG)优化Pass，作用于中间表示(IR)层。核心功能包括合并等价基本块、消除空块、简化分支结构等CFG优化。通过迭代处理函数中的所有基本块，并与支配树(DominatorTree)、目标转换信息(TTI)等模块交互，持续优化直到CFG结构稳定。设计目标是通过简化控制流结构提升后续优化效果和代码生成质量。
+lib/Transforms/Scalar/LoopUnrollPass.cpp，调用次数:198：该模块是LLVM的循环展开优化通道，作用于中端优化的标量变换阶段。核心功能包括分析循环结构、计算展开成本，并执行完全或部分循环展开。模块通过查询目标转换信息、标量演化等分析结果，依据循环规模、迭代次数及代价阈值动态决策展开策略，支持基于编译指示符的强制展开。其设计目标是通过减少循环开销提升运行时性能，同时控制代码膨胀。
+lib/Transforms/Scalar/CorrelatedValuePropagation.cpp，调用次数:148：该模块是LLVM标量优化阶段的关联值传播器，利用LazyValueInfo分析结果进行值推断。核心功能包括：传播常量值、简化PHI节点与选择指令、优化条件分支与switch语句、推断整数运算溢出标志。通过值范围分析和控制流边缘信息，实现指令简化与类型转换优化。
+lib/Transforms/Scalar/MemCpyOptimizer.cpp，调用次数:343：该模块是LLVM标量优化阶段的MemCpy优化器，专注于识别和优化内存操作指令。核心功能包括删除冗余的memcpy/memmove指令、将memmove转换为memcpy、推断memset操作以及执行调用槽和栈移动优化。它通过别名分析、内存SSA和支配关系等分析技术，在保证正确性的前提下消除不必要的内存拷贝操作。
+lib/Transforms/Scalar/JumpThreading.cpp，调用次数:338：JumpThreading.cpp是LLVM的标量变换模块，在中间表示优化阶段执行跳转线程化。该模块通过复制基本块来重定向控制流，消除冗余分支并简化CFG。核心功能包括分析条件分支、评估复制成本、选择最优跳转目标，并与支配树、循环信息等分析结果交互以提升代码路径局部性。
+lib/Transforms/Scalar/LICM.cpp，调用次数:628：LICM模块是LLVM的循环优化组件，在标量变换阶段执行循环不变代码外提。该模块通过分析循环体内不变表达式，将可安全移动的指令提升至循环前置头或下沉至退出块，减少重复计算。核心功能包括指令提升与下沉、内存访问优化及算术表达式重组，依赖循环信息、别名分析和支配树等分析结果实现跨基本块代码移动。
+lib/Transforms/Scalar/LoopIdiomRecognize.cpp，调用次数:190：该模块是LLVM标量优化阶段的循环惯用语识别器，作用于循环中间表示。核心功能是识别特定循环模式并将其转换为高效内置操作：包括将存储循环转换为memset、加载存储序列转换为memcpy/memmove、计数循环转换为popcount/cttz等位操作，以及识别strlen等字符串操作。该过程依赖循环分析、标量演算和别名分析等信息，旨在通过模式匹配提升循环执行效率。
+lib/Transforms/Scalar/GVN.cpp，调用次数:1029：GVN.cpp 是 LLVM 的标量优化转换模块，实现全局值编号功能。其核心作用是在中间表示（IR）上消除冗余计算和加载指令。该模块通过值编号、公共子表达式消除及部分冗余消除（PRE）来优化代码，主要作用于指令简化、循环不变代码外提等编译阶段。它依赖别名分析、支配树、内存依赖分析等分析结果进行交互优化。
+lib/Transforms/Scalar/SimplifyLibCalls.cpp，调用次数:131：该模块是LLVM中用于简化标准库调用的优化器，在编译器的中间表示优化阶段运行。其核心功能是将已知的标准库函数调用（如strlen、memcpy等）替换为更高效的等效操作，包括转换为内置函数、常量折叠或特化优化。该模块通过与目标库信息交互来识别可优化的调用，并利用IR构建器实现安全替换，旨在提升代码性能并减少冗余调用。
+lib/Transforms/Scalar/SROA.cpp，调用次数:1136：该模块实现标量聚合体替换优化(SROA)，在LLVM中端进行标量优化。核心功能是将聚合体类型（如结构体、数组）的alloca内存分配分解为多个标量分配，识别可提升为SSA标量的内存操作，并通过划分内存切片、推测加载操作等机制，将内存访问转换为寄存器操作。该过程与Mem2Reg优化协同工作，旨在消除冗余内存访问，提升寄存器利用率。
+lib/Transforms/Scalar/GlobalMerge.cpp，调用次数:34：GlobalMerge是LLVM代码生成阶段的优化模块，主要作用是将多个全局变量合并为单个复合变量。该模块基于使用模式对全局变量进行分组，可处理常量和外部链接变量，通过减少指令数量和内存访问提升目标机器性能。其设计目标是通过合并全局数据来优化代码大小与执行效率。
+lib/Transforms/Scalar/CodeGenPrepare.cpp，调用次数:643：CodeGenPrepare是LLVM后端优化阶段的关键模块，在指令选择前对IR进行目标相关优化。核心功能包括下沉地址计算与比较指令以减少虚拟寄存器、优化符号/零扩展与加载指令的组合、消除冗余块与简单PHI节点。该模块通过分析循环信息与标量演化，与后续SelectionDAG阶段协同提升代码生成质量。
+lib/Transforms/Scalar/LoopRotation.cpp，调用次数:506：LoopRotation是LLVM的标量循环优化转换，在循环通道中执行循环旋转操作。该模块通过将循环头部的指令移动到循环尾部来转换循环结构，旨在改进后续优化效果并为指令调度创造更好条件。它依赖循环信息、标量演化等分析，可配置最大头部尺寸阈值，并支持在LTO准备阶段运行。
+lib/Transforms/Scalar/TailRecursionElimination.cpp，调用次数:129：该模块是LLVM标量优化阶段的尾递归消除器，核心功能是将函数的尾递归调用转换为迭代循环。它通过识别函数中的尾调用位置，检查动态栈分配等安全条件，并利用支配关系分析进行代码转换。该优化与函数分析、控制流优化等模块交互，旨在减少函数调用开销和栈空间消耗。
+lib/Transforms/Scalar/LoopStrengthReduce.cpp，调用次数:70：LoopStrengthReduce是LLVM的循环强度削减优化模块，在标量优化阶段运行。该模块通过将循环中的高开销表达式（如乘法）替换为低开销操作（如加法）来优化循环。它分析归纳变量使用模式，利用标量演化信息识别优化机会，并与目标转换信息交互以生成高效的地址计算模式。
+lib/Transforms/Scalar/EarlyCSE.cpp，调用次数:565：EarlyCSE是LLVM的标量优化模块，在中间表示（IR）层进行早期公共子表达式消除。该模块通过哈希值匹配在支配树内消除冗余指令，涵盖算术运算、比较、加载、调用及GEP等指令类型。设计目标是在编译早期快速消除重复计算，可与MemorySSA交互以优化内存操作，并包含指令简化等辅助优化功能。
+lib/Transforms/Scalar/ADCE.cpp，调用次数:157：该模块实现了一个积极的死代码消除（ADCE）编译器优化。其核心功能是移除程序中的无用代码，包括指令和不可达的控制流分支。该过程在LLVM的中端优化阶段进行，利用控制流图、支配树和内存SSA等分析信息来识别和删除死代码。模块通过统计信息跟踪被移除的指令和分支数量，并可配置是否移除控制流和循环结构。
+lib/Transforms/Scalar/DeadStoreElimination.cpp，调用次数:504：该模块是LLVM的"死存储消除"优化器，在Scalar变换阶段运行。其核心功能是识别并移除冗余的存储指令，包括完全死存储和部分被覆盖的存储。通过别名分析、内存SSA和支配树等分析结果，检测后续存储覆盖前驱存储的情况，支持部分覆盖存储的截断与合并优化，以消除不必要的内存写入操作。
+lib/Transforms/Scalar/LoopDeletion.cpp，调用次数:367：该模块是LLVM标量优化阶段的循环删除转换，核心功能是删除无效循环。通过分析循环执行特性，识别并移除两类循环：可证明不被执行的无用循环（dead loop）和可被证伪回跳的无限循环（infinite loop）。该过程依赖循环简化形式和LCSSA，并与循环信息、标量演化等分析模块交互，旨在消除不影响程序语义的冗余循环结构。
+lib/Transforms/Scalar/Reassociate.cpp，调用次数:920：Reassociate.cpp 是 LLVM 的标量优化模块，在中间表示（IR）层运行。其核心功能是重排和重组可结合的二元运算（如加法、乘法），通过打破减法、转换位运算为算术运算等方式，优化表达式树结构以暴露公共子表达式和常量折叠机会。该模块旨在提升后续指令选择和算术运算优化的效果。
+lib/Transforms/InstCombine/InstCombineCasts.cpp，调用次数:234：该模块是LLVM指令组合优化阶段的核心组件，专注于简化类型转换操作。主要功能包括消除冗余的类型转换（如截断与扩展）、优化位转换与向量操作，并支持在更窄类型中安全地重评估表达式。其设计目标是通过降低类型转换开销，提升中间表示的效率，并与指令组合器的其他优化模块协同工作。
+lib/Transforms/InstCombine/InstCombinePHI.cpp，调用次数:117：该模块是LLVM指令组合优化阶段对PHI节点的核心处理模块。主要功能包括消除冗余PHI节点、优化PHI与插入/提取值操作、基于控制流简化PHI、折叠依赖归纳变量，以及安全下沉负载操作。通过模式匹配和支配树分析，将PHI相关操作转换为更高效形式，提升中间代码质量。
+lib/Transforms/InstCombine/InstCombineSimplifyDemanded.cpp，调用次数:422：该模块是LLVM指令组合优化阶段的核心组件，专注于基于位需求（Demanded Bits）和值跟踪来简化指令。其核心功能包括：通过分析指令操作数的特定位需求来收缩常量、优化移位操作以选择压缩向量元素，并验证已知位信息的一致性。该模块与值跟踪分析交互，旨在移除冗余操作并优化指令表示。
+lib/Transforms/InstCombine/InstCombineAndOrXor.cpp，调用次数:8：该模块是LLVM指令组合优化阶段的核心组件，专注于对逻辑运算（与、或、异或）及其与比较指令的组合进行简化。通过匹配多种位操作和比较模式（如掩码检查、德摩根定律），将复杂表达式折叠为更高效形式，并与ICmp、FCmp等指令交互以提升代码质量。
+lib/Transforms/InstCombine/InstCombineCalls.cpp，调用次数:468：InstCombineCalls.cpp 是 LLVM 指令组合优化器的核心模块，专注于对函数调用和内部函数（Intrinsics）进行简化与折叠。该模块在中间表示（IR）层面处理大量内建函数和内部函数调用，通过模式匹配将其转换为更高效的等效指令序列或常量。其设计目标是与指令组合器（InstCombiner）协同工作，在编译优化阶段消除冗余计算并降低运行时开销。
+lib/Transforms/InstCombine/InstCombineCompares.cpp，调用次数:1075：该模块是LLVM指令组合优化阶段的比较指令优化器，专门处理整数和浮点比较指令(ICmp/FCmp)的简化与转换。核心功能包括将复杂比较转换为等效更简单形式、识别并优化特定比较模式(如符号测试、溢出检查)、处理GEP偏移比较以及简化与位操作相关的比较。通过与常量折叠、指令简化等分析模块交互，实现比较表达式的高效优化。
+lib/Transforms/InstCombine/InstructionCombining.cpp，调用次数:994：该模块是LLVM指令组合优化阶段的核心实现，通过迭代遍历函数指令进行局部化简与组合。主要功能包括：利用代数恒等式和常量折叠简化表达式，重组算术运算以发掘优化机会，优化内存操作（如GEP指令），并消除死代码。该阶段与指令简化、别名分析等模块交互，旨在减少冗余指令并提升低级IR效率。
+lib/Transforms/InstCombine/InstCombineAddSub.cpp，调用次数:194：该模块是LLVM指令组合优化阶段的核心组件，专注于对加法和减法指令进行简化与转换。通过模式匹配和代数恒等式变换，实现常量折叠、操作数重排、特殊运算模式识别（如线性插值和饱和加法）等优化。其设计目标是通过降低指令复杂度并利用已知位信息，提升后续分析效率并生成更高效的机器代码。
+lib/Transforms/InstCombine/InstCombineLoadStoreAlloca.cpp，调用次数:353：该模块是LLVM指令组合优化阶段的核心组件，专注于对加载、存储和alloca指令进行优化。主要功能包括消除冗余存储、合并内存操作类型以匹配操作数类型、简化alloca数组大小，并识别源自常量内存的复制操作。其设计目标是通过类型匹配和死代码消除来提升内存操作效率，并与别名分析、数据布局等模块交互协作。
+lib/Transforms/Instrumentation/MemorySanitizer.cpp，调用次数:86：MemorySanitizer是LLVM中检测未初始化内存读取的模块，在编译时通过插桩实现。它在IR层面对内存操作进行影子内存跟踪，可检测栈、堆及临时变量的未初始化使用。该模块通过选项控制来源追踪、内联汇编处理等策略，并与编译器优化通道交互实现轻量级检测。
+lib/Transforms/Instrumentation/BoundsChecking.cpp，调用次数:24：该模块是LLVM的边界检查插桩工具，在编译优化阶段对内存访问指令进行运行时安全检查。核心功能是分析指针访问条件，在可能越界的操作前插入条件陷阱或运行时调用。通过计算对象大小与偏移量，生成检查条件并与目标库信息交互，最终将安全检查代码注入到IR中，防止内存越界访问。
+lib/Transforms/Instrumentation/AddressSanitizer.cpp，调用次数:98：该模块是LLVM的地址消毒剂（AddressSanitizer）核心实现，用于在编译时插桩检测内存错误。它在IR转换阶段工作，通过插桩内存访问指令（读写）、管理栈/全局变量影子内存来发现越界、使用后释放等问题。模块与目标平台影子内存布局交互，并优化对编译器生成变量的访问。
+lib/Transforms/Instrumentation/ThreadSanitizer.cpp，调用次数:57：该模块是LLVM的ThreadSanitizer检测器，在编译时插桩以检测多线程数据竞争。核心功能包括插桩内存访问、原子操作、函数入口/退出、内存内置函数及C++异常处理。通过运行时库交互，识别常规读写、虚表访问及volatile操作的并发冲突。
+lib/Transforms/Instrumentation/GCOVProfiling.cpp，调用次数:116：该模块在LLVM编译流程的插桩阶段实现GCOV代码覆盖率分析功能。核心作用是在IR级别插入计数器，生成.gcno文件记录程序结构信息。通过构建控制流图最小生成树来优化插桩点，并利用调试信息关联源码位置。设计目标是与编译器工具链协作，为后续的.gcda数据文件生成提供基础结构。
+lib/Transforms/Vectorize/SLPVectorizer.cpp，调用次数:33：该模块是LLVM的SLP向量化器，作用于中端优化阶段。核心功能是通过底向上方法将代码中的标量指令合并为向量指令，提升数据级并行性。关键类BoUpSLP实现向量化识别与转换，利用目标变换信息进行成本评估，并与别名分析、循环信息等模块交互以优化向量化决策。
+lib/Transforms/Vectorize/LoopVectorize.cpp，调用次数:1774：LoopVectorize.cpp 是 LLVM 中实现循环向量化的核心模块。它通过 VPlan 模型将可向量化的循环转换为 SIMD 指令，支持固定长度和可伸缩向量化。该模块在优化阶段运行，与标量演化、循环信息等分析交互，旨在提升循环执行性能。主要功能包括循环合法性检查、成本评估、向量化方案规划及代码生成。
+lib/Bitcode/Writer/BitcodeWriter.cpp，调用次数:34：该模块负责将LLVM中间表示(IR)序列化为比特码格式，实现编译器后端的代码持久化。核心功能包括编码模块元数据、函数体、全局变量和类型系统，生成包含标识头、类型表和数据块的标准化比特流。设计目标是与比特码读取器协同工作，支持跨平台序列化，并为链接时优化提供模块摘要索引。
+lib/CodeGen/SelectionDAG/ScheduleDAGRRList.cpp，调用次数:941：该模块实现LLVM预寄存器分配阶段的指令调度，采用自底向上的表调度算法。核心功能包括管理指令依赖关系、评估寄存器压力、处理物理寄存器冲突，并通过多种启发式规则（如延迟平衡、寄存器亲和性）优化指令序列。设计目标是在保证正确性的前提下，平衡指令级并行性与寄存器使用效率。
+lib/CodeGen/SelectionDAG/ResourcePriorityQueue.cpp，调用次数:113：该模块是LLVM指令调度器中的资源优先级队列，在指令选择后、寄存器分配前的调度阶段工作。它基于DFA资源建模计算指令优先级，通过分析控制依赖、寄存器压力和指令延迟等因子，为调度器提供指令排序策略，旨在优化指令级并行和资源利用率。
+lib/CodeGen/SelectionDAG/SelectionDAGISel.cpp，调用次数:1758：该模块是LLVM后端的SelectionDAG指令选择器核心实现，负责将LLVM IR转换为SelectionDAG节点，并通过模式匹配生成目标指令。作为代码生成的关键阶段，它衔接了DAG构建与指令调度，支持快速指令选择与基于DAG的指令选择两种路径，同时整合了调试信息处理和多种分析结果。
+lib/CodeGen/SelectionDAG/FunctionLoweringInfo.cpp，调用次数:410：该模块在LLVM代码生成阶段负责将IR函数转换为机器函数。核心功能包括管理函数参数的抽象位置到物理寄存器/栈槽的映射，处理异常处理信息，以及为指令选择准备必要上下文。它通过辅助函数分析指令跨块使用情况并确定符号扩展偏好，与目标平台 lowering 及机器函数框架交互以完成从IR到机器码的转换。
+lib/CodeGen/SelectionDAG/LegalizeTypes.cpp，调用次数:238：该模块是LLVM代码生成器中的DAG类型合法化阶段，负责将SelectionDAG中的操作数类型转换为目标机器原生支持的格式。其核心功能包括类型扩展、拆分、标量化及向量化处理，确保后续指令选择能正确进行。该阶段与目标平台数据布局紧密交互，是实现跨平台代码生成的关键环节。
+lib/CodeGen/SelectionDAG/DAGCombiner.cpp，调用次数:969：DAGCombiner是LLVM SelectionDAG优化阶段的核心模块，负责通过模式匹配和转换来简化DAG节点。它在代码生成阶段对指令选择后的DAG进行优化，主要功能包括常量折叠、代数恒等式应用、特殊操作组合以及冗余操作消除。该模块与目标平台信息交互，旨在提升生成代码的质量和效率。
+lib/CodeGen/SelectionDAG/LegalizeDAG.cpp，调用次数:326：LegalizeDAG.cpp 实现SelectionDAG的合法化过程，将目标平台不支持的DAG节点转换为合法操作。核心功能包括检查数学库调用（如sin/cos）的可用性、扩展位向量操作、处理向量类型提升及栈内存对齐。该模块在代码生成阶段与目标平台信息交互，确保DAG节点可被后端正确 lowering。
+lib/CodeGen/SelectionDAG/TargetLowering.cpp，调用次数:44：该模块是LLVM目标代码生成的核心组件，负责在SelectionDAG阶段将LLVM IR通用操作转换为目标特定的指令。主要功能包括处理算术运算优化（如精确除法转乘法）、设置条件码化简、向量操作转换以及动态向量索引边界处理。通过与SelectionDAG框架交互，实现跨平台指令选择的通用 lowering 逻辑。
+lib/CodeGen/SelectionDAG/SelectionDAGBuilder.cpp，调用次数:1314：该模块是LLVM SelectionDAG构建器，负责将LLVM IR转换为SelectionDAG节点。作为代码生成的关键环节，它在指令选择阶段将IR指令映射到目标相关的DAG操作，处理值拆分组合、内建函数展开和调试信息维护。通过与目标无关的DAG表示，为后续指令选择提供中间表示。
+lib/CodeGen/SelectionDAG/ScheduleDAGVLIW.cpp，调用次数:42：该模块实现了一个面向VLIW架构的指令调度器，作用于寄存器分配前的编译阶段。其核心功能是基于资源优先级队列和危险检测机制，对SelectionDAG节点进行指令调度，以优化VLIW指令包的并行执行效率。该调度器通过统计空操作和流水线停顿来评估调度效果，并作为可注册的调度策略集成在LLVM调度系统中。
+lib/CodeGen/SelectionDAG/SelectionDAG.cpp，调用次数:1540：该文件实现LLVM SelectionDAG模块的核心功能，负责在代码生成阶段将LLVM IR转换为面向目标的SelectionDAG。主要处理DAG节点的创建、合法化、优化和模式匹配，通过DAGCombine进行节点折叠与简化。作为指令选择前的关键环节，它与目标降低(TargetLowering)模块紧密交互，将通用操作转换为目标特定指令，为后续指令调度和寄存器分配奠定基础。
+lib/CodeGen/SelectionDAG/FastISel.cpp，调用次数:19：FastISel.cpp 实现了LLVM的快速指令选择模块，在代码生成阶段将LLVM IR快速转换为目标机器指令。其核心作用是通过目标无关和目标相关的选择器快速生成指令，作为SelectionDAG指令选择的快速路径。该模块统计成功选择及移除死指令的数量，并与函数降级信息等模块交互以提升编译速度。
+lib/CodeGen/SelectionDAG/LegalizeVectorOps.cpp，调用次数:63：该模块是LLVM SelectionDAG向量操作合法化器，负责在代码生成阶段将目标平台不支持的向量操作转换为合法操作。核心功能包括处理VP（向量谓词）SDNode和严格浮点指令，通过查询TargetLowering确定操作合法性并生成等价的合法向量序列。它与目标后端交互，确保向量指令能被特定硬件支持。
+lib/CodeGen/SelectionDAG/ScheduleDAGSDNodes.cpp，调用次数:593：该模块实现基于SelectionDAG节点的指令调度，属于LLVM预寄存器分配调度阶段。核心功能包括处理物理寄存器依赖检查、调试信息值传递、节点克隆与Glue操作管理。通过分析SDNode依赖关系构建调度DAG，并与指令发射器交互完成机器指令生成。
+lib/CodeGen/SelectionDAG/InstrEmitter.cpp，调用次数:622：该模块是LLVM指令选择后的核心组件，负责将SelectionDAG节点发射为具体的MachineInstr指令。其核心功能包括计算操作数数量、处理物理寄存器和调试信息操作数，并在寄存器分配阶段前完成虚拟寄存器的约束。它作为指令选择与后续机器码生成阶段的桥梁，确保DAG能正确转换为目标机器指令序列。
+lib/CodeGen/AsmPrinter/ARMException.cpp，调用次数:34：该模块在LLVM代码生成阶段处理ARM架构的异常处理信息。核心功能是基于DwarfException框架生成ARM目标平台的调用帧指令与异常处理表，通过AsmPrinter与MCStreamer的交互，将异常元数据嵌入到汇编输出中，确保栈展开和异常处理符合ARM EHABI标准。
+lib/CodeGen/AsmPrinter/DwarfCFIException.cpp，调用次数:68：该模块在LLVM代码生成阶段，为支持DWARF标准的异常处理机制生成调用帧信息（CFI）。它通过AsmPrinter与目标机器和流式汇编器交互，在汇编输出中嵌入CFI指令，确保栈展开器能够在异常抛出时正确解析调用栈。
+lib/CodeGen/AsmPrinter/AsmPrinter.cpp，调用次数:849：AsmPrinter是LLVM后端代码生成模块，负责将机器指令转换为目标汇编代码或直接生成目标文件。该模块在编译的汇编输出阶段工作，处理函数/全局变量定义、指令发射和调试信息生成。它通过集成DwarfDebug、WinException等子模块支持多格式调试信息与异常处理，并与MC层交互完成最终代码输出。
+lib/CodeGen/AsmPrinter/DwarfDebug.cpp，调用次数:508：该模块负责在LLVM代码生成阶段生成DWARF调试信息。核心功能包括管理调试信息条目(DIE)的创建与组织、处理变量位置描述、生成行号表及范围列表。设计目标是为源代码提供准确的调试映射，与汇编器、目标文件生成模块协作，支持调试器进行源码级调试。
+lib/CodeGen/AsmPrinter/AsmPrinterDwarf.cpp，调用次数:14：该模块负责在LLVM代码生成阶段生成DWARF调试信息。核心功能是将DIE（调试信息条目）转换为目标汇编代码，通过AsmPrinter与MCStreamer的交互，将调试信息写入目标文件。主要处理调试信息的编码和节区生成，确保生成符合DWARF标准的调试数据。
+lib/CodeGen/TargetOptionsImpl.cpp，调用次数:5：该模块实现LLVM目标代码生成选项的核心配置功能，负责解析和处理目标相关的编译参数。它通过映射字符串选项到具体枚举值，为栈帧布局、函数调用约定等机器级代码生成提供关键配置支持，衔接IR层与后端代码生成阶段。
+lib/CodeGen/MachineFunction.cpp，调用次数:254：该模块是LLVM后端机器代码表示的核心，负责管理MachineFunction及其包含的MachineBasicBlock和MachineInstr。主要功能包括维护函数属性、常量池、跳转表、帧信息和寄存器信息，支持异常处理数据管理，并提供常量池条目共享检测、调用指令识别等实用功能。它在代码生成阶段与目标平台信息和IR函数进行交互，构成后端编译流程的关键数据结构基础。
+lib/CodeGen/TargetLoweringBase.cpp，调用次数:1054：该文件是LLVM目标代码生成的核心组件，为不同目标架构提供通用 lowering 基类。主要功能包括：在指令选择阶段将LLVM IR操作映射到目标特定的SelectionDAG节点、管理类型合法化与操作扩展、处理函数调用约定与参数传递。设计目标是通过统一接口与各目标后端交互，实现通用代码生成逻辑的共享。
+lib/CodeGen/PHIElimination.cpp，调用次数:232：该模块是LLVM编译器后端的机器函数Pass，核心功能是在寄存器分配前消除机器指令中的PHI节点。通过将PHI节点转换为目标架构支持的移动指令，为后续寄存器分配做准备。处理过程中会分析关键边分割需求，并与活跃区间分析、控制流分析等模块交互，确保在保持程序语义的前提下完成PHI节点 lowering。
+lib/CodeGen/LiveVariables.cpp，调用次数:709：该模块实现LLVM代码生成阶段的活跃变量分析，通过LiveVariablesWrapperPass计算机器指令级别的变量生存期。核心功能是确定在程序各点哪些变量仍被后续使用，为寄存器分配等优化提供数据流信息。该分析作为独立Pass运行，服务于后端优化流程。
+lib/CodeGen/LiveRegMatrix.cpp，调用次数:119：LiveRegMatrix模块在LLVM寄存器分配阶段，负责跟踪物理寄存器的实时使用情况并管理虚拟寄存器到物理寄存器的映射。其核心功能包括检测寄存器间的冲突干扰、执行寄存器分配与解除分配操作。该模块与寄存器分配器、虚拟寄存器映射及实时区间分析等组件交互，共同完成寄存器分配任务。
+lib/CodeGen/MachinePostDominators.cpp，调用次数:3：该模块实现机器后支配树（MachinePostDominatorTree）的构建与维护，属于LLVM代码生成阶段的机器函数优化环节。核心功能包括计算机器基本块的后支配关系、支持动态增删边操作，并提供验证机制。通过模板化设计复用通用支配树算法，为后续机器级优化提供控制流分析基础。
+lib/CodeGen/OptimizePHIs.cpp，调用次数:103：该模块是LLVM机器代码优化阶段的机器函数Pass，专门优化机器指令中的PHI节点。核心功能包括识别并消除死PHI循环、替换可优化的PHI循环结构，以减少冗余操作。该Pass在代码生成阶段运行，与机器基本块和寄存器信息交互，旨在提升后续指令调度和寄存器分配的效率。
+lib/CodeGen/RegAllocGreedy.cpp，调用次数:394：该模块实现LLVM贪婪寄存器分配器，在代码生成阶段将虚拟寄存器映射到物理寄存器。核心功能包括全局/局部分割、干涉区域管理、最后机会染色和溢出处理，通过优先级评估与实时干涉分析优化寄存器分配。
+lib/CodeGen/RegisterClassInfo.cpp，调用次数:122：该模块在LLVM寄存器分配阶段提供目标寄存器类的动态信息缓存与查询服务。核心类RegisterClassInfo通过分析机器函数上下文，计算每个寄存器类的可用寄存器数量、分配顺序及掩码，优化分配器对寄存器资源的访问效率。设计目标是为寄存器分配器快速提供准确的寄存器可用性数据，与目标相关寄存器信息模块交互。
+lib/CodeGen/AggressiveAntiDepBreaker.cpp，调用次数:36：该模块是LLVM后寄存器分配调度器中的激进反依赖消除器，作用于机器指令调度阶段。核心功能是识别并消除调度单元间的反依赖和输出依赖，通过重命名寄存器来打破关键路径上的依赖链，提升指令级并行度。模块与调度依赖图交互，分析依赖边并沿关键路径进行寄存器重分配。
+lib/CodeGen/MachineTraceMetrics.cpp，调用次数:6：该模块在LLVM机器指令调度阶段分析程序轨迹，通过计算关键路径、依赖高度和资源使用等指标评估代码性能。核心功能包括跟踪选择、数据依赖分析、物理寄存器依赖追踪，为后续调度优化提供量化依据。
+lib/CodeGen/TailDuplication.cpp，调用次数:117：该模块是LLVM代码生成阶段的机器函数优化Pass，实现尾复制功能。核心作用是在机器代码级别复制基本块尾部指令以减少分支开销，提升执行效率。通过TailDuplicator与机器基本块频率信息交互，在控制流优化阶段复制高频执行路径的尾部代码，支持早期和标准两种复制时机。
+lib/CodeGen/GCMetadata.cpp，调用次数:76：该模块负责生成垃圾收集器元数据，在LLVM代码生成阶段为函数和模块创建GC策略信息。核心类GCModuleInfo作为Pass收集和管理模块级GC元数据，GCFunctionInfo则记录函数栈帧中与垃圾收集相关的指针位置及安全点信息。该设计旨在为不同垃圾收集器提供统一的元数据接口，支撑后端生成准确的堆栈映射表。
+lib/CodeGen/CodeGen.cpp，调用次数:53：该文件是LLVM代码生成器的核心模块，负责初始化和管理与代码生成相关的编译器Pass。它定义并注册了多个关键Pass，用于控制指令选择、寄存器分配、指令调度等后端编译阶段。该模块作为连接LLVM中端优化与目标特定代码生成的桥梁，协调各代码生成组件按正确顺序执行。
+lib/CodeGen/SpillPlacement.cpp，调用次数:138：该模块是LLVM编译器中的"Spill Code Placement Analysis"（溢出代码放置分析）Pass，作用于代码生成阶段。其核心功能是通过Hopfield网络模型优化寄存器溢出位置，将每个边束映射为网络节点，基于机器基本块频率信息计算最优的溢出代码插入点，以减少执行开销。该分析与边束和块频率信息模块交互，共同优化寄存器分配性能。
+lib/CodeGen/MachineModuleInfo.cpp，调用次数:119：MachineModuleInfo模块在LLVM后端代码生成阶段管理机器相关的模块级信息。它作为MachineFunction的容器，维护每函数机器代码的元数据，并与目标特定对象文件格式交互。该模块通过MachineModuleInfoWrapperPass封装为分析通道，为后端优化和代码发射提供统一的机器代码上下文管理。
+lib/CodeGen/MachineFunctionAnalysis.cpp，调用次数:46：该模块是LLVM机器函数分析管理器，在代码生成阶段为每个IR函数创建并缓存对应的MachineFunction对象。它作为MachineFunctionPass的基础设施，依赖MachineModuleInfo来维护机器级函数的生命周期，确保后续机器代码处理阶段能高效访问这些底层表示。
+lib/CodeGen/MachineVerifier.cpp，调用次数:13：该模块是LLVM机器代码验证器，用于在代码生成阶段检查MachineFunction的正确性。核心功能包括验证机器指令操作数、寄存器使用、控制流图完整性，以及收敛控制等属性。它作为MachineFunctionPass运行，与寄存器分配器、指令选择器等组件交互，旨在在编译期捕获后端错误。
+lib/CodeGen/StackColoring.cpp，调用次数:187：StackColoring是一个LLVM代码生成阶段的机器函数Pass，用于合并函数中生命周期不重叠的栈槽。它通过分析栈对象的生存期标记（LIFETIME_START/END）或首次使用模式，识别可共享内存空间的栈槽，从而减少栈内存占用。该模块与栈帧信息管理和生存期分析交互，旨在优化栈空间利用率。
+lib/CodeGen/CallingConvLower.cpp，调用次数:88：该模块负责在代码生成阶段处理调用约定(Calling Convention)的 lowering 逻辑。核心功能包括管理调用过程中参数与返回值的寄存器分配及栈位置映射，通过CCState等关键类协调目标平台特定的寄存器分配策略。其设计目标是为不同调用约定提供统一的参数传递降级框架，并与目标平台注册信息及帧信息管理模块进行交互。
+lib/CodeGen/InterferenceCache.cpp，调用次数:36：该模块是LLVM寄存器分配器中的干涉查询缓存，用于快速检测物理寄存器间的生存期冲突。核心类InterferenceCache通过缓存LiveIntervals查询结果，优化干涉检查性能。它在寄存器分配阶段工作，与目标寄存器信息和生存期分析模块交互，旨在提升编译后端效率。
+lib/CodeGen/MachineBranchProbabilityInfo.cpp，调用次数:21：该模块是LLVM机器层分支概率分析器，在代码生成阶段为机器基本块的分支转移提供静态概率评估。作为MachineBranchProbabilityInfoWrapperPass实现，通过"machine-branch-prob"标识集成到编译流程中，为后续机器代码优化传递分支权重信息。
+lib/CodeGen/StackProtector.cpp，调用次数:90：该模块在LLVM代码生成阶段实现栈保护机制，通过分析函数中的数组和地址操作识别需要保护的栈分配。它在函数入口插入栈保护值加载与存储逻辑，在函数返回前添加校验代码，当检测到栈破坏时跳转至失败处理例程。该模块与目标平台层交互获取栈保护变量，并支持基于SelectionDAG的代码生成路径。
+lib/CodeGen/SlotIndexes.cpp，调用次数:311：该模块为LLVM代码生成阶段的机器指令提供连续的槽位索引编号，用于追踪指令位置和生存区间。核心功能包括建立指令与索引的映射关系、维护索引在代码修改时的有效性，并支持寄存器分配等后续优化环节的快速查询。该模块作为MachineFunction的包装器通行证运行，专门服务于指令调度和寄存器分配过程。
+lib/CodeGen/MachineCopyPropagation.cpp，调用次数:288：该模块是LLVM机器码优化阶段的复制传播Pass，作用于机器指令层。核心功能是消除冗余寄存器拷贝，包括识别并删除死拷贝、前向传播拷贝源到使用点、后向传播拷贝目标到定义点。特别优化了溢出-重加载链中的拷贝操作，与寄存器分配器交互以减少不必要的移动指令。
+lib/CodeGen/EarlyIfConversion.cpp，调用次数:104：该模块是LLVM的早期if转换优化，在机器指令层将条件分支转换为谓词化执行。核心功能识别并转换"菱形"和"三角形"控制流模式，通过指令谓词化消除分支开销。它在代码生成阶段运行，依赖机器踪迹度量和分支概率信息，与寄存器分配和指令调度等后续阶段协同工作，旨在提升指令级并行性。
+lib/CodeGen/MachineBlockPlacement.cpp，调用次数:110：该模块是LLVM代码生成阶段的机器基本块布局优化器，在尾部复制和分支折叠的辅助下，通过分析分支概率与块频率，对基本块进行重排序以提升指令缓存局部性、增加fall-through机会并减少分支开销。其设计目标是与机器块频率信息、循环信息等模块交互，共同优化程序性能。
+lib/CodeGen/MachineBasicBlock.cpp，调用次数:125：该模块实现LLVM机器基本块（MachineBasicBlock）的核心功能，位于代码生成阶段。主要提供基本块内机器指令的维护管理、关键边分裂、跳转表索引查询等操作。它与机器函数、寄存器分配、活值分析等模块交互，支撑后续指令调度与代码发射。
+lib/CodeGen/BranchFolding.cpp，调用次数:530：该模块是LLVM编译器后端的控制流优化器，主要在代码生成阶段对机器基本块进行分支折叠优化。核心功能包括合并相同代码尾部以减少冗余、移除不可达的死代码块、优化分支指令以改善执行流。通过分析块频率和分支概率，与机器块频率信息等模块交互，旨在提升代码尺寸和运行时性能。
+lib/CodeGen/TargetInstrInfo.cpp，调用次数:53：该模块提供目标指令相关的核心功能，包括指令折叠、内联汇编内存操作数处理、隐式操作数传递及指令组合优化。作用于编译器后端代码生成阶段，与机器指令调度、寄存器分配等模块交互，旨在优化指令选择并提升代码质量。
+lib/CodeGen/PostRASchedulerList.cpp，调用次数:216：该模块实现了一个后寄存器分配阶段的指令调度器，采用自顶向下列表调度算法。其核心功能是在机器基本块内基于指令延迟进行调度，通过反依赖破坏器消除寄存器分配引入的伪依赖，并与目标相关的危险识别器交互以优化流水线性能。
+lib/CodeGen/TargetSchedule.cpp，调用次数:35：该模块为LLVM目标无关的指令调度提供核心支持，负责建模目标机器的调度资源与指令延迟。它封装了调度模型，关键功能包括计算指令延迟和操作数间延迟，并处理指令定义/使用操作数的索引映射。该模块在机器指令调度阶段与各目标后端的调度描述交互，以驱动调度器决策。
+lib/CodeGen/ScheduleDAGInstrs.cpp，调用次数:37：该模块在LLVM机器指令调度阶段，将机器指令转换为调度依赖图(ScheduleDAG)。核心功能包括构建指令间的数据依赖和内存依赖关系，管理物理寄存器生存期，处理内存别名分析，并与目标调度模型交互以确定指令延迟。其设计目标是为后续的指令调度算法提供准确的依赖关系图。
+lib/CodeGen/VirtRegMap.cpp，调用次数:311：该模块在LLVM寄存器分配后执行虚拟寄存器到物理寄存器的映射与重写。核心功能包括管理虚拟寄存器到物理寄存器或栈槽的映射关系，消除冗余的恒等移动指令，并分配必要的溢出槽位。它作为寄存器分配器与后续代码生成阶段的桥梁，确保中间表示能正确转换为目标指令。
+lib/CodeGen/PrologEpilogInserter.cpp，调用次数:539：该模块是LLVM代码生成中的Prologue/Epilogue插入器，负责在函数入口和出口处插入栈帧设置与清理代码。核心功能包括分配调用者保存寄存器的溢出槽、插入实际的保存/恢复指令、调整栈偏移量以及优化栈空间布局。它在寄存器分配后运行，与栈帧布局和寄存器清除子系统交互，共同完成栈帧最终化。
+lib/CodeGen/MachineLoopInfo.cpp，调用次数:318：该模块在LLVM机器代码层实现自然循环分析，通过MachineLoopInfoWrapperPass识别和控制流图中的循环结构。它基于机器基本块和机器指令构建循环层次树，依赖MachineDominators进行支配关系分析，为后续机器代码优化（如循环优化）提供基础信息。
+lib/CodeGen/MachineInstr.cpp，调用次数:746：该模块实现LLVM机器指令（MachineInstr）的核心功能，负责在代码生成阶段表示和目标相关的底层指令。提供指令操作数管理、内存操作数处理、调试信息维护及指令间别名分析等关键能力，并与机器基本块、寄存器信息等模块交互，支撑后端指令选择与调度优化。
+lib/CodeGen/RegisterCoalescer.cpp，调用次数:667：RegisterCoalescer是LLVM编译器后端寄存器分配阶段的关键组件，其核心功能是合并冗余的寄存器拷贝指令。该模块通过分析活跃区间，消除不必要的移动指令，减少寄存器使用并提升代码性能。它处理局部和全局拷贝，支持跨寄存器类合并，并与活跃区间分析、机器指令等模块交互，共同优化生成的机器代码。
+lib/CodeGen/CalcSpillWeights.cpp，调用次数:77：该模块在LLVM寄存器分配阶段负责计算虚拟寄存器的溢出权重。通过分析活跃区间、机器指令和循环结构，为每个虚拟寄存器评估其溢出到内存的相对代价。该计算为后续的寄存器分配器提供优先级依据，以最小化溢出开销并优化性能。
+lib/CodeGen/MachineRegisterInfo.cpp，调用次数:316：该模块管理机器指令中的虚拟与物理寄存器信息，属于LLVM后端代码生成阶段。核心功能包括寄存器类约束处理、子寄存器活性跟踪控制，以及指令调用函数分析。它与目标平台寄存器信息交互，支撑寄存器分配前的数据流管理。
+lib/CodeGen/MachineCSE.cpp，调用次数:485：该模块实现机器指令公共子表达式消除（Machine CSE），作用于LLVM代码生成阶段。核心功能是通过哈希表识别并消除冗余的机器指令，支持跨基本块和物理寄存器CSE。该Pass依赖机器支配树和循环信息，设计目标是在保证正确性前提下优化代码性能，可配置激进模式覆盖保守启发式规则。
+lib/CodeGen/LexicalScopes.cpp，调用次数:70：该模块在LLVM代码生成阶段维护调试信息的词法作用域。核心功能是构建并管理从IR到机器指令的调试作用域映射，包括识别DILexicalBlock和DICompileUnit等调试元数据。通过扫描机器函数建立作用域层次结构，为后续生成精确的调试信息提供作用域上下文，确保调试器能正确追踪变量作用域。
+lib/CodeGen/MachineScheduler.cpp，调用次数:128：该模块实现机器指令调度器，在LLVM代码生成阶段对机器基本块进行指令重排序。核心功能包括构建调度依赖图、管理寄存器压力、应用启发式调度策略，支持预分配和后分配两种调度模式。通过集成目标相关的调度模型和风险识别器，优化指令级并行性并减少流水线停顿。
+lib/CodeGen/TargetRegisterInfo.cpp，调用次数:61：该模块在LLVM代码生成阶段提供目标平台寄存器信息的抽象与查询功能。核心作用包括管理物理/虚拟寄存器分类、分配位图计算，以及处理寄存器子类与超类关系。它通过TargetRegisterInfo接口与寄存器分配器、帧处理等模块交互，旨在为不同后端提供统一的寄存器描述框架。
+lib/CodeGen/IfConversion.cpp，调用次数:52：该模块是LLVM后端的机器指令优化阶段，负责执行If转换以消除分支。核心功能是将条件分支控制流转换为谓词执行，支持简单、三角形和菱形等多种控制流模式转换。通过分析基本块结构和分支概率，在机器基本块级别进行谓词化处理，与分支折叠等优化协同工作，旨在减少分支误预测并提升指令级并行性。
+lib/CodeGen/MachineModuleInfoImpls.cpp，调用次数:67：该模块为机器码生成提供桩函数(stub)管理支持，核心功能包括维护符号-桩值映射关系及排序。通过SortSymbolPair和SortAuthStubPair函数实现桩函数的有序排列，协助MachineModuleInfoImpl在代码生成阶段处理外部符号引用和认证桩。模块通过桩排序机制优化目标代码的链接效率。
+lib/CodeGen/MachineInstrBundle.cpp，调用次数:8：该模块提供机器指令束(MI Bundle)的处理功能，核心包括解包指令束的UnpackMachineBundles编译通道、在指令范围内查找调试位置信息，以及检查寄存器是否在指定物理/虚拟寄存器列表中的工具函数。这些功能作用于机器指令层，服务于后续代码生成阶段。
+lib/CodeGen/InlineSpiller.cpp，调用次数:75：该模块是LLVM寄存器分配器中的内联溢出器，在寄存器分配后处理无法分配到物理寄存器的虚拟寄存器。其核心功能是通过插入spill/reload指令将虚拟寄存器溢出到栈槽，并优化相关操作。关键优化包括折叠冗余的栈访问、识别并移除不必要的spill/reload指令、支持重 materialization 以减少内存操作。该模块与LiveInterval分析、SplitKit等组件交互，共同完成高效的寄存器溢出处理。
+lib/CodeGen/TwoAddressInstructionPass.cpp，调用次数:278：该模块是LLVM后端的机器指令优化Pass，核心功能是处理二地址指令。通过识别具有相同源/目标寄存器的指令，采用操作数交换、指令重调度和提升到三地址等方式消除冗余拷贝。该优化在寄存器分配前运行，与活跃区间分析等模块交互，旨在减少寄存器压力并提升指令级并行度。
+lib/CodeGen/GCStrategy.cpp，调用次数:324：该模块是LLVM垃圾回收策略的抽象基类，为编译器后端提供统一的GC接口。核心功能包括定义GC安全点、初始化运行时、生成栈映射元数据等。它在代码生成阶段与LLVM代码生成器交互，允许不同GC方案通过策略模式接入编译流程，实现定制化内存管理支持。
+lib/CodeGen/ExpandPostRAPseudos.cpp，调用次数:84：该模块是LLVM后寄存器分配阶段的机器指令扩展Pass，核心功能是将伪指令展开为底层目标指令。它在代码生成流程中紧接寄存器分配之后运行，依赖目标指令信息进行模式匹配与替换，确保所有伪指令在最终输出前被转换为实际硬件指令。
+lib/CodeGen/BasicTargetTransformInfo.cpp，调用次数:73：该文件基于目标无关代码生成器中的抽象接口，实现了基础的TargetTransformInfo查询功能。它利用TargetLowering等核心组件为编译器优化阶段提供目标相关的成本模型和变换信息。该模块作为通用实现框架，允许具体目标仅需少量定制即可复用大部分查询逻辑。
+lib/CodeGen/MachineDominators.cpp，调用次数:282：该模块实现机器代码层级的支配树计算，属于LLVM代码生成阶段的关键优化基础设施。核心功能包括构建机器基本块间的支配关系、支持增量更新和完整性验证，为机器指令调度和寄存器分配等后续优化提供控制流分析支持。模块通过通用支配树模板实现与LLVM中间表示的架构统一。
+lib/CodeGen/MachineFunctionPrinterPass.cpp，调用次数:7：该模块实现了一个机器函数打印通行证（MachineFunctionPrinterPass），用于在LLVM代码生成阶段输出机器函数的IR表示。其核心功能是在机器指令级优化和调度之后，将机器函数的内部状态（包括指令和SlotIndexes）打印到调试输出流，主要用于编译器的调试和内部状态可视化。该通行证通过LLVM通行证管理器进行交互，服务于代码生成流程的分析需求。
+lib/CodeGen/StackSlotColoring.cpp，调用次数:140：StackSlotColoring是LLVM代码生成阶段的优化模块，通过分析栈槽的活跃区间，合并互不重叠的栈槽以节省堆栈空间。该模块作为MachineFunctionPass运行，利用LiveIntervals和LiveStacks信息进行槽位共享，并统计消除的栈槽数量。
+lib/CodeGen/RegAllocFast.cpp，调用次数:6：该模块是LLVM的快速寄存器分配器，在代码生成阶段为机器指令分配物理寄存器。其核心功能包括线性扫描分配、处理寄存器类约束、以及通过合并拷贝指令优化性能。该分配器作为机器函数Pass运行，与寄存器类信息和目标指令系统交互，旨在以编译速度优先进行轻量级分配。
+lib/CodeGen/UnreachableBlockElim.cpp，调用次数:341：该模块是LLVM代码生成阶段的机器函数Pass，核心功能是从控制流图中移除不可达的基本块。它通过深度优先遍历识别并删除无法从入口块到达的块，需要依赖机器支配树和循环信息进行分析。该优化旨在精简CFG结构，为后续代码生成流程做准备。
+lib/CodeGen/MachineFunctionPass.cpp，调用次数:43：该文件定义了LLVM机器函数传递（MachineFunctionPass）基类，用于在代码生成阶段对机器函数（MachineFunction）进行优化和转换。它允许传递访问机器函数级别的分析结果（如循环信息、别名分析等），并与机器模块信息（MachineModuleInfo）交互以维护模块级状态。该模块是连接IR传递与后端机器代码传递的桥梁。
+lib/CodeGen/LocalStackSlotAllocation.cpp，调用次数:42：该模块是LLVM后端的本地栈槽分配器，在代码生成阶段运行。其核心功能是将局部栈帧对象分配到一个连续的内存块中，通过分配虚拟基址寄存器来优化访问。该过程会替换原有帧索引引用，减少栈指针调整次数，并与机器帧信息管理模块交互以提升栈内存访问效率。
+lib/CodeGen/ScheduleDAG.cpp，调用次数:283：该模块实现指令调度依赖关系图（ScheduleDAG）的核心功能，负责在寄存器分配前（pre-RA）阶段构建指令间的数据依赖与顺序约束。通过拓扑排序管理节点执行顺序，并与目标相关的危险识别器（HazardRecognizer）交互以规避流水线冲突。其设计目标是为不同调度算法提供统一的依赖图管理基础。
+lib/CodeGen/LiveDebugVariables.cpp，调用次数:203：该模块在LLVM代码生成阶段维护调试信息完整性，通过跟踪变量活跃范围并插入DBG_VALUE指令。它在寄存器分配后运行，将变量值映射到物理寄存器或内存位置，确保调试器能正确显示变量值。该过程与LiveIntervals和SlotIndexes等模块交互，优化调试体验的同时不影响代码性能。
+lib/CodeGen/MachineSink.cpp，调用次数:163：该模块实现机器代码下沉优化，在机器指令层将指令移动到控制流后继块中。核心功能包括减少寄存器压力、提升性能，通过分析控制流、寄存器依赖和块频率信息，在保证正确性的前提下将指令下沉到使用点附近。该过程涉及机器基本块、循环信息和后支配树等模块交互，主要在代码生成阶段运行。
+lib/CodeGen/PeepholeOptimizer.cpp，调用次数:359：该模块是LLVM中的窥孔优化器，在代码生成阶段对机器指令进行局部优化。核心功能包括消除冗余比较、重用扩展操作结果、折叠立即数和加载操作、优化选择指令及处理不可合并的复制操作。通过遍历基本块指令并与目标指令信息交互，实现寄存器使用优化和冗余指令删除。
+lib/CodeGen/RegAllocBase.cpp，调用次数:134：该模块是LLVM寄存器分配器的基础框架，为具体分配算法提供公共基础设施。其核心作用是在代码生成阶段管理虚拟寄存器的分配过程，通过协调活动区间分析、寄存器矩阵和溢出器等组件，将虚拟寄存器映射到物理寄存器。该框架支持分配验证，并为不同分配算法实现共享的分配逻辑。
+lib/CodeGen/MachineBlockFrequencyInfo.cpp，调用次数:379：该模块是LLVM机器代码生成阶段的优化分析器，用于估算机器基本块的执行频率。它基于控制流图和分支概率信息，通过BlockFrequencyInfoImpl算法计算块频率，为机器代码布局等优化提供关键数据。模块支持以图形化方式展示频率传播过程，并与机器分支概率分析、机器循环信息等模块交互。
+lib/CodeGen/DeadMachineInstructionElim.cpp，调用次数:229：该模块是LLVM后端的机器指令消除优化，在代码生成阶段移除无用的死指令。作为机器函数Pass，它通过分析寄存器活跃单元反向遍历基本块，识别并删除对物理寄存器无副作用的死指令。该优化与寄存器分配器交互，旨在提升代码质量并减少冗余指令。
+lib/CodeGen/LiveRangeEdit.cpp，调用次数:265：该模块在LLVM寄存器分配阶段负责虚拟寄存器活跃区间的编辑优化。核心功能包括通过死代码消除删除冗余指令、折叠单次使用的加载操作、对活跃区间进行分裂处理以及指令重 materialization。其设计目标是与活跃区间分析、虚拟寄存器映射等模块协同工作，共同提升寄存器分配后的代码质量与性能。
+lib/CodeGen/LiveIntervalUnion.cpp，调用次数:26：该模块在寄存器分配阶段管理一组共存的活动区间，用于检测区间重叠。核心类LiveIntervalUnion通过区间树高效查询重叠，支持区间合并与迭代，与分配器交互以解决寄存器冲突。
+lib/CodeGen/MachineLICM.cpp，调用次数:180：该模块实现机器指令级别的循环不变代码外提优化，作用于LLVM后端机器指令调度阶段。核心功能是识别并提升循环中的不变指令到循环前置块，减少重复计算。通过分析机器指令、寄存器依赖和内存操作，结合循环信息、控制流及块频率数据，在保持程序语义前提下提升性能。
+lib/CodeGen/DwarfEHPrepare.cpp，调用次数:118：该模块是LLVM代码生成阶段的DWARF异常处理准备器，核心功能是优化异常处理代码。通过分析函数和控制流，主要处理清理着陆垫、降低resume调用、标记不可达块等操作，确保DWARF异常处理机制能正确工作。该过程依赖目标平台信息和支配树分析，与后端代码生成紧密交互。
+lib/CodeGen/LiveRangeCalc.cpp，调用次数:279：LiveRangeCalc模块在LLVM寄存器分配阶段负责计算和更新虚拟寄存器的活跃区间。它通过深度优先遍历控制流图，利用支配树信息高效传播活跃性，能够处理复杂控制流和循环结构。该模块与SlotIndexes、MachineDominators等组件协作，支持增量更新和批量计算，是寄存器分配器的核心基础设施。
+lib/CodeGen/EdgeBundles.cpp，调用次数:120：该模块在LLVM代码生成阶段实现边捆绑分析，将控制流图中的边划分为多个捆绑包以减少边数量。它构建机器基本块之间的捆绑关系，支持通过视图选项可视化分析结果，为后续寄存器分配等优化提供简化的控制流结构。
+lib/CodeGen/TargetLoweringObjectFileImpl.cpp，调用次数:95：该模块是LLVM目标文件生成的核心实现，负责在代码生成阶段将全局对象（如函数、变量）映射到特定目标文件格式（ELF/COFF/MachO/Wasm）的对应节区。它根据对象属性和目标平台特性选择或创建合适的节区，处理节区标志、合并与唯一性，并支持静态构造函数等特殊节区分配。
+lib/CodeGen/LiveInterval.cpp，调用次数:154：该模块实现LLVM寄存器分配中的活跃区间管理，核心类LiveInterval用于跟踪虚拟寄存器在代码中的生存范围。主要功能包括维护活跃区间段、处理子寄存器通道掩码、以及支持区间合并等操作。在代码生成阶段与活跃区间分析、寄存器合并等模块交互，旨在为后续分配器提供精确的寄存器生存期信息。
+lib/CodeGen/ProcessImplicitDefs.cpp，调用次数:247：该模块是LLVM代码生成阶段的机器函数Pass，负责处理隐式定义操作。其核心功能是遍历机器指令，识别并显式化指令中的隐式寄存器定义，确保后续优化和代码生成阶段能正确处理这些定义。该Pass与寄存器分配等后续阶段交互，旨在消除隐式定义对数据流分析的干扰。
+lib/CodeGen/SplitKit.cpp，调用次数:46：该模块是LLVM寄存器分配器的核心分割工具，用于在寄存器分配阶段优化虚拟寄存器的使用。主要功能包括管理虚拟寄存器的活区间分割、处理子区间掩码映射、插入分割副本指令以及统计分割操作。通过与活区间编辑器和机器循环信息交互，实现循环归纳变量等启发式优化，提升寄存器分配效率。
