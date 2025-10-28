@@ -1,6 +1,8 @@
 from configparser import ConfigParser
+
+from llvm.aggregate import aggregate
 from llvm.generateMutate import generateMutate
-from llvm.rank_RBFNN import fileRank
+from llvm.rank import fileRank
 
 config = ConfigParser()
 config.read('./config/config.ini', encoding='utf-8')
@@ -39,6 +41,7 @@ def process_bugid_wrapper(args):
 
     # generateMutate(bugid, revision, check, compileOptionRight, compileOptionWrong, configPath)
     fileRank(bugid, revision, configPath)
+    aggregate(bugid,configPath)
 
     return bugid
 

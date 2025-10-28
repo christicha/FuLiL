@@ -227,25 +227,6 @@ def fileRank(bugId, rev, configFile):
             failstmt[filename + ',' + stmt] = 1  # 失败用例覆盖1次
             passstmt[filename + ',' + stmt] = 0  # 通过用例覆盖0次（初始）
 
-    # 处理失败用例的覆盖率数据
-    # if os.path.exists(passdir + bugId + '/failcov'):
-    #     for i in os.listdir(passdir + bugId + '/failcov'):
-    #         # 读取单个通过用例的覆盖率文件
-    #         failfile = open(passdir + '/' + bugId + '/failcov/' + i + '/stmt_info.txt')
-    #         filelines = failfile.readlines()
-    #         failfile.close()
-    #         for j in range(len(faillines)):
-    #             filelinesplit = faillines[j].strip().split(',')
-    #             filename = filelinesplit[0].strip().split('.gcda')[0].strip()
-    #             filename = deleteGcdaPath(filename)
-    #             if not filename.endswith('.cpp'):  # 只考虑.cpp文件
-    #                 continue
-    #             if filename not in failfileset:  # 只处理fail.c也覆盖的文件
-    #                 continue
-    #             stmtlist = filelines[j].strip().split(':')[1].split(',')
-    #             for stmt in set(stmtlist) & failfilemapstmt[filename]:
-    #                 failstmt[filename + ',' + stmt] += 1
-
     # 处理所有通过测试用例的覆盖率
     for i in os.listdir(passdir + bugId + '/passcov'):
         # 读取单个通过用例的覆盖率文件
@@ -301,23 +282,23 @@ def fileRank(bugId, rev, configFile):
         result.write(f"{rank},{filename},{score_val:.6f}\n")
 
     # 添加详细的buggy文件信息
-    result.write(f"\n# Buggy Files Details\n")
-    for bf in buggyfiles:
-        # 在完整排名中查找已知 buggy 文件的位置
-        found_rank = None
-        found_score = None
-        for rank, (filename, score_val) in enumerate(scorelist, 1):
-            setbf = set(bf.split('/'))
-            seti = set(filename.split('/'))
-            if setbf.issubset(seti):
-                found_rank = rank
-                found_score = score_val
-                break
-
-        if found_rank is not None:
-            result.write(f"Buggy file: {bf} -> Rank: {found_rank}, Score: {found_score:.6f}\n")
-        else:
-            result.write(f"Buggy file: {bf} -> Not found in ranking\n")
+    # result.write(f"\n# Buggy Files Details\n")
+    # for bf in buggyfiles:
+    #     # 在完整排名中查找已知 buggy 文件的位置
+    #     found_rank = None
+    #     found_score = None
+    #     for rank, (filename, score_val) in enumerate(scorelist, 1):
+    #         setbf = set(bf.split('/'))
+    #         seti = set(filename.split('/'))
+    #         if setbf.issubset(seti):
+    #             found_rank = rank
+    #             found_score = score_val
+    #             break
+    #
+    #     if found_rank is not None:
+    #         result.write(f"Buggy file: {bf} -> Rank: {found_rank}, Score: {found_score:.6f}\n")
+    #     else:
+    #         result.write(f"Buggy file: {bf} -> Not found in ranking\n")
     result.flush()
     result.close()
 
