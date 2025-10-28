@@ -3,6 +3,7 @@ from configparser import ConfigParser
 from llvm.aggregate import aggregate
 from llvm.generateMutate import generateMutate
 from llvm.rank import fileRank
+from llvm.rank_RBFNN import fileRank_RBFNN
 
 config = ConfigParser()
 config.read('./config/config.ini', encoding='utf-8')
@@ -30,6 +31,7 @@ with open(buglist, 'r') as f:
 
 from concurrent.futures import ProcessPoolExecutor, as_completed
 
+
 def process_bugid_wrapper(args):
     i, bugIds, revisions, compileOptionRights, compileOptionWrongs, checks, configPath, passBasePath = args
 
@@ -41,7 +43,8 @@ def process_bugid_wrapper(args):
 
     # generateMutate(bugid, revision, check, compileOptionRight, compileOptionWrong, configPath)
     fileRank(bugid, revision, configPath)
-    aggregate(bugid,configPath)
+    fileRank_RBFNN(bugid, revision, configPath)
+    aggregate(bugid, configPath)
 
     return bugid
 
@@ -68,6 +71,3 @@ with ProcessPoolExecutor(max_workers=1) as executor:
         except Exception as e:
             completed_count += 1
             print(f"进度: {completed_count}/{total_count} - BugID {bugid} 处理失败: {e}")
-
-
-

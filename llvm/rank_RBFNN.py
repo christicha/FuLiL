@@ -296,7 +296,7 @@ class RBFNNWithAttention(RBFNNFaultLocalization):
         return np.array(suspiciousness)
 
 
-def fileRank(bugId, rev, configFile):
+def fileRank_RBFNN(bugId, rev, configFile):
     cfg = ConfigParser()
     cfg.read(configFile)
     baseInfoDir = cfg.get('llvm-locations', 'infodir')
