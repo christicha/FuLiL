@@ -15,8 +15,8 @@ infoBasePath = config.get('llvm-locations', 'infodir')
 compilerBasePath = config.get('llvm-locations', 'compilersdir')
 
 # 基础参数
-bugid = '15920'
-revision = 'r181189'
+bugid = '16069'
+revision = 'r182209'
 
 # ---------------------- 第一步：处理 method_info.txt 生成 abstract.txt ----------------------
 filemap = dict()
@@ -60,8 +60,8 @@ with open('abstract.txt', 'w', encoding='utf-8') as out_file:
 # ---------------------- 编译相关基础配置 ----------------------
 compiler = os.path.join(compilerBasePath, revision, f'{revision}-build', 'bin', 'clang')
 fail = os.path.join(infoBasePath, bugid, 'fail.c')
-rightOption = '-O2'
-wrongOption = '-O3'
+rightOption = '-O1'
+wrongOption = '-Os'
 
 # 前置检查
 if not os.path.exists(compiler):
@@ -293,9 +293,9 @@ def compile_deep_analysis(log_file):
 
     # 日志头部
     with open(log_file, 'w', encoding='utf-8') as f:
-        f.write(f"深度编译分析日志 | BugID: {bugid} | 编译器版本：clang 3.3\n")
+        f.write(f"深度编译分析日志 | BugID: {bugid}\n")
         f.write(f"测试文件: {fail}\n")
-        f.write(f"编译架构: x86-64 | 调试选项: -g | 适配说明：移除clang 3.3不支持的参数\n")
+        f.write(f"编译架构: x86-64 | 调试选项: -g \n")
         f.write("=" * 100 + "\n\n")
 
     for cfg in compile_configs:

@@ -1,1 +1,6 @@
-27868,r271236,-O0,-O1,checkIsPass_zeroandsegmentoneline,install_no
+15920,r181189,-O2,-O3,checkIsPass_wrongcodeOneline,install_no
+17338,r191183,-m32 -O1,-m32 -O0,checkIsPass_wrongcodeOneline,install_no
+17503,r192089,-O1,-Os,checkIsPass_wrongcodeOneline,install_no
+18000,r195148,-O1,-Os,checkIsPass_wrongcodeOneline,install_no
+22613,r229360,-Os,-O2,checkIsPass_zeroandsegmentoneline,install_no
+22641,r229830,-O0,-O1,checkIsPass_zeroandsegmentoneline,install_no

@@ -4,6 +4,7 @@ from llvm.aggregate import aggregate
 from llvm.generateMutate import generateMutate
 from llvm.rank import fileRank
 from llvm.rank_RBFNN import fileRank_RBFNN
+from llvm.rank_llm import fileRank_llm
 
 config = ConfigParser()
 config.read('./config/config.ini', encoding='utf-8')
@@ -42,9 +43,10 @@ def process_bugid_wrapper(args):
     check = checks[i]
 
     # generateMutate(bugid, revision, check, compileOptionRight, compileOptionWrong, configPath)
-    fileRank(bugid, revision, configPath)
-    fileRank_RBFNN(bugid, revision, configPath)
-    aggregate(bugid, configPath)
+    # fileRank(bugid, revision, configPath)
+    # fileRank_RBFNN(bugid, revision, configPath)
+    fileRank_llm(bugid, revision, configPath, compileOptionRight, compileOptionWrong)
+    # aggregate(bugid, configPath)
 
     return bugid
 
