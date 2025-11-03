@@ -212,7 +212,9 @@ def fileRank_llm(bugid, rev, configFile, rightOption, wrongOption):
     abstractDir = cfg.get('llvm-locations', 'abstractDir')
     infoBasePath = cfg.get('llvm-locations', 'infodir')
     compilerBasePath = cfg.get('llvm-locations', 'compilersdir')
+    basePassDir = cfg.get('llvm-locations', 'passdir')
     logBaseDir = cfg.get('llvm-locations', 'logDir')
+    structureFile = cfg.get('llvm-locations', 'structureFile')
     filemap = dict()
     methodcov = infoBasePath + bugid + '/failcov/method_info.txt'
     if not os.path.exists(logBaseDir + bugid):
@@ -428,33 +430,42 @@ def fileRank_llm(bugid, rev, configFile, rightOption, wrongOption):
     abstract_file = logBaseDir + bugid + '/abstract.txt'
     deep_compile_file = logBaseDir + bugid + '/deep_compile_analysis.log'
     fail_c_file = logBaseDir + bugid + '/fail.c'
+    pass_code_dir = basePassDir + bugid + '/passing_cases/'
+    fail_code_dir = basePassDir + bugid + '/failing_cases/'
+    pass_code_list = []
+    fail_code_list = []
 
     print("正在读取文件内容...")
     abstract_content = read_file_content(abstract_file)
     deep_compile_content = read_file_content(deep_compile_file)
     fail_c_content = read_file_content(fail_c_file)
+    structure_content = read_file_content(structureFile)
+    for i in range(6):
+        if os.path.exists(pass_code_dir + f"pass_{i:04d}.c"):
+            pass_code_list.append(read_file_content(pass_code_dir + f"pass_{i:04d}.c"))
+    for i in range(6):
+        if os.path.exists(fail_code_dir + f"fail_{i:04d}.c"):
+            fail_code_list.append(read_file_content(fail_code_dir + f"fail_{i:04d}.c"))
 
     # 构建提示词
     system_prompt = """你是一个编译器优化问题分析专家，需要基于多源信息对可疑文件进行重排序分析。"""
 
     user_prompt = f"""
-    你需要基于多源信息重排序可疑文件，你要根据文件执行次数，相关文件功能摘要文档，测试用例编译输出信息，结合测试用例代码，不同优化水平的特点、失败特征、文件执行次数与文件功能描述分析相关性，为每个文件分配0-10分并按分数降序排列。
-
+    你需要基于多源信息重排序可疑文件，你要根据代码仓库结构，文件执行次数，相关文件功能摘要文档，测试用例代码和编译输出信息，结合测试用例差异、失败特征、文件执行次数与文件功能描述分析相关性，重点关注不同优化水平的特点，为每个文件分配0-10分并按分数降序排列。
     请按以下格式输出：
     1. 首先进行详细的思维分析过程，分析每个文件与bug的相关性
-    2. 然后用markdown表格格式给出最终排序结果，表格包含三列：Rank, Filename, Score，排名尽可能完整
-
-    以下是三个关键文件的内容：
-
+    2. 然后用markdown表格格式给出最终排序结果，表格包含三列：Rank, Filename, Score，排名尽可能完整，包括所有文件
+    以下是几个关键文件的内容：
     === abstract.txt (文件执行次数和功能摘要) ===
     {abstract_content}
-
     === deep_compile_analysis.log (编译分析日志) ===  
     {deep_compile_content}
-
     === fail.c (测试用例代码) ===
     {fail_c_content}
-
+    === structure.txt (代码仓库结构) ===
+    {structure_content}
+    {'=== 根据fail.c变异的成功测试用例 === ' +chr(10).join(pass_code_list ) if len(pass_code_list)!= 0 else ''}
+    {'=== 根据fail.c变异的失败测试用例 === ' +chr(10).join(fail_code_list ) if len(fail_code_list)!= 0 else ''}
     请基于以上信息进行深度分析，并提供最终的文件排序结果。
     """
 
