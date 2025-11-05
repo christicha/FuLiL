@@ -372,7 +372,7 @@ def fileRank_RBFNN(bugId, rev, configFile):
     print(f"通过测试用例数: {len(cov_matrix) - count}")
 
     if cov_matrix is not None and cov_matrix.shape[0] > 1:
-        # 初始化带四重注意力的RBFNN（优化故障关联权重缩放强度）
+        # 初始化带注意力的RBFNN
         rbfnn = RBFNNWithAttention(
             beta=0.035,
             func_attention_scale=2.0,  # 增强稀疏函数权重

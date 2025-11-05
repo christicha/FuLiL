@@ -69,7 +69,7 @@ def collect(compilersdir, infodir, revision, wrongoption):
     exccmd(gccdir + '/clang ' + wrongoption + ' ' + testname + '.c')  # change per bug
     if os.path.exists('oriwrongfile'):
         os.system('rm oriwrongfile')
-    os.system('{ timeout 10 ./a.out; echo $? ; } >oriwrongfile 2>&1')
+    os.system('{ timeout 10 ./a.out; } >oriwrongfile 2>&1')
 
     if os.path.exists('gcdalist'):
         exccmd('rm gcdalist')

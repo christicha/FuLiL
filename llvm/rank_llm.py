@@ -55,7 +55,7 @@ def save_table_to_csv(table_text, output_path):
         for line in lines:
             # 移除表格边界符，分割单元格
             cells = [cell.strip() for cell in line.split('|') if cell.strip()]
-            if cells:
+            if len(cells) == 3:
                 csv_lines.append(','.join(cells))
 
         # 保存CSV文件
@@ -118,7 +118,7 @@ def fix_executable_permission(exe_path):
 
 
 def get_detailed_compile_logs(compiler, src, opt, output_prefix):
-    """拆解编译阶段，适配clang 3.3（移除不支持的参数）"""
+    """拆解编译阶段"""
     logs = {
         "preprocess": "", "ast": "", "ir_raw": "", "ir_opt": "",
         "asm": "", "opt_passes": "", "backend": ""
@@ -261,14 +261,14 @@ def fileRank_llm(bugid, rev, configFile, rightOption, wrongOption):
             except Exception as e:
                 print(f"{filename}，{call_count}：读取错误 - {str(e)}")
         else:
-            print(f"{filename}，{call_count}：对应JSON文件不存在")
+            # print(f"{filename}，{call_count}：对应JSON文件不存在")
+            continue
 
     with open(logBaseDir + bugid + '/abstract.txt', 'w', encoding='utf-8') as out_file:
         out_file.write('\n'.join(result_lines))
 
     compiler = os.path.join(compilerBasePath, rev, f'{rev}-build', 'bin', 'clang')
     fail = os.path.join(infoBasePath, bugid, 'fail.c')
-
 
     def compile_deep_analysis(log_file):
         compile_configs = [
@@ -420,11 +420,13 @@ def fileRank_llm(bugid, rev, configFile, rightOption, wrongOption):
                 f.write(f"   {wrongOption}指令分布：{dict(o3_inst_cnt) if o3_inst_cnt else '无'}\n")
             except Exception as e:
                 f.write(f"\n2. 汇编差异对比失败：{str(e)}\n")
+
     compile_deep_analysis(logBaseDir + bugid + "/deep_compile_analysis.log")
     print(f"编译分析日志已生成：{logBaseDir}{bugid}/deep_compile_analysis.log")
     client = OpenAI(
         api_key='sk-ad1a7b32b3f2419db17ed342a23b6b06',
-        base_url='https://api.deepseek.com'
+        base_url='https://api.deepseek.com',
+        timeout=3600
     )
     # 读取三个文件的内容
     abstract_file = logBaseDir + bugid + '/abstract.txt'
@@ -434,12 +436,19 @@ def fileRank_llm(bugid, rev, configFile, rightOption, wrongOption):
     fail_code_dir = basePassDir + bugid + '/failing_cases/'
     pass_code_list = []
     fail_code_list = []
-
+    abstract_content = ''
+    deep_compile_content = ''
+    fail_c_content = ''
+    structure_content = ''
     print("正在读取文件内容...")
-    abstract_content = read_file_content(abstract_file)
-    deep_compile_content = read_file_content(deep_compile_file)
-    fail_c_content = read_file_content(fail_c_file)
-    structure_content = read_file_content(structureFile)
+    if os.path.exists(abstract_file):
+        abstract_content = read_file_content(abstract_file)
+    if os.path.exists(deep_compile_file):
+        deep_compile_content = read_file_content(deep_compile_file)
+    if os.path.exists(fail_c_file):
+        fail_c_content = read_file_content(fail_c_file)
+    if os.path.exists(structureFile):
+        structure_content = read_file_content(structureFile)
     for i in range(6):
         if os.path.exists(pass_code_dir + f"pass_{i:04d}.c"):
             pass_code_list.append(read_file_content(pass_code_dir + f"pass_{i:04d}.c"))
@@ -450,25 +459,36 @@ def fileRank_llm(bugid, rev, configFile, rightOption, wrongOption):
     # 构建提示词
     system_prompt = """你是一个编译器优化问题分析专家，需要基于多源信息对可疑文件进行重排序分析。"""
 
+    # user_prompt = f"""
+    # 你需要基于多源信息重排序可疑文件，你要根据代码仓库结构，文件执行次数，相关文件功能摘要文档，测试用例代码和编译输出信息，结合测试用例差异、失败特征、文件执行次数与文件功能描述分析相关性，重点关注不同优化水平的特点，为每个文件分配0-10分并按分数降序排列。
+    # 请按以下格式输出：
+    # 1. 首先进行详细的思维分析过程，分析每个文件与bug的相关性
+    # 2. 然后用markdown表格格式给出最终排序结果，表格包含三列：Rank, Filename, Score，排名尽可能完整，包括所有文件
+    # 以下是几个关键文件的内容：
+    # {'=== abstract.txt (文件执行次数和功能摘要) ===' + abstract_content if len(abstract_content) != 0 else ''}
+    # {'=== deep_compile_analysis.log (编译分析日志) ===' + deep_compile_content if len(deep_compile_content) != 0 else ''}
+    # {'=== fail.c (测试用例代码) ===' + fail_c_content if len(fail_c_content) != 0 else ''}
+    # {'=== structure.txt (代码仓库结构) ===' + structure_content if len(structure_content) != 0 else ''}
+    # {'=== 根据fail.c变异的成功测试用例 === ' +chr(10).join(pass_code_list) if len(pass_code_list)!= 0 else ''}
+    # {'=== 根据fail.c变异的失败测试用例 === ' +chr(10).join(fail_code_list) if len(fail_code_list)!= 0 else ''}
+    # 请基于以上信息进行深度分析，并提供最终的文件排序结果。
+    # """
+
     user_prompt = f"""
-    你需要基于多源信息重排序可疑文件，你要根据代码仓库结构，文件执行次数，相关文件功能摘要文档，测试用例代码和编译输出信息，结合测试用例差异、失败特征、文件执行次数与文件功能描述分析相关性，重点关注不同优化水平的特点，为每个文件分配0-10分并按分数降序排列。
+    你需要基于多源信息重排序可疑文件，你要根据文件执行次数，相关文件功能摘要文档，测试用例代码和编译输出信息，结合测试用例差异、失败特征、文件执行次数与文件功能描述分析相关性，重点关注不同优化水平的特点，为每个文件分配0-10分并按分数降序排列。
     请按以下格式输出：
     1. 首先进行详细的思维分析过程，分析每个文件与bug的相关性
     2. 然后用markdown表格格式给出最终排序结果，表格包含三列：Rank, Filename, Score，排名尽可能完整，包括所有文件
     以下是几个关键文件的内容：
-    === abstract.txt (文件执行次数和功能摘要) ===
-    {abstract_content}
-    === deep_compile_analysis.log (编译分析日志) ===  
-    {deep_compile_content}
-    === fail.c (测试用例代码) ===
-    {fail_c_content}
-    === structure.txt (代码仓库结构) ===
-    {structure_content}
-    {'=== 根据fail.c变异的成功测试用例 === ' +chr(10).join(pass_code_list ) if len(pass_code_list)!= 0 else ''}
-    {'=== 根据fail.c变异的失败测试用例 === ' +chr(10).join(fail_code_list ) if len(fail_code_list)!= 0 else ''}
+    {'=== abstract.txt (文件执行次数和功能摘要) ===' + abstract_content if len(abstract_content) != 0 else ''}
+    {'=== deep_compile_analysis.log (编译分析日志) ===' + deep_compile_content if len(deep_compile_content) != 0 else ''}
+    {'=== fail.c (测试用例代码) ===' + fail_c_content if len(fail_c_content) != 0 else ''}
+    {'=== 根据fail.c变异的成功测试用例 === ' + chr(10).join(pass_code_list) if len(pass_code_list) != 0 else ''}
+    {'=== 根据fail.c变异的失败测试用例 === ' + chr(10).join(fail_code_list) if len(fail_code_list) != 0 else ''}
     请基于以上信息进行深度分析，并提供最终的文件排序结果。
     """
 
+    print(user_prompt)
     try:
         print("正在发送请求到DeepSeek API...")
         response = client.chat.completions.create(
@@ -478,14 +498,14 @@ def fileRank_llm(bugid, rev, configFile, rightOption, wrongOption):
                 {"role": "user", "content": user_prompt}
             ],
             temperature=1,
-            # max_tokens=8000
+            max_tokens=25000
         )
 
         # 获取响应内容
         response_text = response.choices[0].message.content
         print("收到API响应")
 
-        # 保存完整响应（可选）
+        # 保存完整响应
         full_response_path = logBaseDir + bugid + '/llm_full_response.md'
         with open(full_response_path, 'w', encoding='utf-8') as f:
             f.write(response_text)
