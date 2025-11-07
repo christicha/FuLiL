@@ -244,6 +244,8 @@ def checkIsPass_zeroandonenumber(compilerPath, compilerOptionRight, compilerOpti
         os.system('rm rightfile')
     start = time.time()
     os.system('{ timeout 10 ./a.out ; } >rightfile 2>&1')
+
+
     end = time.time()
     if (end - start) >= 10:
         return 0, err_set

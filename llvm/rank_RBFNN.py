@@ -326,26 +326,8 @@ def fileRank_RBFNN(bugId, rev, configFile):
             vector[v] = 1
         matrix.append(vector)
 
-    # 读取剩余失败测试用例
-    failcovDir = basePassDir + bugId + '/failcov'
-    if os.path.exists(failcovDir):
-        for dir in os.listdir(failcovDir):
-            vector = torch.zeros(len(methodmap) + 1)
-            vector[-1] = 1
-            with open(os.path.join(failcovDir, dir, 'method_info.txt'), 'r') as f:
-                lines = f.readlines()
-                for line in lines:
-                    items = line.strip().split(',')
-                    if len(items) < 2:
-                        continue
-                    filename = re.sub(r'/CMakeFiles/[^/]+.dir', '', items[0]).split('.gcda')[0]
-                    methodname = items[1]
-                    key = f"{filename},{methodname}"
-                    if key in methodmap:
-                        vector[methodmap[key]] = 1
-            matrix.append(vector)
-
     # 读取成功测试用例
+    cnt = 0
     passcovDir = basePassDir + bugId + '/passcov/'
     for dir in os.listdir(passcovDir):
         vector = torch.zeros(len(methodmap) + 1)
@@ -361,6 +343,30 @@ def fileRank_RBFNN(bugId, rev, configFile):
                 if key in methodmap:
                     vector[methodmap[key]] = 1
         matrix.append(vector)
+        cnt += 1
+
+    # 读取剩余失败测试用例
+    failcovDir = basePassDir + bugId + '/failcov'
+    i = 0
+    if os.path.exists(failcovDir):
+        for dir in os.listdir(failcovDir):
+            if i >= cnt-1:
+                break
+            vector = torch.zeros(len(methodmap) + 1)
+            vector[-1] = 1
+            with open(os.path.join(failcovDir, dir, 'method_info.txt'), 'r') as f:
+                lines = f.readlines()
+                for line in lines:
+                    items = line.strip().split(',')
+                    if len(items) < 2:
+                        continue
+                    filename = re.sub(r'/CMakeFiles/[^/]+.dir', '', items[0]).split('.gcda')[0]
+                    methodname = items[1]
+                    key = f"{filename},{methodname}"
+                    if key in methodmap:
+                        vector[methodmap[key]] = 1
+            matrix.append(vector)
+            i += 1
 
     # 构建覆盖矩阵并训练
     cov_matrix = torch.stack(matrix)
@@ -370,6 +376,7 @@ def fileRank_RBFNN(bugId, rev, configFile):
     print(f"覆盖矩阵形状: {cov_matrix.shape}")
     print(f"失败测试用例数: {count}")
     print(f"通过测试用例数: {len(cov_matrix) - count}")
+    print(cov_matrix)
 
     if cov_matrix is not None and cov_matrix.shape[0] > 1:
         # 初始化带注意力的RBFNN
