@@ -3,6 +3,8 @@ from configparser import ConfigParser
 from llvm.aggregate import aggregate
 from llvm.generateMutate import generateMutate
 from llvm.rank import fileRank
+from llvm.rank_CNN import fileRank_CNN
+from llvm.rank_GNN import fileRank_GNN
 from llvm.rank_RBFNN import fileRank_RBFNN
 from llvm.rank_llm import fileRank_llm
 
@@ -46,12 +48,13 @@ def process_bugid_wrapper(args):
     # fileRank(bugid, revision, configPath)
     # fileRank_RBFNN(bugid, revision, configPath)
     # fileRank_llm(bugid, revision, configPath, compileOptionRight, compileOptionWrong)
-    aggregate(bugid, configPath)
+    fileRank_GNN(bugid, revision, configPath)
+    # aggregate(bugid, configPath)
 
     return bugid
 
 
-with ProcessPoolExecutor(max_workers=4) as executor:
+with ProcessPoolExecutor(max_workers=1) as executor:
     # 提交所有任务
     future_to_bugid = {
         executor.submit(process_bugid_wrapper, (

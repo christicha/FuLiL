@@ -1,4 +1,0 @@
-test trunk:206387
-fail opti level:-Os
-fixed revision:206460
-file:gcc/tree-ssa-sink.c;method:execute_sink_code (void)
