@@ -3,7 +3,6 @@ from configparser import ConfigParser
 from llvm.aggregate import aggregate
 from llvm.generateMutate import generateMutate
 from llvm.rank import fileRank
-from llvm.rank_CNN import fileRank_CNN
 from llvm.rank_GNN import fileRank_GNN
 from llvm.rank_RBFNN import fileRank_RBFNN
 from llvm.rank_llm import fileRank_llm
