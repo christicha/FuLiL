@@ -6,11 +6,11 @@ from configparser import ConfigParser
 import csv
 
 
-def read_rbfnn_sbfl_ranking(file_path, rbfnn_score_range=(-1, 1)):
+def read_gnn_sbfl_ranking(file_path, gnn_score_range=(-1, 1)):
     """
-    读取RBFNN/SBFL排名文件，返回 {文件名: 归一化分数} 字典
+    读取GNN/SBFL排名文件，返回 {文件名: 归一化分数} 字典
     :param file_path: 文件路径
-    :param rbfnn_score_range: RBFNN分数原始范围，默认(-1, 1)；SBFL传(0, 1)
+    :param gnn_score_range: GNN分数原始范围，默认(-1, 1)；SBFL传(0, 1)
     """
     ranking = {}
     with open(file_path, 'r') as f:
@@ -18,7 +18,7 @@ def read_rbfnn_sbfl_ranking(file_path, rbfnn_score_range=(-1, 1)):
         for row in reader:
             file_name = row['File']
             score = float(row['Score'])
-            min_val, max_val = rbfnn_score_range
+            min_val, max_val = gnn_score_range
             # 归一化到0-1，同时限制异常值
             normalized_score = (score - min_val) / (max_val - min_val)
             ranking[file_name] = max(0.0, min(1.0, normalized_score))
@@ -113,18 +113,18 @@ def final_aggregate(all_sub_aggregates):
     return final_ranking, avg_ranks
 
 
-def monte_carlo_aggregate(rbfnn_path, sbfl_path, llm_path, output_path,
+def monte_carlo_aggregate(gnn_path, sbfl_path, llm_path, output_path,
                           n_samples=500, sample_ratio=0.8, method="borda",
-                          include_rbfnn=True):  # 是否包含RBFNN
+                          include_gnn=True):  # 是否包含GNN
     """
-    蒙特卡洛排序聚合主函数（支持控制是否包含RBFNN）
-    :param include_rbfnn: 是否将RBFNN排名纳入聚合，默认True
+    蒙特卡洛排序聚合主函数（支持控制是否包含GNN）
+    :param include_gnn: 是否将GNN排名纳入聚合，默认True
     """
     # 1. 读取需要包含的排名文件
     included_rankings = []
-    if include_rbfnn:
-        included_rankings.append(read_rbfnn_sbfl_ranking(rbfnn_path))
-    included_rankings.append(read_rbfnn_sbfl_ranking(sbfl_path))  # 始终包含SBFL
+    if include_gnn:
+        included_rankings.append(read_gnn_sbfl_ranking(gnn_path))
+    included_rankings.append(read_gnn_sbfl_ranking(sbfl_path))  # 始终包含SBFL
     included_rankings.append(read_llm_ranking(llm_path))  # 始终包含LLM
 
     # 2. 对齐所有包含的排名（缺失文件补0分）
@@ -156,24 +156,24 @@ def monte_carlo_aggregate(rbfnn_path, sbfl_path, llm_path, output_path,
     print(f"聚合完成，结果已保存至 {output_path}")
 
 
-def aggregate(bugid, configPath, include_rbfnn=True):
+def aggregate(bugid, configPath, include_gnn=True):
     cfg = ConfigParser()
     cfg.read(configPath)
     baseResultDir = cfg.get('llvm-locations', 'resultFile')
     logBaseDir = cfg.get('llvm-locations', 'logDir')
     # 三个排名文件路径
-    RBFNNfile = baseResultDir + bugid + '/NNresultFile_file_with_attention.csv'
+    GNNfile = baseResultDir + bugid + '/result_gnn.csv'
     SBFLfile = baseResultDir + bugid + '/resultFile_file.csv'
     LLMfile = logBaseDir + bugid + '/result_llm.csv'
     resulefile = baseResultDir + bugid + '/aggregate_result.csv'
 
     monte_carlo_aggregate(
-        rbfnn_path=RBFNNfile,
+        gnn_path=GNNfile,
         sbfl_path=SBFLfile,
         llm_path=LLMfile,
         output_path=resulefile,
         n_samples=1000,
         sample_ratio=0.85,
         method="borda",
-        include_rbfnn=include_rbfnn
+        include_gnn=include_gnn
     )

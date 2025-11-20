@@ -48,7 +48,7 @@ def process_bugid_wrapper(args):
     # fileRank_RBFNN(bugid, revision, configPath)
     # fileRank_llm(bugid, revision, configPath, compileOptionRight, compileOptionWrong)
     fileRank_GNN(bugid, revision, configPath)
-    # aggregate(bugid, configPath)
+    aggregate(bugid, configPath)
 
     return bugid
 

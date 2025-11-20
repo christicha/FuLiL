@@ -120,7 +120,7 @@ def fileRank_GNN(bugId, rev, configFile):
 
     if not os.path.exists(os.path.join(baseResultDir, bugId)):
         os.makedirs(os.path.join(baseResultDir, bugId))
-    resultFile = os.path.join(baseResultDir, bugId, 'GNNresultFile_file_gated_rank.csv')
+    resultFile = os.path.join(baseResultDir, bugId, 'result_gnn.csv')
 
     matrix = []
     methodmap = dict()
