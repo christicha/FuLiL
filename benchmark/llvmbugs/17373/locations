@@ -1,6 +1,6 @@
 test trunk:191356
 fixed revision:193438
-buggy location:
+buggy location
 file:llvm/trunk/lib/Analysis/ScalarEvolutionExpander.cpp;method:SCEVExpander::expandAddRecExprLiterally(const SCEVAddRecExpr *S)
 file:llvm/trunk/lib/Analysis/ScalarEvolutionExpander.cpp;method:isSafeToExpand(const SCEV *S)
 file:llvm/trunk/lib/Transforms/Scalar/LoopStrengthReduce.cpp;method:LSRUse::InsertFormula(const Formula &F) 

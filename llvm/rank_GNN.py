@@ -267,7 +267,7 @@ def fileRank_GNN(bugId, rev, configFile):
     # 优化器使用更小的学习率
     optimizer = optim.Adam(model.parameters(), lr=0.001)
 
-    EPOCHS = 50
+    EPOCHS = 10
     MARGIN = 0.5  # 排名损失的边距
     print("Starting GNN Training with Gating and Ranking Loss...")
 
