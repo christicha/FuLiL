@@ -199,7 +199,7 @@ def aggregate(bugid, configPath, include_gnn=True):
         llm_path=LLMfile,
         output_path=resultfile,
         n_samples=1000,
-        sample_ratio=0.85,
+        sample_ratio=0.8,
         method="borda",
         include_gnn=include_gnn
     )

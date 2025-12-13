@@ -59,7 +59,7 @@ def save_table_to_csv(table_text, output_path):
                 # 核心修改：给第二列的文件名添加.c后缀（避免重复添加）
                 filename = cells[1]
                 # 仅当文件名不以.c结尾时，添加后缀
-                if not filename.endswith('.c') and filename != '...':
+                if not filename.endswith('.c') and filename != '...' and filename != 'Filename':
                     filename += '.c'
                 # 替换第二列为添加后缀后的文件名
                 cells[1] = filename

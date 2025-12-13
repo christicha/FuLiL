@@ -375,7 +375,7 @@ def generateMutate(bugid, revision, checkpass, compileOptionRight, compileOption
                 if len(err_set) != 0:
                     syn_err_set.update(err_set)
                     syn_error_prog += 1
-            elif checkpass == 'checkIsPass_onenumberandzero':
+            elif checkpass == 'checkIsPass_zeroandonenumber' or checkpass == 'checkIsPass_onenumberandzero':
                 flagIsPass, err_set = checkIsPass_onenumberandzero(configPath, revision, compileOptionRight,
                                                                    compileOptionWrong)  # 1:pass; 2:still fail
                 if len(err_set) != 0:

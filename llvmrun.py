@@ -46,9 +46,8 @@ def process_bugid_wrapper(args):
 
     # generateMutate(bugid, revision, check, compileOptionRight, compileOptionWrong, configPath)
     # fileRank(bugid, revision, configPath)
-    # fileRank_RBFNN(bugid, revision, configPath)
     # fileRank_llm(bugid, revision, configPath, compileOptionRight, compileOptionWrong)
-    # fileRank_GNN(bugid, revision, configPath)
+    fileRank_GNN(bugid, revision, configPath)
     # aggregate(bugid, configPath)
     analysis(bugid, revision, configPath)
 

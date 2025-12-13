@@ -32,6 +32,7 @@ def analysis(bugid, revision, configPath):
             if line.startswith('file:'):
                 full_path = line.split('file:')[1].split(';')[0]
                 buggy_name = full_path.replace('gcc/', '')
+                buggy_name = buggy_name.replace('trunk/', '')
                 # 处理开头的/
                 buggy_name = buggy_name.lstrip()
                 if buggy_name.startswith('/'):
