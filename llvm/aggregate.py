@@ -193,7 +193,7 @@ def monte_carlo_aggregate(ranking_paths, output_path,
     print(f"聚合完成，结果已保存至 {output_path}")
 
 
-def aggregate(bugid, configPath, methods_to_include):
+def aggregate(bugid, configPath, methods_to_include, k):
     """
     灵活的聚合主入口函数。
 
@@ -210,7 +210,7 @@ def aggregate(bugid, configPath, methods_to_include):
     file_map = {
         'gnn': baseResultDir + bugid + '/result_gnn.csv',
         'sbfl': baseResultDir + bugid + '/resultFile_file.csv',
-        'llm': logBaseDir + bugid + '/result_llm.csv'
+        'llm': logBaseDir + bugid + f'/result_llm_{k}.csv'
     }
 
     # 1. 确定要聚合的文件路径字典
@@ -225,7 +225,7 @@ def aggregate(bugid, configPath, methods_to_include):
     # 2. 定义输出文件名
     # 根据包含的方法生成动态输出文件名，例如 aggregate_gnn_sbfl.csv
     methods_str = "_".join(sorted(ranking_paths.keys()))
-    resulefile = os.path.join(baseResultDir, bugid, f'aggregate_{methods_str}.csv')
+    resulefile = os.path.join(baseResultDir, bugid, f'aggregate_{methods_str}_{k}.csv')
 
     # 3. 调用蒙特卡洛聚合
     monte_carlo_aggregate(

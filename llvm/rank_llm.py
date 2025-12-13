@@ -42,21 +42,119 @@ def extract_table_from_markdown(response_text):
     return '\n'.join(table_lines) if table_lines else None
 
 
-def save_table_to_csv(table_text, output_path):
-    """将markdown表格转换为CSV格式并保存"""
+import re
+from typing import List, Union
+
+
+def is_valid_number(s: str) -> bool:
+    """检查字符串是否可以被安全地转换为浮点数。"""
+    try:
+        # 排除空字符串或纯空格
+        if not s.strip():
+            return False
+        # 尝试转换，如果成功则为有效数字
+        float(s)
+        return True
+    except ValueError:
+        return False
+
+
+def is_valid_filename_part(s: str) -> bool:
+    """检查文件名部分是否主要包含英文、数字、点号和斜杠 (/)，用于路径。"""
+    # 允许的字符包括：字母 (a-zA-Z), 数字 (0-9), 点号 (.), 斜杠 (/) 和下划线 (_)
+    # 如果字符串中超过 80% 的字符是这些允许字符，我们认为它是有效的文件名。
+    s_cleaned = s.strip()
+    if not s_cleaned:
+        return False
+
+    # 统计允许字符的数量
+    allowed_chars = re.sub(r'[a-zA-Z0-9./_-]', '', s_cleaned)
+
+    # 允许一些非允许字符存在，如空格、括号等，但不能是纯数字或纯特殊符号
+    # 只要它不是纯数字且包含路径或点号，就倾向于认为是文件名。
+    if re.search(r'[a-zA-Z]', s_cleaned) or re.search(r'\.|/', s_cleaned):
+        return True
+    return False
+
+
+def save_table_to_csv(table_text: str, output_path: str) -> bool:
+    """
+    将markdown表格转换为CSV格式并保存，并严格验证内容。
+    第一列和第三列必须为数字，第二列必须为文件名（英文/点号/斜杠等）。
+    """
     if not table_text:
         print("没有找到表格内容")
         return False
 
     try:
         lines = table_text.strip().split('\n')
-        csv_lines = []
+        csv_lines: List[str] = []
+
+        # 启发式判断表头：查找包含 'Rank' 和 'Score' 的行
+        header_identified = False
 
         for line in lines:
-            # 移除表格边界符，分割单元格
-            cells = [cell.strip() for cell in line.split('|') if cell.strip()]
-            if len(cells) == 3:
-                csv_lines.append(','.join(cells))
+            line = line.strip()
+
+            # 1. 忽略空行
+            if not line:
+                continue
+
+            # 2. 忽略 Markdown 分割线 (|---|---|---)
+            if re.match(r'^\|[\s]*[-:=]+[\s]*\|', line):
+                continue
+
+            # 3. 忽略包含省略号 '...' 的行
+            if '...' in line:
+                continue
+
+            # 4. 提取和清理单元格
+            # 移除两侧的 '|'，并按 '|' 分割单元格
+            cells = [cell.strip() for cell in line.strip('|').split('|')]
+
+            # 确保至少有 3 列数据
+            if len(cells) < 3:
+                continue
+
+            # 只取前三列
+            selected_cells = cells[:3]
+            clean_cells = [c.replace('\n', ' ').strip() for c in selected_cells]
+
+            # 5. 表头识别和处理
+            if not header_identified:
+                # 检查是否包含表头关键词
+                if all(keyword in clean_cells[i].lower() for i, keyword in enumerate(['rank', 'filename', 'score'])):
+                    csv_lines.append(','.join(clean_cells))
+                    header_identified = True
+                    continue
+
+            # 6. 数据行内容验证（只有在表头被识别后才开始验证）
+            if header_identified:
+                rank_str = clean_cells[0]
+                filename_str = clean_cells[1]
+                score_str = clean_cells[2]
+
+                # a. 验证 Rank (第一列)
+                is_rank_valid = is_valid_number(rank_str)
+
+                # b. 验证 Score (第三列)
+                is_score_valid = is_valid_number(score_str)
+
+                # c. 验证 Filename (第二列)
+                is_filename_valid = is_valid_filename_part(filename_str)
+
+                # 只有当 Rank 和 Score 都是有效数字，且 Filename 看起来像有效路径时，才保留该行
+                if is_rank_valid and is_score_valid and is_filename_valid:
+                    csv_lines.append(','.join(clean_cells))
+                else:
+                    # 打印被丢弃的行，便于调试
+                    # print(f"警告：丢弃无效数据行 - Rank({is_rank_valid}), File({is_filename_valid}), Score({is_score_valid}): {line}")
+                    pass
+
+        # 检查是否有实际数据被提取
+        if len(csv_lines) < 2:  # 至少需要表头和一行数据
+            print(f"提取到的有效数据行数不足: {len(csv_lines)} 行 (少于1行数据)")
+            return False
 
         # 保存CSV文件
         with open(output_path, 'w', encoding='utf-8') as f:
@@ -206,7 +304,7 @@ def get_detailed_compile_logs(compiler, src, opt, output_prefix):
     return logs
 
 
-def fileRank_llm(bugid, rev, configFile, rightOption, wrongOption):
+def fileRank_llm(bugid, rev, configFile, rightOption, wrongOption, k):
     cfg = ConfigParser()
     cfg.read(configFile)
     abstractDir = cfg.get('llvm-locations', 'abstractDir')
@@ -459,8 +557,23 @@ def fileRank_llm(bugid, rev, configFile, rightOption, wrongOption):
     # 构建提示词
     system_prompt = """你是一个编译器优化问题分析专家，需要基于多源信息对可疑文件进行重排序分析。"""
 
+    user_prompt = f"""
+    你需要基于多源信息重排序可疑文件，你要根据代码仓库结构，文件执行次数，相关文件功能摘要文档，测试用例代码和编译输出信息，结合测试用例差异、失败特征、文件执行次数与文件功能描述分析相关性，重点关注不同优化水平的特点，为每个文件分配0-10分并按分数降序排列。
+    以下是几个关键文件的内容：
+    {'=== abstract.txt (文件执行次数和功能摘要) ===' + abstract_content if len(abstract_content) != 0 else ''}
+    {'=== deep_compile_analysis.log (编译分析日志) ===' + deep_compile_content if len(deep_compile_content) != 0 else ''}
+    {'=== fail.c (测试用例代码) ===' + fail_c_content if len(fail_c_content) != 0 else ''}
+    {'=== structure.txt (代码仓库结构) ===' + structure_content if len(structure_content) != 0 else ''}
+    {'=== 根据fail.c变异的成功测试用例 === ' +chr(10).join(pass_code_list) if len(pass_code_list)!= 0 else ''}
+    {'=== 根据fail.c变异的失败测试用例 === ' +chr(10).join(fail_code_list) if len(fail_code_list)!= 0 else ''}
+    请基于以上信息进行深度分析，并提供最终的文件排序结果。
+    请按以下格式输出：
+    1. 首先进行详细的思维分析过程，分析每个文件与bug的相关性
+    2. 然后用markdown表格格式给出最终排序结果，表格包含三列：Rank, Filename, Score，排名尽可能完整，包括所有文件
+    """
+
     # user_prompt = f"""
-    # 你需要基于多源信息重排序可疑文件，你要根据代码仓库结构，文件执行次数，相关文件功能摘要文档，测试用例代码和编译输出信息，结合测试用例差异、失败特征、文件执行次数与文件功能描述分析相关性，重点关注不同优化水平的特点，为每个文件分配0-10分并按分数降序排列。
+    # 你需要基于多源信息重排序可疑文件，你要根据文件执行次数，相关文件功能摘要文档，测试用例代码和编译输出信息，结合测试用例差异、失败特征、文件执行次数与文件功能描述分析相关性，重点关注不同优化水平的特点，为每个文件分配0-10分并按分数降序排列。
     # 请按以下格式输出：
     # 1. 首先进行详细的思维分析过程，分析每个文件与bug的相关性
     # 2. 然后用markdown表格格式给出最终排序结果，表格包含三列：Rank, Filename, Score，排名尽可能完整，包括所有文件
@@ -468,25 +581,10 @@ def fileRank_llm(bugid, rev, configFile, rightOption, wrongOption):
     # {'=== abstract.txt (文件执行次数和功能摘要) ===' + abstract_content if len(abstract_content) != 0 else ''}
     # {'=== deep_compile_analysis.log (编译分析日志) ===' + deep_compile_content if len(deep_compile_content) != 0 else ''}
     # {'=== fail.c (测试用例代码) ===' + fail_c_content if len(fail_c_content) != 0 else ''}
-    # {'=== structure.txt (代码仓库结构) ===' + structure_content if len(structure_content) != 0 else ''}
-    # {'=== 根据fail.c变异的成功测试用例 === ' +chr(10).join(pass_code_list) if len(pass_code_list)!= 0 else ''}
-    # {'=== 根据fail.c变异的失败测试用例 === ' +chr(10).join(fail_code_list) if len(fail_code_list)!= 0 else ''}
+    # {'=== 根据fail.c变异的成功测试用例 === ' + chr(10).join(pass_code_list) if len(pass_code_list) != 0 else ''}
+    # {'=== 根据fail.c变异的失败测试用例 === ' + chr(10).join(fail_code_list) if len(fail_code_list) != 0 else ''}
     # 请基于以上信息进行深度分析，并提供最终的文件排序结果。
     # """
-
-    user_prompt = f"""
-    你需要基于多源信息重排序可疑文件，你要根据文件执行次数，相关文件功能摘要文档，测试用例代码和编译输出信息，结合测试用例差异、失败特征、文件执行次数与文件功能描述分析相关性，重点关注不同优化水平的特点，为每个文件分配0-10分并按分数降序排列。
-    请按以下格式输出：
-    1. 首先进行详细的思维分析过程，分析每个文件与bug的相关性
-    2. 然后用markdown表格格式给出最终排序结果，表格包含三列：Rank, Filename, Score，排名尽可能完整，包括所有文件
-    以下是几个关键文件的内容：
-    {'=== abstract.txt (文件执行次数和功能摘要) ===' + abstract_content if len(abstract_content) != 0 else ''}
-    {'=== deep_compile_analysis.log (编译分析日志) ===' + deep_compile_content if len(deep_compile_content) != 0 else ''}
-    {'=== fail.c (测试用例代码) ===' + fail_c_content if len(fail_c_content) != 0 else ''}
-    {'=== 根据fail.c变异的成功测试用例 === ' + chr(10).join(pass_code_list) if len(pass_code_list) != 0 else ''}
-    {'=== 根据fail.c变异的失败测试用例 === ' + chr(10).join(fail_code_list) if len(fail_code_list) != 0 else ''}
-    请基于以上信息进行深度分析，并提供最终的文件排序结果。
-    """
 
     print(user_prompt)
     try:
@@ -506,7 +604,7 @@ def fileRank_llm(bugid, rev, configFile, rightOption, wrongOption):
         print("收到API响应")
 
         # 保存完整响应
-        full_response_path = logBaseDir + bugid + '/llm_full_response.md'
+        full_response_path = logBaseDir + bugid + f'/llm_full_response.md_{k}'
         with open(full_response_path, 'w', encoding='utf-8') as f:
             f.write(response_text)
         print(f"完整响应已保存: {full_response_path}")
@@ -517,7 +615,7 @@ def fileRank_llm(bugid, rev, configFile, rightOption, wrongOption):
         if table_content:
             print("找到表格内容，正在转换为CSV格式...")
             # 保存表格为CSV
-            result_csv_path = logBaseDir + bugid + '/result_llm.csv'
+            result_csv_path = logBaseDir + bugid + f'/result_llm_{k}.csv'
             if save_table_to_csv(table_content, result_csv_path):
                 print(f"✅ 成功生成结果文件: {result_csv_path}")
             else:

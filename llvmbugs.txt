@@ -1,1 +1,1 @@
-17288,r190911,-O2,-O3,checkIsPass_wrongcodeOneline,install_no
+24757,r247047,-O1,-Os,checkIsPass_wrongcodeOneline,install_no
