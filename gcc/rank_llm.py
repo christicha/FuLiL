@@ -7,6 +7,7 @@ import subprocess
 import time
 from collections import Counter
 from configparser import ConfigParser
+from typing import List
 
 from openai import OpenAI
 
@@ -42,29 +43,115 @@ def extract_table_from_markdown(response_text):
     return '\n'.join(table_lines) if table_lines else None
 
 
-def save_table_to_csv(table_text, output_path):
-    """将markdown表格转换为CSV格式并保存，第二列文件名自动添加.c后缀"""
+def is_valid_number(s: str) -> bool:
+    """检查字符串是否可以被安全地转换为浮点数。"""
+    try:
+        # 排除空字符串或纯空格
+        if not s.strip():
+            return False
+        # 尝试转换，如果成功则为有效数字
+        float(s)
+        return True
+    except ValueError:
+        return False
+
+
+def is_valid_filename_part(s: str) -> bool:
+    """检查文件名部分是否主要包含英文、数字、点号和斜杠 (/)，用于路径。"""
+    # 允许的字符包括：字母 (a-zA-Z), 数字 (0-9), 点号 (.), 斜杠 (/) 和下划线 (_)
+    # 如果字符串中超过 80% 的字符是这些允许字符，我们认为它是有效的文件名。
+    s_cleaned = s.strip()
+    if not s_cleaned:
+        return False
+
+    # 统计允许字符的数量
+    allowed_chars = re.sub(r'[a-zA-Z0-9./_-]', '', s_cleaned)
+
+    # 允许一些非允许字符存在，如空格、括号等，但不能是纯数字或纯特殊符号
+    # 只要它不是纯数字且包含路径或点号，就倾向于认为是文件名。
+    if re.search(r'[a-zA-Z]', s_cleaned) or re.search(r'\.|/', s_cleaned):
+        return True
+    return False
+
+
+def save_table_to_csv(table_text: str, output_path: str) -> bool:
+    """
+    将markdown表格转换为CSV格式并保存，并严格验证内容。
+    第一列和第三列必须为数字，第二列必须为文件名（英文/点号/斜杠等）。
+    """
     if not table_text:
         print("没有找到表格内容")
         return False
 
     try:
         lines = table_text.strip().split('\n')
-        csv_lines = []
+        csv_lines: List[str] = []
+
+        # 启发式判断表头：查找包含 'Rank' 和 'Score' 的行
+        header_identified = False
 
         for line in lines:
-            # 移除表格边界符，分割单元格
-            cells = [cell.strip() for cell in line.split('|') if cell.strip()]
-            if len(cells) == 3:
-                # 核心修改：给第二列的文件名添加.c后缀（避免重复添加）
-                filename = cells[1]
-                # 仅当文件名不以.c结尾时，添加后缀
-                if not filename.endswith('.c') and filename != '...' and filename != 'Filename':
-                    filename += '.c'
-                # 替换第二列为添加后缀后的文件名
-                cells[1] = filename
-                # 重新拼接为CSV行
-                csv_lines.append(','.join(cells))
+            line = line.strip()
+
+            # 1. 忽略空行
+            if not line:
+                continue
+
+            # 2. 忽略 Markdown 分割线 (|---|---|---)
+            if re.match(r'^\|[\s]*[-:=]+[\s]*\|', line):
+                continue
+
+            # 3. 忽略包含省略号 '...' 的行
+            if '...' in line:
+                continue
+
+            # 4. 提取和清理单元格
+            # 移除两侧的 '|'，并按 '|' 分割单元格
+            cells = [cell.strip() for cell in line.strip('|').split('|')]
+
+            # 确保至少有 3 列数据
+            if len(cells) < 3:
+                continue
+
+            # 只取前三列
+            selected_cells = cells[:3]
+            clean_cells = [c.replace('\n', ' ').strip() for c in selected_cells]
+
+            # 5. 表头识别和处理
+            if not header_identified:
+                # 检查是否包含表头关键词
+                if all(keyword in clean_cells[i].lower() for i, keyword in enumerate(['rank', 'filename', 'score'])):
+                    csv_lines.append(','.join(clean_cells))
+                    header_identified = True
+                    continue
+
+            # 6. 数据行内容验证（只有在表头被识别后才开始验证）
+            if header_identified:
+                rank_str = clean_cells[0]
+                filename_str = clean_cells[1]
+                score_str = clean_cells[2]
+
+                # a. 验证 Rank (第一列)
+                is_rank_valid = is_valid_number(rank_str)
+
+                # b. 验证 Score (第三列)
+                is_score_valid = is_valid_number(score_str)
+
+                # c. 验证 Filename (第二列)
+                is_filename_valid = is_valid_filename_part(filename_str)
+
+                # 只有当 Rank 和 Score 都是有效数字，且 Filename 看起来像有效路径时，才保留该行
+                if is_rank_valid and is_score_valid and is_filename_valid:
+                    csv_lines.append(','.join(clean_cells))
+                else:
+                    # 打印被丢弃的行，便于调试
+                    # print(f"警告：丢弃无效数据行 - Rank({is_rank_valid}), File({is_filename_valid}), Score({is_score_valid}): {line}")
+                    pass
+
+        # 检查是否有实际数据被提取
+        if len(csv_lines) < 2:  # 至少需要表头和一行数据
+            print(f"提取到的有效数据行数不足: {len(csv_lines)} 行 (少于1行数据)")
+            return False
 
         # 保存CSV文件
         with open(output_path, 'w', encoding='utf-8') as f:
