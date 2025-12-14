@@ -6,6 +6,8 @@ int d;
 static char b = 48;
 static char c;
 
+
+
 int
 main ()
 {

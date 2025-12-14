@@ -2,6 +2,12 @@
 char a = -1;
 int b;
 
+
+
+
+
+
+
 short
 fn1 (int p1)
 {

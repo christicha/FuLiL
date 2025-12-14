@@ -4,6 +4,8 @@ int c;
 int d = 10;
 unsigned char b = 255;
 
+
+
 void
 fn1 ()
 { 

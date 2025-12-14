@@ -4,6 +4,10 @@ short a;
 int b;
 int c;
 
+
+
+
+
 int
 foo ()
 {

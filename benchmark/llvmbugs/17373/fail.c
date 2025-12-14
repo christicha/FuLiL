@@ -6,6 +6,8 @@ int f;
 int g;
 unsigned int b;
 
+
+
 int main ()
 {
   for (; c < 1; c++)

@@ -4,6 +4,11 @@ int b;
 int i;  
 static int c[] = { 0, 1, 0, 0 };
 
+
+
+
+
+
 void
 fn1 ()
 {

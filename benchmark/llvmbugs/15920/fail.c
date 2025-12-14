@@ -2,6 +2,12 @@ int printf(const char *, ...);
 signed char c;
 signed char d;
 int i;
+
+
+
+
+
+
 int
 main ()
 {

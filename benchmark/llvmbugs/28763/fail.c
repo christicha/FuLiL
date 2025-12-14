@@ -4,6 +4,11 @@ int a;
 int c = 1;
 static short b;
 
+
+
+
+
+
 void fn1 ()
 {
   c = 2;

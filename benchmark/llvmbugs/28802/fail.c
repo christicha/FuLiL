@@ -1,16 +1,7 @@
 
 char a = 1;
-char f;
-char h;
-char j;
-char n;
-int b;
-int c;
-int d;
-int e;
-int g;
-int i;
-int k;
+char f; char h; char j; char n; int b;
+int c; int d; int e; int g; int i; int k;
 int l;
 int m;
 int o;

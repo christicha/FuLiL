@@ -1,18 +1,7 @@
 #include <assert.h>
-
-struct
-{ 
-  int f0;
-  short f1;
-  short f2;
-  short f3;
+struct {  int f0; short f1; short f2; short f3;
 } b, e;
-
-int a;
-int **c;
-int f;
-int *m;
-int d;
+int a; int **c; int f; int *m; int d;
 int i;
 int j;
 int l;

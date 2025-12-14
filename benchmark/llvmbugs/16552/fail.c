@@ -5,6 +5,10 @@ int b;
 int d;
 unsigned char c;
 
+
+
+
+
 int
 foo ()
 {

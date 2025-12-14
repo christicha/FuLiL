@@ -1,11 +1,5 @@
 
-int a;
-int b;
-int *c;
-int e;
-int f;
-int g = 1;
-int h;
+int a; int b; int *c; int e; int f; int g = 1; int h;
 int k;
 int m;
 int n;

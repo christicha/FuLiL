@@ -49,7 +49,7 @@ def process_bugid_wrapper(args):
     # fileRank_GNN(bugid, revision, configPath)
 
     for i in range(5):
-        # fileRank_llm(bugid, revision, configPath, compileOptionRight, compileOptionWrong, i)
+        fileRank_llm(bugid, revision, configPath, compileOptionRight, compileOptionWrong, i)
         aggregate(bugid, configPath, ['gnn', 'sbfl', 'llm'], i)
         aggregate(bugid, configPath, ['gnn', 'sbfl'], i)
         aggregate(bugid, configPath, ['gnn', 'llm'], i)
@@ -59,7 +59,7 @@ def process_bugid_wrapper(args):
     return bugid
 
 
-with ProcessPoolExecutor(max_workers=1) as executor:
+with ProcessPoolExecutor(max_workers=8) as executor:
     # 提交所有任务
     future_to_bugid = {
         executor.submit(process_bugid_wrapper, (

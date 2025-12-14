@@ -5,6 +5,10 @@ int c;
 volatile int v;
 static int u[] = { 0, 0, 0, 0, 0, 1 };
 
+
+
+
+
 void foo() {
   int i;
   int j;

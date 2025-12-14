@@ -1,4 +1,13 @@
+int a;
 void f () {}
+
+
+
+
+
+
+
+
 
 int g (int p, int q)
 {

@@ -307,7 +307,7 @@ def get_detailed_compile_logs_gcc(compiler, src, opt, output_prefix):
     return logs
 
 
-def fileRank_llm(bugid, rev, configFile, rightOption, wrongOption):
+def fileRank_llm(bugid, rev, configFile, rightOption, wrongOption, k):
     cfg = ConfigParser()
     cfg.read(configFile)
     abstractDir = cfg.get('gcc-locations', 'abstractDir')
@@ -636,7 +636,7 @@ def fileRank_llm(bugid, rev, configFile, rightOption, wrongOption):
         print("收到API响应")
 
         # 保存完整响应
-        full_response_path = logBaseDir + bugid + '/llm_full_response.md'
+        full_response_path = logBaseDir + bugid + f'/llm_full_response_{k}.md'
         with open(full_response_path, 'w', encoding='utf-8') as f:
             f.write(response_text)
         print(f"GCC版本完整响应已保存: {full_response_path}")
@@ -647,7 +647,7 @@ def fileRank_llm(bugid, rev, configFile, rightOption, wrongOption):
         if table_content:
             print("找到表格内容，正在转换为CSV格式...")
             # 保存表格为CSV
-            result_csv_path = logBaseDir + bugid + '/result_llm.csv'
+            result_csv_path = logBaseDir + bugid + f'/result_llm_{k}.csv'
             if save_table_to_csv(table_content, result_csv_path):
                 print(f"✅ 成功生成GCC版本结果文件: {result_csv_path}")
             else:
@@ -655,7 +655,7 @@ def fileRank_llm(bugid, rev, configFile, rightOption, wrongOption):
         else:
             print("❌ 在响应中未找到表格内容")
             # 保存原始响应以供调试
-            debug_path = logBaseDir + bugid + '/llm_response_debug.txt'
+            debug_path = logBaseDir + bugid + f'/llm_response_debug_{k}.txt'
             with open(debug_path, 'w', encoding='utf-8') as f:
                 f.write(response_text)
             print(f"GCC版本调试信息已保存: {debug_path}")

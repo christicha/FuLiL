@@ -200,7 +200,6 @@ def analysis(bugid: str, revision: str, configPath: str, k):
     # 3. 逐个配置收集排名数据
     print(f"--- 开始收集 Bug ID {bugid} 的所有排名数据 (LLM k={k}) ---")
     for suffix, agg_file_path in aggregation_configs.items():
-        # ⚠️ 关键检查：打印文件路径，确保路径正确
         print(f"  > 检查聚合文件: {suffix} -> {agg_file_path}")
 
         # 只有文件存在时才进行收集

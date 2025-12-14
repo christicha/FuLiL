@@ -1,16 +1,11 @@
 int printf (const char *, ...);
-
 int a;
 int b;
 int c;
 int d;
 int e = 1; 
 
-struct S
-{
-  int f;
-};
-
+struct S { int f; };
 volatile struct S s;
 
 void foo (int *p)

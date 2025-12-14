@@ -7,6 +7,7 @@ int f;
 short b[5];
 short d;
 
+
 int
 main ()
 {
