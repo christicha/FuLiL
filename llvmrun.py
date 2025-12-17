@@ -49,11 +49,11 @@ def process_bugid_wrapper(args):
     # fileRank_GNN(bugid, revision, configPath)
 
     for i in range(5):
-        fileRank_llm(bugid, revision, configPath, compileOptionRight, compileOptionWrong, i)
-        aggregate(bugid, configPath, ['gnn', 'sbfl', 'llm'], i)
-        aggregate(bugid, configPath, ['gnn', 'sbfl'], i)
-        aggregate(bugid, configPath, ['gnn', 'llm'], i)
-        aggregate(bugid, configPath, ['sbfl', 'llm'], i)
+        # fileRank_llm(bugid, revision, configPath, compileOptionRight, compileOptionWrong, i)
+        # aggregate(bugid, configPath, ['gnn', 'sbfl', 'llm'], i)
+        # aggregate(bugid, configPath, ['gnn', 'sbfl'], i)
+        # aggregate(bugid, configPath, ['gnn', 'llm'], i)
+        # aggregate(bugid, configPath, ['sbfl', 'llm'], i)
         analysis(bugid, revision, configPath, i)
 
     return bugid

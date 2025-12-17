@@ -110,6 +110,8 @@ def generateMutate(bugid, revision, checkpass, compileOptionRight, compileOption
     actionPath = config.get('gcc-locations', 'actionFile')
     passdir = config.get('gcc-locations', 'passdir')
     compilerBasePath = config.get('gcc-locations', 'compilersdir')
+    key = config.get('deepseek','api')
+    url = config.get('deepseek','url')
     workpath = passdir + bugid
     if not os.path.exists(workpath):
         os.system('mkdir -p ' + workpath)
@@ -197,8 +199,8 @@ def generateMutate(bugid, revision, checkpass, compileOptionRight, compileOption
     remove_oracle_prog = 0
 
     client = OpenAI(
-        api_key='sk-ad1a7b32b3f2419db17ed342a23b6b06',
-        base_url='https://api.deepseek.com'
+        api_key=key,
+        base_url=url
     )
 
     failProgramPath = baseInfoDir + bugid + '/fail.c'
