@@ -313,6 +313,8 @@ def fileRank_llm(bugid, rev, configFile, rightOption, wrongOption, k):
     basePassDir = cfg.get('llvm-locations', 'passdir')
     logBaseDir = cfg.get('llvm-locations', 'logDir')
     structureFile = cfg.get('llvm-locations', 'structureFile')
+    key = cfg.get('gpt-gemini','api')
+    url = cfg.get('gpt-gemini','url')
     filemap = dict()
     methodcov = infoBasePath + bugid + '/failcov/method_info.txt'
     if not os.path.exists(logBaseDir + bugid):
@@ -522,8 +524,8 @@ def fileRank_llm(bugid, rev, configFile, rightOption, wrongOption, k):
     compile_deep_analysis(logBaseDir + bugid + "/deep_compile_analysis.log")
     print(f"编译分析日志已生成：{logBaseDir}{bugid}/deep_compile_analysis.log")
     client = OpenAI(
-        api_key='sk-ad1a7b32b3f2419db17ed342a23b6b06',
-        base_url='https://api.deepseek.com',
+        api_key=key,
+        base_url=url,
         timeout=3600
     )
     # 读取三个文件的内容
@@ -590,7 +592,7 @@ def fileRank_llm(bugid, rev, configFile, rightOption, wrongOption, k):
     try:
         print("正在发送请求到DeepSeek API...")
         response = client.chat.completions.create(
-            model="deepseek-reasoner",
+            model="gemini-2.5-flash",
             messages=[
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": user_prompt}

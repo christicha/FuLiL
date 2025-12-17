@@ -111,6 +111,8 @@ def generateMutate(bugid, revision, checkpass, compileOptionRight, compileOption
     passdir = config.get('llvm-locations', 'passdir')
     compilerBasePath = config.get('llvm-locations', 'compilersdir')
     infoBasePath = config.get('llvm-locations', 'infodir')
+    key = config.get('gpt-gemini','api')
+    url = config.get('gpt-gemini','url')
     workpath = passdir + bugid
     if not os.path.exists(workpath):
         os.system('mkdir -p ' + workpath)
@@ -198,8 +200,8 @@ def generateMutate(bugid, revision, checkpass, compileOptionRight, compileOption
     remove_oracle_prog = 0
 
     client = OpenAI(
-        api_key='sk-ad1a7b32b3f2419db17ed342a23b6b06',
-        base_url='https://api.deepseek.com'
+        api_key=key,
+        base_url=url
     )
 
     failProgramPath = baseInfoDir + bugid + '/fail.c'
@@ -233,7 +235,7 @@ def generateMutate(bugid, revision, checkpass, compileOptionRight, compileOption
         print(f"\n=== Progress: {passingcnt}/499 passing cases, {total_prog} total generated ===")
         print(f"Elapsed time: {gaptime:.2f}s")
 
-        if gaptime > 3600:
+        if gaptime > 3600 / 2:
             print("Time limit reached (1 hour)")
             break
 
@@ -274,7 +276,7 @@ def generateMutate(bugid, revision, checkpass, compileOptionRight, compileOption
 
         try:
             chat_completion = client.chat.completions.create(
-                model="deepseek-chat",
+                model="gemini-2.5-flash-lite-preview-06-17",
                 messages=messages,
                 temperature=1.0,
             )

@@ -15,6 +15,7 @@ baseResultPath = config.get('llvm-locations', 'resultFile')
 buglist = config.get('llvm-locations', 'bugList')
 passBasePath = config.get('llvm-locations', 'passdir')
 configPath = config.get('llvm-locations', 'configFile')
+round = config.get('config','round')
 
 bugIds = []
 revisions = []
@@ -48,12 +49,12 @@ def process_bugid_wrapper(args):
     # fileRank(bugid, revision, configPath)
     # fileRank_GNN(bugid, revision, configPath)
 
-    for i in range(5):
-        # fileRank_llm(bugid, revision, configPath, compileOptionRight, compileOptionWrong, i)
-        # aggregate(bugid, configPath, ['gnn', 'sbfl', 'llm'], i)
-        # aggregate(bugid, configPath, ['gnn', 'sbfl'], i)
-        # aggregate(bugid, configPath, ['gnn', 'llm'], i)
-        # aggregate(bugid, configPath, ['sbfl', 'llm'], i)
+    for i in range(int(round)):
+        fileRank_llm(bugid, revision, configPath, compileOptionRight, compileOptionWrong, i)
+        aggregate(bugid, configPath, ['gnn', 'sbfl', 'llm'], i)
+        aggregate(bugid, configPath, ['gnn', 'sbfl'], i)
+        aggregate(bugid, configPath, ['gnn', 'llm'], i)
+        aggregate(bugid, configPath, ['sbfl', 'llm'], i)
         analysis(bugid, revision, configPath, i)
 
     return bugid
