@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import json
 import os
 import re
@@ -19,28 +21,6 @@ def read_file_content(file_path):
             return f.read()
     except Exception as e:
         return f"无法读取文件 {file_path}: {str(e)}"
-
-
-def extract_table_from_markdown(response_text):
-    """从markdown响应中提取表格内容"""
-    # 查找表格的开始和结束
-    table_start = response_text.find('|')
-    if table_start == -1:
-        return None
-
-    # 提取表格部分
-    table_lines = []
-    lines = response_text.split('\n')
-    in_table = False
-
-    for line in lines:
-        if line.strip().startswith('|') and '---' not in line:
-            in_table = True
-            table_lines.append(line.strip())
-        elif in_table and not line.strip().startswith('|'):
-            break
-
-    return '\n'.join(table_lines) if table_lines else None
 
 
 def is_valid_number(s: str) -> bool:
@@ -74,6 +54,46 @@ def is_valid_filename_part(s: str) -> bool:
     return False
 
 
+def extract_table_from_markdown(response_text: str) -> str | None:
+    """
+    从markdown响应中提取包含rank/filename/score的表格
+    处理多表格场景，仅返回第一个符合条件的表格
+    """
+    # 分割行并处理空行，保留行号便于定位
+    lines = [line.strip() for line in response_text.split('\n')]
+    table_blocks = []  # 存储所有表格块（连续的|开头行）
+    current_block = []
+
+    # 第一步：提取所有连续的表格块（以|开头的行）
+    for line in lines:
+        if line.startswith('|'):
+            current_block.append(line)
+        else:
+            if current_block:
+                table_blocks.append(current_block)
+                current_block = []
+    # 处理最后一个表格块
+    if current_block:
+        table_blocks.append(current_block)
+
+    # 第二步：遍历每个表格块，寻找包含目标关键字的表格
+    for block in table_blocks:
+        # 检查该表格块中是否有行满足：至少3列，且列对应包含rank/filename/score（忽略大小写）
+        for line in block:
+            # 分割单元格：移除两侧|，按|分割并清理空格
+            cells = [cell.strip().lower() for cell in line.strip('|').split('|')]
+            # 确保至少3列，且对应列包含目标关键字
+            if len(cells) >= 3 and \
+                    'rank' in cells[0] and \
+                    'filename' in cells[1] and \
+                    'score' in cells[2]:
+                # 找到目标表格，返回整个表格块的文本
+                return '\n'.join(block)
+
+    # 未找到符合条件的表格
+    return None
+
+
 def save_table_to_csv(table_text: str, output_path: str) -> bool:
     """
     将markdown表格转换为CSV格式并保存，并严格验证内容。
@@ -86,8 +106,6 @@ def save_table_to_csv(table_text: str, output_path: str) -> bool:
     try:
         lines = table_text.strip().split('\n')
         csv_lines: List[str] = []
-
-        # 启发式判断表头：查找包含 'Rank' 和 'Score' 的行
         header_identified = False
 
         for line in lines:
@@ -96,7 +114,6 @@ def save_table_to_csv(table_text: str, output_path: str) -> bool:
             # 1. 忽略空行
             if not line:
                 continue
-
             # 2. 忽略 Markdown 分割线 (|---|---|---)
             if re.match(r'^\|[\s]*[-:=]+[\s]*\|', line):
                 continue
@@ -117,9 +134,9 @@ def save_table_to_csv(table_text: str, output_path: str) -> bool:
             selected_cells = cells[:3]
             clean_cells = [c.replace('\n', ' ').strip() for c in selected_cells]
 
-            # 5. 表头识别和处理
+            # 5. 表头识别和处理（因提取函数已过滤，此处匹配更高效）
             if not header_identified:
-                # 检查是否包含表头关键词
+                # 检查是否包含表头关键词（忽略大小写）
                 if all(keyword in clean_cells[i].lower() for i, keyword in enumerate(['rank', 'filename', 'score'])):
                     csv_lines.append(','.join(clean_cells))
                     header_identified = True
@@ -144,12 +161,12 @@ def save_table_to_csv(table_text: str, output_path: str) -> bool:
                 if is_rank_valid and is_score_valid and is_filename_valid:
                     csv_lines.append(','.join(clean_cells))
                 else:
-                    # 打印被丢弃的行，便于调试
+                    # 打印被丢弃的行，便于调试（可注释）
                     # print(f"警告：丢弃无效数据行 - Rank({is_rank_valid}), File({is_filename_valid}), Score({is_score_valid}): {line}")
                     pass
 
-        # 检查是否有实际数据被提取
-        if len(csv_lines) < 2:  # 至少需要表头和一行数据
+        # 检查是否有实际数据被提取（至少表头+1行数据）
+        if len(csv_lines) < 2:
             print(f"提取到的有效数据行数不足: {len(csv_lines)} 行 (少于1行数据)")
             return False
 

@@ -208,7 +208,7 @@ def aggregate(bugid, configPath, methods_to_include, k):
 
     # 定义所有模型的文件路径
     file_map = {
-        'gnn': baseResultDir + bugid + '/result_gnn.csv',
+        'gnn': '/home/chris/FLL-workplace/llvmbugs/result/' + bugid + '/result_gnn.csv',
         'sbfl': baseResultDir + bugid + '/resultFile_file.csv',
         'llm': logBaseDir + bugid + f'/result_llm_{k}.csv'
     }

@@ -143,7 +143,7 @@ def collect_ranks(bugid: str, configPath: str, aggregate_file_path: str, agg_suf
     location = os.path.join(infoResultDir, bugid, 'locations')
 
     # 独立模型文件路径
-    GNNfile = os.path.join(baseResultDir, bugid, 'result_gnn.csv')
+    GNNfile = os.path.join('/home/chris/FLL-workplace/llvmbugs/result', bugid, 'result_gnn.csv')
     SBFLfile = os.path.join(baseResultDir, bugid, 'resultFile_file.csv')
     # LLM 文件名现在是带 k 值的
     LLMfile = os.path.join(logBaseDir, bugid, f'result_llm_{llm_k}.csv')

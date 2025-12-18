@@ -4,7 +4,6 @@
 16521,r185306,-O2,-O3,checkIsPass_wrongcodeOneline,install_no
 16552,r185684,-O2,-O3,checkIsPass_wrongcodeOneline,install_no
 16605,r186068,-m32 -O0,-m32 -O3,checkIsPass_zeroandsegmentoneline,install_no
-16729,r187322,-O1,-O3,checkIsPass_zeroandsegmentoneline,install_no
 17288,r190911,-O2,-O3,checkIsPass_wrongcodeOneline,install_no
 17338,r191183,-m32 -O1,-m32 -O0,checkIsPass_wrongcodeOneline,install_no
 17373,r191356,-O2,-O3,checkIsPass_zeroandsegmentoneline,install_no
@@ -39,8 +38,6 @@
 30935,r286097,-O0,-O1,checkIsPass_zeroandsegmentoneline,install_no
 32418,r298721,-O0 -w,-O1 -w,checkIsPass_zeroandsegmentoneline,install_no
 32419,r298721,-O1,-Os,checkIsPass_zeroandsegmentoneline,install_no
-32847,r301611,-Os,-Os -mllvm -enable-newgvn,checkIsPass_zeroandonenumber,install_no
-32847,r301611,-Os,-Os -mllvm -enable-newgvn,checkIsPass_zeroandonenumber,install_no
 32847,r301611,-Os,-Os -mllvm -enable-newgvn,checkIsPass_zeroandonenumber,install_no
 33078,r303218,-O1,-Os,checkIsPass_zeroandsegmentoneline,install_no
 34354,r311896,-O0,-O1,checkIsPass_zeroandsegmentoneline,install_no

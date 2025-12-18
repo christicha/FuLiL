@@ -276,7 +276,7 @@ def generateMutate(bugid, revision, checkpass, compileOptionRight, compileOption
 
         try:
             chat_completion = client.chat.completions.create(
-                model="gemini-2.5-flash-lite-preview-06-17",
+                model="gpt-3.5-turbo",
                 messages=messages,
                 temperature=1.0,
             )
