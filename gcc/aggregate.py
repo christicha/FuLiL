@@ -39,9 +39,10 @@ def read_llm_ranking(file_path, score_range=LLM_SCORE_RANGE):
         reader = csv.DictReader(f)
         for row in reader:
             file_name = row['Filename']
+            if not file_name.endswith('.c'):
+                file_name += '.c'
             score = float(row['Score'])
             min_val, max_val = score_range
-
             # 归一化到 0-1
             normalized_score = (score - min_val) / (max_val - min_val)
             ranking[file_name] = max(0.0, min(1.0, normalized_score))

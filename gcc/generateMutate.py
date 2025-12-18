@@ -234,7 +234,7 @@ def generateMutate(bugid, revision, checkpass, compileOptionRight, compileOption
         print(f"\n=== Progress: {passingcnt}/499 passing cases, {total_prog} total generated ===")
         print(f"Elapsed time: {gaptime:.2f}s")
 
-        if gaptime > 3600:
+        if gaptime > 3600 / 2:
             print("Time limit reached (1 hour)")
             break
 
@@ -275,7 +275,7 @@ def generateMutate(bugid, revision, checkpass, compileOptionRight, compileOption
 
         try:
             chat_completion = client.chat.completions.create(
-                model="gemini-2.5-flash",
+                model="gemini-2.5-flash-lite-preview-06-17",
                 messages=messages,
                 temperature=1.0,
             )

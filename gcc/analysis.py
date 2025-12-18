@@ -60,58 +60,51 @@ def get_buggy_names(location_file_path: str) -> List[str]:
     return buggy_names
 
 
-def get_rank(file_path: str, buggy_name: str, rank_col_name: str = 'Rank') -> Union[str, int, float]:
-    # ... (此函数保持不变) ...
-    """
-    从排名 CSV 文件中查找特定缺陷文件的排名。
+def normalize_for_match(filename: str) -> str:
+    """将文件名统一转为小写、去掉路径、去掉后缀，用于模糊匹配"""
+    if not filename:
+        return ""
+    # 1. 只取文件名部分 (去掉路径)
+    base = os.path.basename(filename)
+    # 2. 去掉后缀 (例如把 main.c 变成 main)
+    name_without_ext = os.path.splitext(base)[0]
+    # 3. 转为小写并去除空格，确保完全一致
+    return name_without_ext.strip().lower()
 
-    :param file_path: 排名 CSV 文件路径。
-    :param buggy_name: 缺陷文件名称。
-    :param rank_col_name: 排名所在列的名称，默认为 'Rank' 或 'AverageRank'。
-    :return: 排名数字或 'N/A'。
-    """
+
+def get_rank(file_path: str, buggy_name: str, rank_col_name: str = 'Rank') -> Union[str, int, float]:
     if not os.path.exists(file_path):
         return 'N/A'
+
+    # 预先标准化要找的目标文件名
+    target_norm = normalize_for_match(buggy_name)
 
     try:
         with open(file_path, 'r', encoding='utf-8') as f:
             reader = csv.DictReader(f)
 
-            # 确定文件名所在的列名
-            file_col_name = None
-            if 'File' in reader.fieldnames:
-                file_col_name = 'File'
-            elif 'Filename' in reader.fieldnames:
-                file_col_name = 'Filename'
-            else:
-                return 'N/A'
+            # 确定文件名和排名所在的列名 (保持您原有的逻辑)
+            file_col = next((c for c in ['File', 'Filename', 'filename', 'file'] if c in reader.fieldnames), None)
+            rank_col = next((c for c in [rank_col_name, 'AverageRank', 'Rank', 'rank'] if c in reader.fieldnames), None)
 
-            # 确定排名所在的列名
-            current_rank_col = None
-            if rank_col_name in reader.fieldnames:
-                current_rank_col = rank_col_name
-            elif 'AverageRank' in reader.fieldnames:
-                current_rank_col = 'AverageRank'
-            elif 'Rank' in reader.fieldnames:
-                current_rank_col = 'Rank'
-            else:
+            if not file_col or not rank_col:
                 return 'N/A'
 
             for row in reader:
-                if row.get(file_col_name) == buggy_name:
-                    rank_value = row.get(current_rank_col)
-                    if rank_value is not None:
+                csv_val = row.get(file_col)
+                if csv_val:
+                    # --- 核心修改：双方都标准化后比较 ---
+                    if normalize_for_match(csv_val) == target_norm:
+                        rank_value = row.get(rank_col)
                         try:
-                            # 尝试转换为整数或浮点数
-                            if current_rank_col == 'Rank':
+                            # 转换数字逻辑
+                            if 'Rank' in rank_col:
                                 return int(float(rank_value))
-                            else:
-                                return float(rank_value)
-                        except ValueError:
+                            return float(rank_value)
+                        except (ValueError, TypeError):
                             return rank_value
             return 'N/A'
-    except Exception as e:
-        # print(f"读取排名文件 {os.path.basename(file_path)} 时发生错误: {e}")
+    except Exception:
         return 'N/A'
 
 

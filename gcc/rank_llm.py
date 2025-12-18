@@ -630,7 +630,7 @@ def fileRank_llm(bugid, rev, configFile, rightOption, wrongOption, k):
                 {"role": "user", "content": user_prompt}
             ],
             temperature=1,
-            max_tokens=25000
+            max_tokens=50000
         )
 
         # 获取响应内容
