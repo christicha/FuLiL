@@ -149,7 +149,6 @@ def generateMutate(bugid, revision, checkpass, compileOptionRight, compileOption
     # pair(filename, statement))
     passCov = dict()
 
-    # 先定义全局字典，对应原逻辑的 existingcovset/unionCovwithFail/passCov
     failExistingCovSet = {}  # 存储当前失败用例与已有失败用例的覆盖率交集
     failUnionCovSet = {}  # 存储当前失败用例与已有失败用例的覆盖率并集
     failCov = {}  # 存储每个失败用例的完整覆盖率集合

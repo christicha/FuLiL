@@ -151,6 +151,54 @@ def generateMutate(bugid, revision, checkpass, compileOptionRight, compileOption
     # pair(filename, statement))
     passCov = dict()
 
+    failExistingCovSet = {}  # 存储当前失败用例与已有失败用例的覆盖率交集
+    failUnionCovSet = {}  # 存储当前失败用例与已有失败用例的覆盖率并集
+    failCov = {}  # 存储每个失败用例的完整覆盖率集合
+
+    def diffFailCov(testname, bugid):
+
+        failcov_dir = passdir + bugid + '/failcov/'  # faildir需和原passdir保持同层级全局变量
+        if len(os.listdir(failcov_dir)) == 1:
+            thisfile = open(failcov_dir + testname + '/stmt_info.txt')
+            thislines = thisfile.readlines()
+            thisfile.close()
+            thisset = set()
+            for i in range(len(thislines)):
+                filenameitem = thislines[i].strip().split(':')[0]
+                lineitems = thislines[i].strip().split(':')[1].split(',')
+                for j in range(len(lineitems)):
+                    thisset.add(filenameitem + ':' + lineitems[j])
+
+            failExistingCovSet[testname] = set()  # 无已有用例，交集为空
+            failUnionCovSet[testname] = thisset  # 并集=当前用例覆盖率
+            failCov[testname] = thisset  # 保存当前用例完整覆盖率
+            return 0  # different - 保留
+        total_existing_fail_set = set()
+        for exist_testname in failCov:
+            if exist_testname == testname:
+                continue
+            total_existing_fail_set.update(failCov[exist_testname])
+        thisfile = open(failcov_dir + testname + '/stmt_info.txt')
+        thislines = thisfile.readlines()
+        thisfile.close()
+
+        thisset = set()
+        for i in range(len(thislines)):
+            filenameitem = thislines[i].strip().split(':')[0]
+            lineitems = thislines[i].strip().split(':')[1].split(',')
+            for j in range(len(lineitems)):
+                thisset.add(filenameitem + ':' + lineitems[j])
+        new_coverage = thisset - total_existing_fail_set
+        if len(new_coverage) > 0:
+            # 有新增覆盖率，保留
+            failExistingCovSet[testname] = thisset & total_existing_fail_set  # 交集
+            failUnionCovSet[testname] = thisset | total_existing_fail_set  # 并集
+            failCov[testname] = thisset  # 保存当前覆盖率
+            return 0  # 有新增，保留
+        else:
+            # 无新增覆盖率，舍弃
+            return 1  # 无差异，舍弃
+
     def diffPassCov(testname, bugid):
         if len(os.listdir(passdir + bugid + '/passcov/')) == 1:
             thisfile = open(passdir + bugid + '/passcov/' + testname + '/stmt_info.txt')
@@ -426,14 +474,27 @@ def generateMutate(bugid, revision, checkpass, compileOptionRight, compileOption
             failing_prog += 1
             compiled_prog += 1
 
-            # 保存失败用例
-            fail_filename = f"failing_cases/fail_{failcnt:04d}.c"
-            shutil.copy('mainvar.c', fail_filename)
             failcovdir = f"{workpath}/failcov/fail_{failcnt:04d}"
             os.system('mkdir -p ' + failcovdir)
             collectcov(bugid, revision, failcovdir, configPath)
 
-            print(f"Still failing case saved as: {fail_filename}")
+            testname = f"fail_{failcnt:04d}"
+            covFlag = diffFailCov(testname, bugid)
+
+            if covFlag == 1:
+                os.system(f"rm -rf {failcovdir}")
+                failcnt -= 1
+                failing_prog -= 1
+                compiled_prog -= 1
+                continue
+            else:
+                fail_filename = f"failing_cases/fail_{failcnt:04d}.c"
+                shutil.copy('mainvar.c', fail_filename)
+                with open('generation_stats.txt', 'a') as stats_file:
+                    stats_file.write(f"Fail {failcnt:04d}: {fail_filename} - Mutation: {selected}\n")
+
+                print(f"Useful failing case saved as: {fail_filename}")
+                print(f"Total useful failing cases: {failcnt}")
 
         # 定期更新统计信息
         if total_prog % 10 == 0:
