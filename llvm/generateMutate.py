@@ -407,7 +407,7 @@ def generateMutate(bugid, revision, checkpass, compileOptionRight, compileOption
             collectcov(bugid, revision, passcovdir, configPath)
             covFlag = diffPassCov(f"pass_{passingcnt:04d}", bugid)
             if covFlag == 1:
-                os.system(f"rm -rm {passcovdir}")
+                os.system(f"rm -rf {passcovdir}")
                 passingcnt -= 1
                 continue
             else:
