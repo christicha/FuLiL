@@ -66,7 +66,7 @@ def collect(compilersdir, infodir, revision, wrongoption):
     # delete all .gcda files
     exccmd('find ' + covdir + ' -name \"*.gcda\" | xargs rm -f')
     # compile test program
-    exccmd(gccdir + '/clang ' + wrongoption + ' ' + testname + '.c')  # change per bug
+    exccmd(gccdir + '/gcc ' + wrongoption + ' ' + testname + '.c')  # change per bug
     if os.path.exists('oriwrongfile'):
         os.system('rm oriwrongfile')
     os.system('{ timeout 10 ./a.out; } >oriwrongfile 2>&1')
@@ -81,7 +81,7 @@ def collect(compilersdir, infodir, revision, wrongoption):
 
     for i in range(len(lines)):
         gcdafile = lines[i].strip()
-        if '/clang/test/' in gcdafile:  # ?
+        if '/gcc/testsuite/' in gcdafile:  # ?
             continue
         exccmd('rm *.gcov')
         if os.path.exists('gcovfile'):
