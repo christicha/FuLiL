@@ -5,9 +5,10 @@ from configparser import ConfigParser
 config = ConfigParser()
 config.read('./config/config.ini', encoding='utf-8')
 compilerBasePath = config.get('gcc-locations', 'compilersdir')
-baseResultPath = config.get('gcc-locations', 'resultFile')
+baseResultPath = config.get('gcc-locations', 'resultDir')
 buglist = config.get('gcc-locations', 'bugList')
 infoBasePath = config.get('gcc-locations', 'infodir')
+fileListBasePath = config.get('gcc-locations', 'fileListDir')
 benchmarkPath = config.get('gcc-locations', 'benchmark')
 
 bugIds = []
@@ -86,8 +87,15 @@ def collect(compilersdir, infodir, revision, wrongoption):
         exccmd('rm *.gcov')
         if os.path.exists('gcovfile'):
             exccmd('rm gcovfile')
-        exccmd('gcov -f ' + gcdafile + ' > gcovfile')
-        if not os.path.exists('./' + gcdafile.strip().split('/')[-1].split('.gcda')[0] + '.gcov'):
+        exccmd('LC_ALL=C ' + gccdir+'/gcov -f ' + gcdafile + ' > gcovfile')
+        file_temp = ""
+        if os.path.exists('./' + gcdafile.strip().split('/')[-1].replace('gcda', 'c') + '.gcov'):
+            # if not os.path.exists('./' + gcdafile.strip().split('/')[-1].split('.gcda')[0] + '.gcov'):
+            file_temp = './' + gcdafile.strip().split('/')[-1].replace('gcda', 'c') + '.gcov'
+        elif os.path.exists('./' + gcdafile.strip().split('/')[-1].replace('gcda', 'h') + '.gcov'):
+            # if not os.path.exists('./' + gcdafile.strip().split('/')[-1].split('.gcda')[0] + '.gcov'):
+            file_temp = './' + gcdafile.strip().split('/')[-1].replace('gcda', 'h') + '.gcov'
+        else:
             continue
         f = open('gcovfile')
         gcovlines = f.readlines()
@@ -101,7 +109,7 @@ def collect(compilersdir, infodir, revision, wrongoption):
                                          0].strip() +
                                      ',' + gcovlines[j + 1].strip().split('of')[-1].strip() + '\n')
 
-        f = open(gcdafile.strip().split('/')[-1].split('.gcda')[0] + '.gcov')
+        f = open(file_temp)
         stmtlines = f.readlines()
         f.close()
 
